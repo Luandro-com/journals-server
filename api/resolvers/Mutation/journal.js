@@ -56,8 +56,7 @@ const journal = {
   async payment(parent, args, ctx, info) {
     const { input } = args
     const id = getUserId(ctx)
-    const orderId = input.orderId
-    delete input.orderId
+    const articleId = input.articleId
     const payment = await simpleTransaction()
     let formatedPayment = { creditCard: {}}
     Object.keys(payment['Payment']).map(key => {
@@ -102,7 +101,7 @@ const journal = {
       data: {
         merchantOrderId: payment['MerchantOrderId'],
         customerName: payment['Customer']['Name'],
-        order: { connect: { id: orderId } },
+        article: { connect: { id: articleId } },
         customer: { connect: { id } },
         creditCard: { connect: { id: card.id }},
         paymentId,

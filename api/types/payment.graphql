@@ -2,7 +2,7 @@ input PaymentInput {
   method: PaymentType!
   cupom: String
   info: String
-  orderId: String!
+  articleId: String!
 }
 
 enum PaymentType {
