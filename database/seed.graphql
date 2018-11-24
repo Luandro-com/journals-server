@@ -1,4 +1,10 @@
 mutation {
+  createContent: createContent(data: {
+    title: "Periodico Revistas Políticas Públicas"
+    about: "It's niceeeee"
+  }) {
+    title
+  },
   createEdition: createEdition(data: {
     key: "experiencias-do-urbanismo-no-brasil"
     title: "Experiências no Ensino do Urbanismo no Brasil"

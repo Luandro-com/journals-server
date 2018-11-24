@@ -29,6 +29,12 @@ type NewsletterSubscription {
   createdAt: DateTime!
 }
 
+type Content {
+  title: String
+  about: String
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
 
 type Edition {
   id: ID! @unique

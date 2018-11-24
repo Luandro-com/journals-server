@@ -88,6 +88,19 @@ module.exports = () => {
     })
   })
   // READ CONTENT
+  test(`should return content`, (t) => {
+    const content = `{
+      content {
+        title
+        about
+      }
+    }`
+    mockFetch(content, null, token)
+    .then(res => {
+      t.ok(res.content)
+      t.end()
+    })
+  })
   // SUBSCRIBE
   // UPDATE INFORMATION
   // CREATE JOURNAL

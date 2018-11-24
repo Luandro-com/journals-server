@@ -1,4 +1,4 @@
-# import User, DateTime, Payment, Edition from "generated/prisma.graphql"
+# import User, Content, DateTime, Payment, Edition from "generated/prisma.graphql"
 # import * from "types/user.graphql"
 # import * from "types/journal.graphql"
 # import * from "types/admin.graphql"
@@ -10,6 +10,7 @@ type Query {
   admins: [User]
   payments: [Payment]
   editions: [Edition]
+  content: Content
 }
 
 type Mutation {

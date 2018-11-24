@@ -6,6 +6,11 @@ const Query = {
     return ctx.db.query.user({ where: { id } }, info)
   },
 
+  async content(parent, args, ctx, info) {
+    const res = await ctx.db.query.contents({}, info)
+    return res[0]
+  },
+
   async editions(parent, args, ctx, info) {
     return await ctx.db.query.editions({}, info)
   },
