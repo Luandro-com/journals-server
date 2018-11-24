@@ -1,0 +1,19 @@
+# import User, DateTime, Payment, Edition from "generated/prisma.graphql"
+# import * from "types/user.graphql"
+# import * from "types/journal.graphql"
+# import * from "types/admin.graphql"
+# import * from "types/payment.graphql"
+
+type Query {
+  user: User
+  users: [User]
+  admins: [User]
+  payments: [Payment]
+}
+
+type Mutation {
+  signup(email: String!, password: String!, cart: String): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  updateUser(input: UserInput): User
+  payment(input: PaymentInput): Payment
+}

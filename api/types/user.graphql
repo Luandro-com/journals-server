@@ -1,0 +1,9 @@
+input UserInput {
+  firstName: String
+  lastName: String
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}

@@ -1,0 +1,7 @@
+{
+  "name": "periodico-api",
+  "type": "docker",
+  "features": {
+    "cloud": "v2"
+  }
+}

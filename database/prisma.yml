@@ -1,0 +1,17 @@
+endpoint: ${env:PRISMA_ENDPOINT}
+#endpoint: http://localhost:4466
+# endpoint: https://us1.prisma.sh/luandro-93a3b2/periodico/dev
+
+# `Authorization` header of HTTP requests against the Prisma endpoint.
+secret: ${env:PRISMA_SECRET}
+
+datamodel: datamodel.graphql
+
+seed:
+  import: seed.graphql
+
+# Download the GraphQL schema of the Prisma API into 
+# `api/generated/prisma.graphql` (as specfied in `.graphqlconfig.yml`).
+hooks:
+  post-deploy:
+    - graphql get-schema --project database

@@ -1,0 +1,13 @@
+input PaymentInput {
+  method: PaymentType!
+  cupom: String
+  info: String
+  orderId: String!
+}
+
+enum PaymentType {
+  CREDIT
+  DEBIT
+  MONEY_ORDER
+  RECURRYING
+}

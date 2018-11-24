@@ -1,0 +1,113 @@
+type User {
+  id: ID! @unique
+  email: String! @unique
+  password: String!
+  firstName: String
+  lastName: String
+  about: String
+  subscribed: Boolean @default(value: "false")
+  role: Role! @default(value: "READER")
+  payments: [Payment!]!
+  articles: [Article!]!
+  postalAddress: String 
+  institution: String
+  country: String
+  personalSite: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  READER
+  AUTHOR
+}
+
+type NewsletterSubscription {
+  email: String! @unique
+  createdAt: DateTime!
+}
+
+
+type Edition {
+  id: ID! @unique
+  title: String
+  key: String! @unique
+  articles: [Article!]!
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  startCall: DateTime!
+  endCall: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Article {
+  id: ID! @unique
+  author: User!
+  published: Boolean @default(value: "false")
+  file: String
+  edition: Edition!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  payed: Boolean @default(value: "false")
+  payment: Payment
+}
+
+enum AddressType {
+  BILLING
+  SHIPPING
+}
+
+type Cupom {
+  id: ID! @unique
+  discount: Int!
+  code: String!
+  updatedAt: DateTime!
+}
+
+type Payment {
+  id: ID! @unique
+  paymentId: String
+  type: String!
+  currency: String
+  creditCard: CreditCard
+  customer: User!
+  merchantOrderId: String!
+  customerName: String
+  article: Article!
+  tid: String
+  proofOfSale: String
+  authorizationCode: String
+  softDescriptor: String
+  provider: String
+  amount: Int
+  serviceTaxAmount: Int
+  installments: Int
+  interest: Int
+  capture: Boolean @default(value: "false")
+  authenticate: Boolean @default(value: "false")
+  recurrent: Boolean @default(value: "false")
+  receivedDate: DateTime
+  cupom: Cupom
+  status: Int
+  isSplitted: Boolean
+  returnMessage: String
+  returnCode: String
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
+
+type CreditCard {
+  id: ID! @unique
+  cardNumber: String!
+  holder: String!
+  expirationDate: String!
+  saveCard: Boolean @default(value: "false")
+  brand: String!
+}
+
+
