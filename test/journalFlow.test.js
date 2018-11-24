@@ -127,7 +127,37 @@ module.exports = () => {
       t.end()
     })
   })
-  // UPDATE INFORMATION
+  // UPDATE USER INFORMATION
+  test(`should update user information`, (t) => {
+    const updateUser = `
+      mutation($input: UserInput!) {
+        updateUser(input: $input) {
+          email
+          firstName
+          lastName
+        }
+      }
+    `
+    const variables = {
+      input: {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        image: faker.image.avatar(),
+        about: faker.name.jobDescriptor(),
+        postalAddress: faker.address.secondaryAddress(),
+        institution: faker.company.catchPhrase(),
+        country: faker.address.country(),
+        personalSite: faker.internet.domainName(),
+      }
+    }
+    mockFetch(updateUser, variables, token)
+    .then(res => {
+      console.log('RES', res)
+      t.equal(true, validator.isEmail(res.updateUser.email))
+      t.end()
+    })
+    .catch(err => console.log(err))
+  })
   // CREATE JOURNAL
   // PUBLISH JOURNAL
   // PAYMENT

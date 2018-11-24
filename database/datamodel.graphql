@@ -5,6 +5,7 @@ type User {
   firstName: String
   lastName: String
   about: String
+  image: String
   subscribed: Boolean @default(value: "false")
   role: Role! @default(value: "READER")
   payments: [Payment!]!

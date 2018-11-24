@@ -55,9 +55,9 @@ const auth = {
   //   return user
   // },
 
-  async updateUser(parent, { input: { firstName, lastName, image } }, ctx, info) {
+  async updateUser(parent, { input }, ctx, info) {
     const user = await ctx.db.mutation.updateUser({
-      data: { firstName, lastName, image },
+      data: { ...input },
       where: { id: getUserId(ctx) }
     })
     if (!user) {

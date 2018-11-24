@@ -6,7 +6,6 @@ const journal = {
   async subscribe(parent, args, ctx, info) {
     const id = getUserId(ctx)
     const { email } = await ctx.db.query.user({ where: { id }})
-    console.log('USER MAIL', email)
     await ctx.db.mutation.createNewsletterSubscription({
       data: { email }
     })
@@ -16,7 +15,6 @@ const journal = {
   async unsubscribe(parent, args, ctx, info) {
     const id = getUserId(ctx)
     const { email } = await ctx.db.query.user({ where: { id }})
-    console.log('USER MAIL', email)
     await ctx.db.mutation.deleteNewsletterSubscription({
       where: { email }
     })

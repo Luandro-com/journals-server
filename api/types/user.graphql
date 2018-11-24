@@ -1,6 +1,12 @@
 input UserInput {
   firstName: String
   lastName: String
+  image: String
+  about: String
+  postalAddress: String 
+  institution: String
+  country: String
+  personalSite: String
 }
 
 type AuthPayload {

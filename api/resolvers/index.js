@@ -9,7 +9,6 @@ module.exports = {
   Query,
   Mutation: {
     ...auth,
-    // ...post,
     // ...admin,
     ...journal,
   },
