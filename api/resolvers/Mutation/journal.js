@@ -21,6 +21,38 @@ const journal = {
     return true
   },
 
+  async createArticle(parent, { input }, ctx, info) {
+    let validInputs = {}
+    Object.keys(input).filter(k => {
+      if (k !== 'editionId') {
+        validInputs[k] = input[k]
+      }
+    })
+    const id = getUserId(ctx)
+    return await ctx.db.mutation.createArticle({
+      data: {
+        ...validInputs,
+        author: {
+          connect: {
+            id
+          }
+        },
+        edition: {
+          connect: {
+            id: input.editionId
+          }
+        }
+      }
+    }, info)
+  },
+
+  async publishArticle(parent, { articleId }, ctx, info) {
+    return await ctx.db.mutation.updateArticle({
+      where: { id: articleId },
+      data: { published: true }
+    }, info)
+  },
+
   async payment(parent, args, ctx, info) {
     const { input } = args
     const id = getUserId(ctx)

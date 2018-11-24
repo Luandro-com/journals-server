@@ -1,0 +1,6 @@
+input ArticleInput {
+  editionId: ID!
+  file: String
+  title: String
+  resume: String
+}

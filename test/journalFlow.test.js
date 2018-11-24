@@ -7,6 +7,8 @@ const testEmail = faker.internet.email()
 const testPassword = faker.internet.password()
 
 let token
+let editionId
+let articleId
 
 module.exports = () => {
   // SIGNUP
@@ -73,6 +75,7 @@ module.exports = () => {
   test(`should return editions`, (t) => {
     const editions = `{
       editions {
+        id
         title
         articles {
           author {
@@ -83,6 +86,7 @@ module.exports = () => {
     }`
     mockFetch(editions, null, token)
     .then(res => {
+      editionId = res.editions[0].id
       t.equal(true, validator.isEmail(res.editions[0].articles[0].author.email))
       t.end()
     })
@@ -158,8 +162,54 @@ module.exports = () => {
     })
     .catch(err => console.log(err))
   })
-  // CREATE JOURNAL
-  // PUBLISH JOURNAL
+  // CREATE ARTICLE
+  test(`should create a new unpublished article`, (t) => {
+    const createArticle = `
+      mutation($input: ArticleInput!) {
+        createArticle(input: $input) {
+          id
+          published
+        }
+      }
+    `
+    const variables = {
+      input: {
+        editionId,
+        file: faker.image.imageUrl(),
+        title: faker.company.catchPhrase(),
+        resume: faker.company.catchPhraseDescriptor(),
+      }
+    }
+    mockFetch(createArticle, variables, token)
+    .then(res => {
+      console.log('RES', res)
+      articleId = res.createArticle.id
+      t.ok(res.createArticle)
+      t.equal(false, res.createArticle.published)
+      t.end()
+    })
+    .catch(err => console.log(err))
+  })
+  // PUBLISH ARTICLE
+  test(`should publish an unpublished article`, (t) => {
+    const publishArticle = `
+      mutation($articleId: ID!) {
+        publishArticle(articleId: $articleId) {
+          published
+        }
+      }
+    `
+    const variables = {
+      articleId,
+    }
+    mockFetch(publishArticle, variables, token)
+    .then(res => {
+      console.log('RES', res)
+      t.equal(true, res.publishArticle.published)
+      t.end()
+    })
+    .catch(err => console.log(err))
+  })
   // PAYMENT
   // test(`should start payment for order ${orderId} and return payment`, (t) => {
   //   console.log('orderId', orderId)

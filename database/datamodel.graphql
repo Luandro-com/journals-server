@@ -54,6 +54,8 @@ type Edition {
 
 type Article {
   id: ID! @unique
+  title: String
+  resume: String
   author: User!
   published: Boolean @default(value: "false")
   file: String

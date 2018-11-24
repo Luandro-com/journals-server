@@ -27,6 +27,8 @@ module.exports = shield({
   Mutation: {
     updateUser: and(isAuthenticated),
     login: not(isAuthenticated),
+    createArticle: and(isAuthenticated),
+    publishArticle: and(isAuthenticated),
     payment: and(isAuthenticated),
     // updateUserRole: and(isAuthenticated, isAdmin),
   },
