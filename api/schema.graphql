@@ -16,6 +16,8 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, cart: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  subscribe: Boolean
+  unsubscribe: Boolean
   updateUser(input: UserInput): User
   payment(input: PaymentInput): Payment
 }

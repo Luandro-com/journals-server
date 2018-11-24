@@ -102,6 +102,31 @@ module.exports = () => {
     })
   })
   // SUBSCRIBE
+  test(`should subscribe user to newsletter`, (t) => {
+    const subscribe = `
+      mutation {
+        subscribe
+      }
+    `
+    mockFetch(subscribe, null, token)
+    .then(res => {
+      t.ok(res.subscribe)
+      t.end()
+    })
+  })
+  // UNSUBSCRIBE
+  test(`should unsubscribe user to newsletter`, (t) => {
+    const unsubscribe = `
+      mutation {
+        unsubscribe
+      }
+    `
+    mockFetch(unsubscribe, null, token)
+    .then(res => {
+      t.ok(res.unsubscribe)
+      t.end()
+    })
+  })
   // UPDATE INFORMATION
   // CREATE JOURNAL
   // PUBLISH JOURNAL

@@ -3,6 +3,26 @@ const { simpleTransaction, } = require('../../payment')
 const camel = require('camelcase')
 
 const journal = {
+  async subscribe(parent, args, ctx, info) {
+    const id = getUserId(ctx)
+    const { email } = await ctx.db.query.user({ where: { id }})
+    console.log('USER MAIL', email)
+    await ctx.db.mutation.createNewsletterSubscription({
+      data: { email }
+    })
+    return true
+  },
+
+  async unsubscribe(parent, args, ctx, info) {
+    const id = getUserId(ctx)
+    const { email } = await ctx.db.query.user({ where: { id }})
+    console.log('USER MAIL', email)
+    await ctx.db.mutation.deleteNewsletterSubscription({
+      where: { email }
+    })
+    return true
+  },
+
   async payment(parent, args, ctx, info) {
     const { input } = args
     const id = getUserId(ctx)
