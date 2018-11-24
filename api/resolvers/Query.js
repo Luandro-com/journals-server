@@ -6,6 +6,10 @@ const Query = {
     return ctx.db.query.user({ where: { id } }, info)
   },
 
+  async editions(parent, args, ctx, info) {
+    return await ctx.db.query.editions({}, info)
+  },
+
   async users(parent, args, ctx, info) {
     return await ctx.db.query.users({ where: { role_in: ['READER', 'AUTHOR'] } }, info)
   },
@@ -14,6 +18,7 @@ const Query = {
   async admins(parent, args, ctx, info) {
     return await ctx.db.query.users({ where: { role_in: ['ADMIN', 'EDITOR'] } }, info)
   },
+  
 
   async payments(parent, args, ctx, info) {
     return await ctx.db.query.payments({}, info)

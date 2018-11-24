@@ -6,15 +6,9 @@ const auth = {
   async signup(parent, args, ctx, info) {
     const password = await bcrypt.hash(args.password, 10)
     let user
-    if(args.cart) {
-      user = await ctx.db.mutation.createUser({
-        data: { ...args, password, cart: { connect: { id: args.cart.id } } },
-      })
-    } else {
-      user = await ctx.db.mutation.createUser({
-        data: { ...args, password, cart: { create: {} } },
-      })
-    }
+    user = await ctx.db.mutation.createUser({
+      data: { ...args, password },
+    })
     return {
       token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
       user,
@@ -37,6 +31,29 @@ const auth = {
       user,
     }
   },
+
+  // async sendResetPassword(parent, { email }, ctx, info) {
+  //   const user = await ctx.db.query.user({
+  //     where: { email }
+  //   })
+  //   if (!user) {
+  //     throw new Error(`Invalid user`)
+  //   }
+  //   console.log('returning', user)
+  //   return true
+  // },
+
+  // async resetPassword(parent, { password, email }, ctx, info) {
+  //   const user = await ctx.db.mutation.updateUser({
+  //     data: { password },
+  //     where: { email }
+  //   })
+  //   if (!user) {
+  //     throw new Error(`Invalid user`)
+  //   }
+  //   console.log('returning', user)
+  //   return user
+  // },
 
   async updateUser(parent, { input: { firstName, lastName, image } }, ctx, info) {
     const user = await ctx.db.mutation.updateUser({
