@@ -134,7 +134,6 @@ module.exports = () => {
         t.false(res.payedArticles)
       })
   })
-  // UNPAID ARTICLES
   // UPDATE USERS ROLES
   test(`Should update user role to AUTHOR and back to READER if admin and fail if editor or user`, (t) => {
     const updateUsersRoles = `
