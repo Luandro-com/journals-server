@@ -89,29 +89,30 @@ module.exports = () => {
       })
   })
   // PAYMENTS
-  // test(`Should get all payments if admin and fail if editor or user`, (t) => {
-  //   t.plan(testEmails.length)
-  //   const payments = `{
-  //     payments {
-  //       id
-  //       user {
-  //         email
-  //       }
-  //     }
-  //   }`
-  //   mockFetch(payments, null, tokens.admin)
-  //     .then(res => {
-  //       t.equal(true, validator.isEmail(res.payments[0].user.email))
-  //     })
-  //   mockFetch(payments, null, tokens.editor)
-  //     .then(res => {
-  //       t.false(res.payments)
-  //     })
-  //   mockFetch(payments, null, tokens.user)
-  //     .then(res => {
-  //       t.false(res.payments)
-  //     })
-  // })
+  test(`Should get all payments if admin and fail if editor or reader`, (t) => {
+    t.plan(testEmails.length)
+    const payments = `{
+      payments {
+        id
+        amount
+        customer {
+          email
+        }
+      }
+    }`
+    mockFetch(payments, null, tokens.admin)
+      .then(res => {
+        t.equal(true, validator.isEmail(res.payments[0].customer.email))
+      })
+    mockFetch(payments, null, tokens.editor)
+      .then(res => {
+        t.false(res.payments)
+      })
+    mockFetch(payments, null, tokens.user)
+      .then(res => {
+        t.false(res.payments)
+      })
+  })
   // UPDATE USER ROLE
   // test(`Should update user role to EDITOR and back to CUSTOMER if admin and fail if editor or user`, (t) => {
   //   const updateUserRole = `

@@ -1,7 +1,7 @@
 {
   "name": "periodico-api",
-  "type": "docker",
-  "features": {
-    "cloud": "v2"
-  }
+  "version": 2,
+  "builds": [
+    { "src": "api/index.js", "use": "@now/node-server" }
+  ]
 }
