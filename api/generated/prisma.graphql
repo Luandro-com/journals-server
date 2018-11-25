@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sat Nov 24 2018 21:16:33 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 17:21:34 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -1636,6 +1636,7 @@ type Edition implements Node {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!
@@ -1659,6 +1660,7 @@ input EditionCreateInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime!
   endCall: DateTime!
   articles: ArticleCreateManyWithoutEditionInput
@@ -1676,6 +1678,7 @@ input EditionCreateWithoutArticlesInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime!
   endCall: DateTime!
 }
@@ -1704,6 +1707,8 @@ enum EditionOrderByInput {
   publicationPrediction_DESC
   contact_ASC
   contact_DESC
+  published_ASC
+  published_DESC
   startCall_ASC
   startCall_DESC
   endCall_ASC
@@ -1722,6 +1727,7 @@ type EditionPreviousValues {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!
@@ -1774,6 +1780,7 @@ input EditionUpdateInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime
   endCall: DateTime
   articles: ArticleUpdateManyWithoutEditionInput
@@ -1786,6 +1793,7 @@ input EditionUpdateManyMutationInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime
   endCall: DateTime
 }
@@ -1804,6 +1812,7 @@ input EditionUpdateWithoutArticlesDataInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean
   startCall: DateTime
   endCall: DateTime
 }
@@ -2066,6 +2075,10 @@ input EditionWhereInput {
 
   """All values not ending with the given string."""
   contact_not_ends_with: String
+  published: Boolean
+
+  """All values that are not equal to given value."""
+  published_not: Boolean
   startCall: DateTime
 
   """All values that are not equal to given value."""

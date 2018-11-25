@@ -5,15 +5,41 @@ mutation {
   }) {
     title
   },
-  createEdition: createEdition(data: {
+  createFirstEdition: createEdition(data: {
+    key: "experiencias-do-pretexto"
+    title: "Experiências no Pretexto do Pretérito"
+    body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
+    evaluationPeriod: 90
+    published: true
+    publicationPrediction: "2018-04-15T14:49:00.309Z"
+    contact: "wesleymedeiros@periodicos.com"
+    startCall: "2017-11-24T14:49:00.309Z"
+    endCall: "2018-02-24T14:49:00.309Z"
+  }) {
+    id
+  },
+  createSecondEdition: createEdition(data: {
     key: "experiencias-do-urbanismo-no-brasil"
     title: "Experiências no Ensino do Urbanismo no Brasil"
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
     evaluationPeriod: 90
+    published: true
     publicationPrediction: "2019-04-15T14:49:00.309Z"
     contact: "wesleymedeiros@periodicos.com"
     startCall: "2018-11-24T14:49:00.309Z"
     endCall: "2019-02-24T14:49:00.309Z"
+  }) {
+    id
+  },
+  createThirdEdition: createEdition(data: {
+    key: "experiencias-do-urbanismo-no-brasil-revolta"
+    title: "Experiências no Ensino do Urbanismo no Brasil A Revolta do Proletariado"
+    body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
+    evaluationPeriod: 90
+    publicationPrediction: "2019-09-15T14:49:00.309Z"
+    contact: "wesleymedeiros@periodicos.com"
+    startCall: "2019-01-24T14:49:00.309Z"
+    endCall: "2019-06-24T14:49:00.309Z"
   }) {
     id
   },

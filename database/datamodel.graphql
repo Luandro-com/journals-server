@@ -46,6 +46,7 @@ type Edition {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  published: Boolean @default(value: "false")
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!

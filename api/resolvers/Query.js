@@ -12,7 +12,7 @@ const Query = {
   },
 
   async editions(parent, args, ctx, info) {
-    return await ctx.db.query.editions({}, info)
+    return await ctx.db.query.editions({ where: { published: true }}, info)
   },
 
   async users(parent, args, ctx, info) {

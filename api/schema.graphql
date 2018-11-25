@@ -19,7 +19,10 @@ type Mutation {
   subscribe: Boolean
   unsubscribe: Boolean
   updateUser(input: UserInput): User
+  updateUsersRoles(userIds: [ID] role: Role!): Int
   createArticle(input: ArticleInput): Article
   publishArticle(articleId: ID!): Article
+  deleteArticle(articleId: ID!): Article
   payment(input: PaymentInput): Payment
+  createEdition(input: EditionInput): Edition
 }

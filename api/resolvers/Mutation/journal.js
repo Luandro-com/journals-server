@@ -47,10 +47,25 @@ const journal = {
   },
 
   async publishArticle(parent, { articleId }, ctx, info) {
-    return await ctx.db.mutation.updateArticle({
+    const userId = getUserId(ctx)
+    const article = await ctx.db.query.article({ where: { id: articleId } }, `{ author { id }}`)
+    const belongs = article.author.id === userId
+    if (belongs) return await ctx.db.mutation.updateArticle({
       where: { id: articleId },
       data: { published: true }
     }, info)
+    else throw 'Not Authorized'
+
+  },
+
+  async deleteArticle(parent, { articleId }, ctx, info) {
+    const userId = getUserId(ctx)
+    const article = await ctx.db.query.article({ where: { id: articleId } }, `{ author { id }}`)
+    const belongs = article.author.id === userId
+    if (belongs) return await ctx.db.mutation.deleteArticle({
+      where: { id: articleId },
+    }, info)
+    else throw 'Not Authorized'
   },
 
   async payment(parent, args, ctx, info) {

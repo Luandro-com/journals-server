@@ -51,7 +51,7 @@ module.exports = () => {
     }`
     mockFetch(users, null, tokens.admin)
       .then(res => {
-        const readerRoles = res.users.filter(user => user.role === 'READER')
+        const readerRoles = res.users.filter(user => user.role === 'READER' || user.role === 'AUTHOR')
         t.deepEqual(res.users, readerRoles)
       })
     mockFetch(users, null, tokens.editor)
@@ -113,32 +113,57 @@ module.exports = () => {
         t.false(res.payments)
       })
   })
-  // UPDATE USER ROLE
-  // test(`Should update user role to EDITOR and back to CUSTOMER if admin and fail if editor or user`, (t) => {
-  //   const updateUserRole = `
-  //     mutation($userId: ID! $role: Role!) {
-  //       updateUserRole(userId: $userId role: $role) {
-  //         id
-  //         role
-  //       }
-  //     }
-  //   `
-  //   mockFetch(updateUserRole, { userId, role: 'EDITOR' }, tokens.admin)
-  //     .then(res => {
-  //       t.equal('EDITOR', res.updateUserRole.role)
-  //       mockFetch(updateUserRole, { userId, role: 'CUSTOMER' }, tokens.admin)
-  //         .then(response => {
-  //           t.equal('CUSTOMER', response.updateUserRole.role)
-  //           t.end()
-  //         })
-  //     })
-  //   mockFetch(updateUserRole, { userId, role: 'EDITOR' }, tokens.editor)
-  //     .then(res => {
-  //       t.false(res.updateUserRole)
-  //     })
-  //   mockFetch(updateUserRole, { userId, role: 'EDITOR' }, tokens.customer)
-  //     .then(res => {
-  //       t.false(res.updateUserRole)
-  //     })
-  // })
+  // PAYED ARTICLES
+  // UNPAID ARTICLES
+  // UPDATE USERS ROLES
+  test(`Should update user role to AUTHOR and back to READER if admin and fail if editor or user`, (t) => {
+    const updateUsersRoles = `
+      mutation($userIds: [ID] $role: Role!) {
+        updateUsersRoles(userIds: $userIds role: $role)
+      }
+    `
+
+    mockFetch(updateUsersRoles, { userIds: [ userId ], role: 'AUTHOR' }, tokens.admin)
+      .then(res => {
+        console.log('res', res)
+        t.ok(res.updateUsersRoles)
+        mockFetch(updateUsersRoles, { userIds: [ userId ], role: 'READER' }, tokens.admin)
+          .then(response => {
+            t.ok(response)
+            t.end()
+          })
+      })
+    mockFetch(updateUsersRoles, { userIds: [ userId ], role: 'EDITOR' }, tokens.editor)
+      .then(res => {
+        t.false(res.updateUsersRoles)
+      })
+    mockFetch(updateUsersRoles, { userIds: [ userId ], role: 'EDITOR' }, tokens.reader)
+      .then(res => {
+        t.false(res.updateUsersRoles)
+      })
+  })
+  // CREATE EDITION
+  test(`Should create an unpublished edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const createEdition = `{
+      createEdition {
+        
+      }
+    }`
+    mockFetch(createEdition, null, tokens.admin)
+      .then(res => {
+        t.ok(res.createEdition)
+      })
+    // mockFetch(createEdition, null, tokens.editor)
+    //   .then(res => {
+    //     t.false(res.createEdition)
+    //   })
+    // mockFetch(createEdition, null, tokens.user)
+    //   .then(res => {
+    //     t.false(res.createEdition)
+    //   })
+  })
+  // PUBLISH EDITION
+  // DELETE EDITION
+  // ADD ARTICLES TO EDITION
 }

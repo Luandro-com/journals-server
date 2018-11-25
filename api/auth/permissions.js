@@ -29,8 +29,9 @@ module.exports = shield({
     login: not(isAuthenticated),
     createArticle: and(isAuthenticated),
     publishArticle: and(isAuthenticated),
+    deleteArticle: and(isAuthenticated),
     payment: and(isAuthenticated),
-    // updateUserRole: and(isAuthenticated, isAdmin),
+    updateUsersRoles: and(isAuthenticated, isAdmin),
   },
 }, {
   allowExternalErrors: true

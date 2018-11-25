@@ -9,6 +9,7 @@ const testPassword = faker.internet.password()
 let token
 let editionId
 let articleId
+let articleId2
 
 module.exports = () => {
   // SIGNUP
@@ -72,11 +73,12 @@ module.exports = () => {
     })
   })
   // READ EDITIONS
-  test(`should return editions`, (t) => {
+  test(`should return editions that are published`, (t) => {
     const editions = `{
       editions {
         id
         title
+        published
         articles {
           author {
             email
@@ -87,7 +89,7 @@ module.exports = () => {
     mockFetch(editions, null, token)
     .then(res => {
       editionId = res.editions[0].id
-      t.equal(true, validator.isEmail(res.editions[0].articles[0].author.email))
+      t.equal(true, res.editions.filter(e => !e.published).length === 0)
       t.end()
     })
   })
@@ -181,11 +183,13 @@ module.exports = () => {
       }
     }
     mockFetch(createArticle, variables, token)
-    .then(res => {
+    .then(async (res) => {
       console.log('RES', res)
       articleId = res.createArticle.id
       t.ok(res.createArticle)
       t.equal(false, res.createArticle.published)
+      const { createArticle: { id } } = await mockFetch(createArticle, variables, token)
+      articleId2 = id
       t.end()
     })
     .catch(err => console.log(err))
@@ -206,6 +210,22 @@ module.exports = () => {
     .then(res => {
       console.log('RES', res)
       t.equal(true, res.publishArticle.published)
+      t.end()
+    })
+    .catch(err => console.log(err))
+  })
+  // DELETE ARTICLE
+  test(`should delete an article`, (t) => {
+    const deleteArticle = `
+      mutation($articleId: ID!) {
+        deleteArticle(articleId: $articleId) {
+          id
+        }
+      }
+    `
+    mockFetch(deleteArticle, { articleId: articleId2 }, token)
+    .then(res => {
+      t.equal(articleId, res.deleteArticle.id)
       t.end()
     })
     .catch(err => console.log(err))
