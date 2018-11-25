@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Nov 25 2018 17:21:34 GMT-0200 (-02)
+# timestamp: Sun Nov 25 2018 18:37:49 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -43,7 +43,6 @@ type Article implements Node {
   edition: Edition!
   createdAt: DateTime!
   updatedAt: DateTime!
-  payed: Boolean
   payment: Payment
 }
 
@@ -62,7 +61,6 @@ input ArticleCreateInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   author: UserCreateOneWithoutArticlesInput!
   edition: EditionCreateOneWithoutArticlesInput!
   payment: PaymentCreateOneWithoutArticleInput
@@ -88,7 +86,6 @@ input ArticleCreateWithoutAuthorInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   edition: EditionCreateOneWithoutArticlesInput!
   payment: PaymentCreateOneWithoutArticleInput
 }
@@ -98,7 +95,6 @@ input ArticleCreateWithoutEditionInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   author: UserCreateOneWithoutArticlesInput!
   payment: PaymentCreateOneWithoutArticleInput
 }
@@ -108,7 +104,6 @@ input ArticleCreateWithoutPaymentInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   author: UserCreateOneWithoutArticlesInput!
   edition: EditionCreateOneWithoutArticlesInput!
 }
@@ -137,8 +132,6 @@ enum ArticleOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
-  payed_ASC
-  payed_DESC
 }
 
 type ArticlePreviousValues {
@@ -149,7 +142,6 @@ type ArticlePreviousValues {
   file: String
   createdAt: DateTime!
   updatedAt: DateTime!
-  payed: Boolean
 }
 
 input ArticleScalarWhereInput {
@@ -369,10 +361,6 @@ input ArticleScalarWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  payed: Boolean
-
-  """All values that are not equal to given value."""
-  payed_not: Boolean
 }
 
 type ArticleSubscriptionPayload {
@@ -419,7 +407,6 @@ input ArticleUpdateInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
   edition: EditionUpdateOneRequiredWithoutArticlesInput
   payment: PaymentUpdateOneWithoutArticleInput
@@ -430,7 +417,6 @@ input ArticleUpdateManyDataInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
 }
 
 input ArticleUpdateManyMutationInput {
@@ -438,7 +424,6 @@ input ArticleUpdateManyMutationInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
 }
 
 input ArticleUpdateManyWithoutAuthorInput {
@@ -480,7 +465,6 @@ input ArticleUpdateWithoutAuthorDataInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   edition: EditionUpdateOneRequiredWithoutArticlesInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
@@ -490,7 +474,6 @@ input ArticleUpdateWithoutEditionDataInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
@@ -500,7 +483,6 @@ input ArticleUpdateWithoutPaymentDataInput {
   resume: String
   published: Boolean
   file: String
-  payed: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
   edition: EditionUpdateOneRequiredWithoutArticlesInput
 }
@@ -749,10 +731,6 @@ input ArticleWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  payed: Boolean
-
-  """All values that are not equal to given value."""
-  payed_not: Boolean
   author: UserWhereInput
   edition: EditionWhereInput
   payment: PaymentWhereInput

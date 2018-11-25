@@ -11,6 +11,7 @@ type Query {
   payments: [Payment]
   editions: [Edition]
   content: Content
+  payedArticles: [Article]
 }
 
 type Mutation {

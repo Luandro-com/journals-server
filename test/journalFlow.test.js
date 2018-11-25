@@ -183,14 +183,17 @@ module.exports = () => {
       }
     }
     mockFetch(createArticle, variables, token)
-    .then(async (res) => {
+    .then(res => {
       console.log('RES', res)
       articleId = res.createArticle.id
       t.ok(res.createArticle)
       t.equal(false, res.createArticle.published)
-      const { createArticle: { id } } = await mockFetch(createArticle, variables, token)
-      articleId2 = id
-      t.end()
+      mockFetch(createArticle, variables, token)
+        .then(response => {
+          articleId2 = response.createArticle.id
+          t.ok(articleId2)
+          t.end()
+        })
     })
     .catch(err => console.log(err))
   })
@@ -225,7 +228,7 @@ module.exports = () => {
     `
     mockFetch(deleteArticle, { articleId: articleId2 }, token)
     .then(res => {
-      t.equal(articleId, res.deleteArticle.id)
+      t.equal(articleId2, res.deleteArticle.id)
       t.end()
     })
     .catch(err => console.log(err))

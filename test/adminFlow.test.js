@@ -108,12 +108,32 @@ module.exports = () => {
       .then(res => {
         t.false(res.payments)
       })
-    mockFetch(payments, null, tokens.user)
+    mockFetch(payments, null, tokens.reader)
       .then(res => {
         t.false(res.payments)
       })
   })
   // PAYED ARTICLES
+  test(`Should get all payed articles if admin and fail if editor or reader`, (t) => {
+    t.plan(testEmails.length)
+    const payedArticles = `{
+      payedArticles {
+        id
+      }
+    }`
+    mockFetch(payedArticles, null, tokens.admin)
+      .then(res => {
+        t.ok(res.payedArticles)
+      })
+    mockFetch(payedArticles, null, tokens.editor)
+      .then(res => {
+        t.false(res.payedArticles)
+      })
+    mockFetch(payedArticles, null, tokens.reader)
+      .then(res => {
+        t.false(res.payedArticles)
+      })
+  })
   // UNPAID ARTICLES
   // UPDATE USERS ROLES
   test(`Should update user role to AUTHOR and back to READER if admin and fail if editor or user`, (t) => {
@@ -143,26 +163,26 @@ module.exports = () => {
       })
   })
   // CREATE EDITION
-  test(`Should create an unpublished edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
-    t.plan(testEmails.length)
-    const createEdition = `{
-      createEdition {
+  // test(`Should create an unpublished edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+  //   t.plan(testEmails.length)
+  //   const createEdition = `{
+  //     createEdition {
         
-      }
-    }`
-    mockFetch(createEdition, null, tokens.admin)
-      .then(res => {
-        t.ok(res.createEdition)
-      })
+  //     }
+  //   }`
+  //   mockFetch(createEdition, null, tokens.admin)
+  //     .then(res => {
+  //       t.ok(res.createEdition)
+  //     })
     // mockFetch(createEdition, null, tokens.editor)
     //   .then(res => {
     //     t.false(res.createEdition)
     //   })
-    // mockFetch(createEdition, null, tokens.user)
+    // mockFetch(createEdition, null, tokens.reader)
     //   .then(res => {
     //     t.false(res.createEdition)
     //   })
-  })
+  // })
   // PUBLISH EDITION
   // DELETE EDITION
   // ADD ARTICLES TO EDITION

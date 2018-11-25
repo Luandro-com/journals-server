@@ -63,7 +63,6 @@ type Article {
   edition: Edition!
   createdAt: DateTime!
   updatedAt: DateTime!
-  payed: Boolean @default(value: "false")
   payment: Payment
 }
 

@@ -28,6 +28,10 @@ const Query = {
   async payments(parent, args, ctx, info) {
     return await ctx.db.query.payments({}, info)
   },
+
+  async payedArticles(parent, args, ctx, info) {
+    return await ctx.db.query.articles({ where: { payment: { returnCode: '4' } }}, info)
+  },
 }
 
 module.exports = { Query }
