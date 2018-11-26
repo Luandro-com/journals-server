@@ -25,8 +25,8 @@ const admin = {
   },
   async publishEdition(parent, { editionId }, ctx, info) {
     try {
-      const editionInfo = await ctx.db.query.edition({ where: { id: editionId } }, `{ articles { id }}`)
-      if (editionInfo.articles.length > 0 && editionInfo.publishedCall) return await ctx.db.mutation.updateEdition({
+      const editionInfo = await ctx.db.query.edition({ where: { id: editionId } }, `{ publishedCall selectedArticles { id }}`)
+      if (editionInfo.selectedArticles.length > 0 && editionInfo.publishedCall) return await ctx.db.mutation.updateEdition({
         where: { id: editionId },
         data: { published: true }
       }, info)

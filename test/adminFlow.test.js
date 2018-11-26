@@ -349,30 +349,29 @@ module.exports = () => {
       })
   })
   // PUBLISH EDITION
-  // test(`Should publish existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
-  //   t.plan(testEmails.length)
-  //   const publishEdition = `
-  //     mutation($editionId: ID!) {
-  //       publishEdition(editionId: $editionId) {
-  //         id
-  //       }
-  //     }
-  //   `
-  //   mockFetch(publishEdition, { editionId }, tokens.admin)
-  //     .then(res => {
-  //       console.log('RES', res)
-  //       t.ok(res.publishEdition)
-  //     })
-  //     .catch(err => console.log('ERRR;,', err))
-  //   mockFetch(publishEdition, { editionId2 }, tokens.editor)
-  //     .then(res => {
-  //       t.ok(res.publishEdition)
-  //     })
-  //   mockFetch(publishEdition, { editionId }, tokens.reader)
-  //     .then(res => {
-  //       t.false(res.publishEdition)
-  //     })
-  // })
+  test(`Should publish existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const publishEdition = `
+      mutation($editionId: ID!) {
+        publishEdition(editionId: $editionId) {
+          id
+        }
+      }
+    `
+    mockFetch(publishEdition, { editionId }, tokens.admin)
+      .then(res => {
+        t.ok(res.publishEdition)
+      })
+      .catch(err => console.log('ERRR;,', err))
+    mockFetch(publishEdition, { editionId: editionId2 }, tokens.editor)
+      .then(res => {
+        t.ok(res.publishEdition)
+      })
+    mockFetch(publishEdition, { editionId: editionId2 }, tokens.reader)
+      .then(res => {
+        t.false(res.publishEdition)
+      })
+  })
   // UPDATE EDITION
   // test(`Should update existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
   //   t.plan(testEmails.length)
