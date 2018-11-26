@@ -31,6 +31,6 @@ type Mutation {
   updateEdition(editionId: ID! input: EditionInput!): Edition
   deleteEdition(editionId: ID!): Edition
   # selectEditorial(articleId: ID! editionId: ID!): Edition
-  # selectArticles(): Edition
-  # unselectArticles:
+  selectArticles(articleIds: [ID]! editionId: ID!): Edition
+  unselectArticles(articleIds: [ID]! editionId: ID!): Edition
 }

@@ -56,20 +56,32 @@ const admin = {
   //       }, info)
   //     } catch (err) { throw err }
   //   },
-  // async selectArticles(parent, { articleIds, editionId }, ctx, info) {
-  //   try {
-  //     return await ctx.db.mutation.updateEdition({
-  //       where: { id: editionId }
-  //     }, info)
-  //   } catch (err) { throw err }
-  // },
-  // async unselectArticles(parent, { articleIds, editionId }, ctx, info) {
-  //   try {
-  //     return await ctx.db.mutation.updateEdition({
-  //       where: { id: editionId }
-  //     }, info)
-  //   } catch (err) { throw err }
-  // },
+  async selectArticles(parent, { articleIds, editionId }, ctx, info) {
+    const validarticleIds = articleIds.map(a => {
+      return {
+        id: a
+      }
+    })
+    try {
+      return await ctx.db.mutation.updateEdition({
+        where: { id: editionId },
+        data: { selectedArticles: { connect: validarticleIds } },
+      }, info)
+    } catch (err) { throw err }
+  },
+  async unselectArticles(parent, { articleIds, editionId }, ctx, info) {
+    const validArticleIds = articleIds.map(a => {
+      return {
+        id: a
+      }
+    })
+    try {
+      return await ctx.db.mutation.updateEdition({
+        where: { id: editionId },
+        data: { selectedArticles: { disconnect: validArticleIds } },
+      }, info)
+    } catch (err) { throw err }
+  },
 }
 
 module.exports = { admin }
