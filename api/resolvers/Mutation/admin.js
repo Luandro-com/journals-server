@@ -48,14 +48,22 @@ const admin = {
       }, info)
     } catch (err) { throw err }
   },
-  // async selectEditorial(parent, { articleId, editionId }, ctx, info) {
-  //     try {
-  //       return await ctx.db.mutation.updateEdition({
-  //         data: { editorial: articleId },
-  //         where: { id: editionId }
-  //       }, info)
-  //     } catch (err) { throw err }
-  //   },
+  async selectEditorial(parent, { articleId, editionId }, ctx, info) {
+    try {
+      return await ctx.db.mutation.updateEdition({
+        data: { selectedEditorials: { connect: [ { id: articleId } ]}},
+        where: { id: editionId },
+      }, info)
+    } catch (err) { throw err }
+  },
+  async unselectEditorial(parent, { articleId, editionId }, ctx, info) {
+    try {
+      return await ctx.db.mutation.updateEdition({
+        data: { selectedEditorials: { disconnect: [ { id: articleId } ]}},
+        where: { id: editionId },
+      }, info)
+    } catch (err) { throw err }
+  },
   async selectArticles(parent, { articleIds, editionId }, ctx, info) {
     const validarticleIds = articleIds.map(a => {
       return {

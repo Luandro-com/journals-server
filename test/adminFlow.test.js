@@ -297,6 +297,57 @@ module.exports = () => {
       })
   })
   // SELECT EDITORIAL
+  test(`Should select articles for edition editorial if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const selectEditorial = `
+      mutation($articleId: ID! $editionId: ID!) {
+        selectEditorial(editionId: $editionId articleId: $articleId) {
+          id
+          selectedEditorials {
+            id
+          }
+        }
+      }
+    `
+    mockFetch(selectEditorial, { articleId: articles[1], editionId }, tokens.admin)
+      .then(res => {
+        t.equal(1, res.selectEditorial.selectedEditorials.length)
+      })
+    mockFetch(selectEditorial,  { articleId: articles[1], editionId: editionId2 }, tokens.editor)
+      .then(res => {
+        t.equal(1, res.selectEditorial.selectedEditorials.length)
+      })
+    mockFetch(selectEditorial,  { articleId: articles[1], editionId: editionId2 }, tokens.reader)
+      .then(res => {
+        t.false(res.selectEditorial)
+      })
+  })
+  // UNSELECT EDITORIAL
+  test(`Should select articles for edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const unselectEditorial = `
+      mutation($articleId: ID! $editionId: ID!) {
+        unselectEditorial(editionId: $editionId articleId: $articleId) {
+          id
+          selectedEditorials {
+            id
+          }
+        }
+      }
+    `
+    mockFetch(unselectEditorial, { articleId: articles[1], editionId }, tokens.admin)
+      .then(res => {
+        t.equal(0, res.unselectEditorial.selectedEditorials.length)
+      })
+    mockFetch(unselectEditorial,  { articleId: articles[1], editionId: editionId2 }, tokens.editor)
+      .then(res => {
+        t.equal(0, res.unselectEditorial.selectedEditorials.length)
+      })
+    mockFetch(unselectEditorial,  { articleId: articles[1], editionId: editionId2 }, tokens.reader)
+      .then(res => {
+        t.false(res.unselectEditorial)
+      })
+  })
   // PUBLISH EDITION
   // test(`Should publish existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
   //   t.plan(testEmails.length)

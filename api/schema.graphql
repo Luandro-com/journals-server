@@ -30,7 +30,8 @@ type Mutation {
   publishEditionCall(editionId: ID!): Edition
   updateEdition(editionId: ID! input: EditionInput!): Edition
   deleteEdition(editionId: ID!): Edition
-  # selectEditorial(articleId: ID! editionId: ID!): Edition
+  selectEditorial(articleId: ID! editionId: ID!): Edition
+  unselectEditorial(articleId: ID! editionId: ID!): Edition
   selectArticles(articleIds: [ID]! editionId: ID!): Edition
   unselectArticles(articleIds: [ID]! editionId: ID!): Edition
 }
