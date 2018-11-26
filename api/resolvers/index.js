@@ -1,3 +1,4 @@
+const { GraphQLUpload } = require('graphql-upload')
 const { Query } = require('./Query')
 const { Subscription } = require('./Subscription')
 const { auth } = require('./Mutation/auth')
@@ -14,6 +15,7 @@ module.exports = {
   },
   // Subscription,
   AuthPayload,
+  Upload: GraphQLUpload,
   Node: {
     __resolveType() {
       return null;

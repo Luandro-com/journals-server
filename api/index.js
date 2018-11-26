@@ -3,6 +3,7 @@ const { GraphQLServer } = require('graphql-yoga')
 const cors = require('cors')
 const { Prisma } = require('prisma-binding')
 const { sentry } = require('graphql-middleware-sentry')
+const { graphqlUploadExpress } = require('graphql-upload')
 // const { forward } = require('graphql-middleware-forward-binding')
 const permissions = require('./auth/permissions')
 
@@ -29,5 +30,6 @@ const server = new GraphQLServer({
 })
 
 server.use(cors())
+server.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
 
 server.start(() => console.log('Server is running on http://localhost:4000'))
