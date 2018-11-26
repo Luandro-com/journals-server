@@ -41,11 +41,13 @@ type Edition {
   id: ID! @unique
   title: String
   key: String! @unique
-  articles: [Article!]!
+  # editorial: Article @relation(name: "EditionEditorial")
+  articles: [Article!]! # @relation(name: "SelectedArticles")
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean @default(value: "false")
   published: Boolean @default(value: "false")
   startCall: DateTime!
   endCall: DateTime!

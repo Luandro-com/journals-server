@@ -2,6 +2,7 @@ const test = require('tape')
 const mockFetch = require('./fetch')
 const validator = require('validator')
 const faker = require('faker')
+const camelcase = require('camelcase')
 
 const testEmails = [ 'admin@example.com', 'editor@example.com', 'reader@example.com' ]
 const testPassword = 'nooneknows'
@@ -11,6 +12,8 @@ let tokens = {
   editor: '',
 }
 let userId
+let editionId
+let editionId2
 
 module.exports = () => {
   test.onFinish(() => process.exit(0))
@@ -162,27 +165,146 @@ module.exports = () => {
       })
   })
   // CREATE EDITION
-  // test(`Should create an unpublished edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
-  //   t.plan(testEmails.length)
-  //   const createEdition = `{
-  //     createEdition {
-        
-  //     }
-  //   }`
-  //   mockFetch(createEdition, null, tokens.admin)
-  //     .then(res => {
-  //       t.ok(res.createEdition)
-  //     })
-    // mockFetch(createEdition, null, tokens.editor)
-    //   .then(res => {
-    //     t.false(res.createEdition)
-    //   })
-    // mockFetch(createEdition, null, tokens.reader)
-    //   .then(res => {
-    //     t.false(res.createEdition)
-    //   })
-  // })
+  test(`Should create an unpublished edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const createEdition = `
+      mutation($input: EditionInput!) {
+        createEdition(input: $input) {
+          id
+        }
+      }
+    `
+    const variables = {
+      input: {
+        title: faker.company.catchPhrase(),
+        key: camelcase(faker.company.catchPhrase()),
+        body: `<h1>Edição</h1>${faker.lorem.paragraphs()}`,
+        evaluationPeriod: 60,
+        publicationPrediction: new Date(Date.now() + 7000000).toISOString(),
+        contact: faker.phone.phoneNumber(),
+        startCall: new Date(Date.now() + 60000).toISOString(),
+        endCall: new Date(Date.now() + 6000000).toISOString(),
+      }
+    }
+    const variables2 = {
+      input: {
+        title: faker.company.catchPhrase(),
+        key: camelcase(faker.company.catchPhrase()),
+        body: `<h1>Edição</h1>${faker.lorem.paragraphs()}`,
+        evaluationPeriod: 60,
+        publicationPrediction: new Date(Date.now() + 7000000).toISOString(),
+        contact: faker.phone.phoneNumber(),
+        startCall: new Date(Date.now() + 60000).toISOString(),
+        endCall: new Date(Date.now() + 6000000).toISOString(),
+      }
+    }
+    mockFetch(createEdition, variables, tokens.admin)
+      .then(res => {
+        console.log('RES', res)
+        editionId = res.createEdition.id
+        t.ok(res.createEdition)
+      })
+      .catch(err => console.log('ERRR;,', err))
+    mockFetch(createEdition, variables2, tokens.editor)
+      .then(res => {
+        editionId2 = res.createEdition.id
+        t.ok(res.createEdition)
+      })
+    mockFetch(createEdition, variables, tokens.reader)
+      .then(res => {
+        t.false(res.createEdition)
+      })
+  })
+  // PUBLISH EDITION CALL
+  // SELECT ARTICLES
+  // UNSELECT ARTICLES
+  // SELECT EDITORIAL
   // PUBLISH EDITION
+  // test(`Should publish existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+  //   t.plan(testEmails.length)
+  //   const publishEdition = `
+  //     mutation($editionId: ID!) {
+  //       publishEdition(editionId: $editionId) {
+  //         id
+  //       }
+  //     }
+  //   `
+  //   mockFetch(publishEdition, { editionId }, tokens.admin)
+  //     .then(res => {
+  //       console.log('RES', res)
+  //       t.ok(res.publishEdition)
+  //     })
+  //     .catch(err => console.log('ERRR;,', err))
+  //   mockFetch(publishEdition, { editionId2 }, tokens.editor)
+  //     .then(res => {
+  //       t.ok(res.publishEdition)
+  //     })
+  //   mockFetch(publishEdition, { editionId }, tokens.reader)
+  //     .then(res => {
+  //       t.false(res.publishEdition)
+  //     })
+  // })
+  // UPDATE EDITION
+  // test(`Should update existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+  //   t.plan(testEmails.length)
+  //   const updateEdition = `
+  //     mutation($editionId: ID! input: EditionInput!) {
+  //       updateEdition(editionId: $editionId) {
+  //         id
+  //       }
+  //     }
+  //   `
+  //   const variables = {
+  //     editionId,
+  //     input: {
+  //       title: faker.company.catchPhrase(),
+  //       key: camelcase(faker.company.catchPhrase()),
+  //       body: `<h1>Edição</h1>${faker.lorem.paragraphs()}`,
+  //       evaluationPeriod: 60,
+  //       publicationPrediction: new Date(Date.now() + 7000000).toISOString(),
+  //       contact: faker.phone.phoneNumber(),
+  //       startCall: new Date(Date.now() + 60000).toISOString(),
+  //       endCall: new Date(Date.now() + 6000000).toISOString(),
+  //     }
+  //   }
+  //   mockFetch(updateEdition, variables, tokens.admin)
+  //     .then(res => {
+  //       console.log('RES', res)
+  //       t.ok(res.updateEdition)
+  //     })
+  //     .catch(err => console.log('ERRR;,', err))
+  //   mockFetch(updateEdition, variables, tokens.editor)
+  //     .then(res => {
+  //       t.false(res.updateEdition)
+  //     })
+  //   mockFetch(updateEdition, variables, tokens.reader)
+  //     .then(res => {
+  //       t.false(res.updateEdition)
+  //     })
+  // })
   // DELETE EDITION
-  // ADD ARTICLES TO EDITION
+  // test(`Should delete existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+  //   t.plan(testEmails.length)
+  //   const deleteEdition = `
+  //     mutation($editionId: ID!) {
+  //       deleteEdition(editionId: $editionId) {
+  //         id
+  //       }
+  //     }
+  //   `
+  //   mockFetch(deleteEdition, { editionId }, tokens.admin)
+  //     .then(res => {
+  //       console.log('RES', res)
+  //       t.ok(res.deleteEdition)
+  //     })
+  //     .catch(err => console.log('ERRR;,', err))
+  //   mockFetch(deleteEdition, { editionId }, tokens.editor)
+  //     .then(res => {
+  //       t.false(res.deleteEdition)
+  //     })
+  //   mockFetch(deleteEdition, { editionId }, tokens.reader)
+  //     .then(res => {
+  //       t.false(res.deleteEdition)
+  //     })
+  // })
 }

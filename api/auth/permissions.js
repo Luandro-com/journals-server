@@ -33,6 +33,11 @@ module.exports = shield({
     deleteArticle: and(isAuthenticated),
     payment: and(isAuthenticated),
     updateUsersRoles: and(isAuthenticated, isAdmin),
+    createEdition: and(isAuthenticated, or(isAdmin, isEditor)),
+    publishEdition: and(isAuthenticated, or(isAdmin, isEditor)),
+    publishEditionCall: and(isAuthenticated, or(isAdmin, isEditor)),
+    updateEdition: and(isAuthenticated, or(isAdmin, isEditor)),
+    deleteEdition: and(isAuthenticated, or(isAdmin, isEditor)),
   },
 }, {
   allowExternalErrors: true

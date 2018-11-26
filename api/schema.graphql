@@ -25,5 +25,9 @@ type Mutation {
   publishArticle(articleId: ID!): Article
   deleteArticle(articleId: ID!): Article
   payment(input: PaymentInput): Payment
-  createEdition(input: EditionInput): Edition
+  createEdition(input: EditionInput!): Edition
+  publishEdition(editionId: ID!): Edition
+  publishEditionCall(editionId: ID!): Edition
+  updateEdition(editionId: ID! input: EditionInput!): Edition
+  deleteEdition(editionId: ID!): Edition
 }
