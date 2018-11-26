@@ -3,6 +3,15 @@
 # import * from "types/journal.graphql"
 # import * from "types/admin.graphql"
 # import * from "types/payment.graphql"
+scalar Upload
+
+type File {
+  id: ID!
+  path: String!
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
 
 type Query {
   user: User
@@ -12,6 +21,7 @@ type Query {
   editions: [Edition]
   content: Content
   payedArticles: [Article]
+  uploads: [File]
 }
 
 type Mutation {
@@ -34,4 +44,5 @@ type Mutation {
   unselectEditorial(articleId: ID! editionId: ID!): Edition
   selectArticles(articleIds: [ID]! editionId: ID!): Edition
   unselectArticles(articleIds: [ID]! editionId: ID!): Edition
+  uploadPDF(file: Upload!): File
 }

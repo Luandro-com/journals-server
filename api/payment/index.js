@@ -13,7 +13,7 @@ const dadosSale = {
   },
   "Payment":{  
     "Type":"CreditCard",
-    "Amount":15700,
+    "Amount":2000,
     "Installments":1,
     "SoftDescriptor":"123456789ABCD",
     "CreditCard":{  
