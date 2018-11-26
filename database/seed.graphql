@@ -11,6 +11,7 @@ mutation {
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
     evaluationPeriod: 90
     published: true
+    publishedCall: true
     publicationPrediction: "2018-04-15T14:49:00.309Z"
     contact: "wesleymedeiros@periodicos.com"
     startCall: "2017-11-24T14:49:00.309Z"
@@ -24,6 +25,7 @@ mutation {
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
     evaluationPeriod: 90
     published: true
+    publishedCall: true
     publicationPrediction: "2019-04-15T14:49:00.309Z"
     contact: "wesleymedeiros@periodicos.com"
     startCall: "2018-11-24T14:49:00.309Z"
@@ -36,6 +38,7 @@ mutation {
     title: "Experiências no Ensino do Urbanismo no Brasil A Revolta do Proletariado"
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
     evaluationPeriod: 90
+    publishedCall: true
     publicationPrediction: "2019-09-15T14:49:00.309Z"
     contact: "wesleymedeiros@periodicos.com"
     startCall: "2019-01-24T14:49:00.309Z"

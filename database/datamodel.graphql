@@ -41,8 +41,9 @@ type Edition {
   id: ID! @unique
   title: String
   key: String! @unique
-  # editorial: Article @relation(name: "EditionEditorial")
-  articles: [Article!]! # @relation(name: "SelectedArticles")
+  submitedArticles: [Article!]! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
+  selectedArticles: [Article!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
+  selectedEditorials: [Article!]! @relation(name: "EditorialArticles")
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -62,7 +63,9 @@ type Article {
   author: User!
   published: Boolean @default(value: "false")
   file: String
-  edition: Edition!
+  edition: Edition! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
+  selectedBy: [Edition!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
+  editorial: [Edition!]! @relation(name: "EditorialArticles")
   createdAt: DateTime!
   updatedAt: DateTime!
   payment: Payment

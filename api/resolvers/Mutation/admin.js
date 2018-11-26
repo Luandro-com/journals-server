@@ -26,12 +26,11 @@ const admin = {
   async publishEdition(parent, { editionId }, ctx, info) {
     try {
       const editionInfo = await ctx.db.query.edition({ where: { id: editionId } }, `{ articles { id }}`)
-      console.log('editionInfo', editionInfo)
-      if (editionInfo.articles.length > 0) return await ctx.db.mutation.updateEdition({
+      if (editionInfo.articles.length > 0 && editionInfo.publishedCall) return await ctx.db.mutation.updateEdition({
         where: { id: editionId },
         data: { published: true }
       }, info)
-      else throw 'No articles selected'
+      else throw 'No articles selected or call not published'
     } catch (err) { throw err }
   },
   async updateEdition(parent, { editionId, input }, ctx, info) {
@@ -49,6 +48,14 @@ const admin = {
       }, info)
     } catch (err) { throw err }
   },
+  // async selectEditorial(parent, { articleId, editionId }, ctx, info) {
+  //     try {
+  //       return await ctx.db.mutation.updateEdition({
+  //         data: { editorial: articleId },
+  //         where: { id: editionId }
+  //       }, info)
+  //     } catch (err) { throw err }
+  //   },
   // async selectArticles(parent, { articleIds, editionId }, ctx, info) {
   //   try {
   //     return await ctx.db.mutation.updateEdition({

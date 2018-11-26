@@ -79,17 +79,20 @@ module.exports = () => {
         id
         title
         published
-        articles {
-          author {
-            email
-          }
+        publishedCall
+        selectedArticles {
+          id
+        }
+        selectedEditorials {
+          id
         }
       }
     }`
     mockFetch(editions, null, token)
     .then(res => {
+      console.log('RES', res)
       editionId = res.editions[0].id
-      t.equal(true, res.editions.filter(e => !e.published).length === 0)
+      t.equal(true, res.editions.filter(e => (!e.published && !e.publishedCall)).length === 0)
       t.end()
     })
   })

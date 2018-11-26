@@ -12,7 +12,10 @@ const Query = {
   },
 
   async editions(parent, args, ctx, info) {
-    return await ctx.db.query.editions({ where: { published: true }}, info)
+    return await ctx.db.query.editions({ where: { OR: [
+      { published: true },
+      { publishedCall: true },
+    ] }}, info)
   },
 
   async users(parent, args, ctx, info) {

@@ -38,6 +38,10 @@ module.exports = shield({
     publishEditionCall: and(isAuthenticated, or(isAdmin, isEditor)),
     updateEdition: and(isAuthenticated, or(isAdmin, isEditor)),
     deleteEdition: and(isAuthenticated, or(isAdmin, isEditor)),
+    // selectEditorial: and(isAuthenticated, or(isAdmin, isEditor)),
+    // selectArticles: and(isAuthenticated, or(isAdmin, isEditor)),
+    // unselectArticles: and(isAuthenticated, or(isAdmin, isEditor)),
+
   },
 }, {
   allowExternalErrors: true

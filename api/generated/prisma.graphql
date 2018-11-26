@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Nov 25 2018 18:37:49 GMT-0200 (-02)
+# timestamp: Mon Nov 26 2018 10:09:01 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -41,6 +41,8 @@ type Article implements Node {
   published: Boolean
   file: String
   edition: Edition!
+  selectedBy(where: EditionWhereInput, orderBy: EditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Edition!]
+  editorial(where: EditionWhereInput, orderBy: EditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Edition!]
   createdAt: DateTime!
   updatedAt: DateTime!
   payment: Payment
@@ -62,7 +64,9 @@ input ArticleCreateInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
-  edition: EditionCreateOneWithoutArticlesInput!
+  edition: EditionCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
+  editorial: EditionCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -76,6 +80,16 @@ input ArticleCreateManyWithoutEditionInput {
   connect: [ArticleWhereUniqueInput!]
 }
 
+input ArticleCreateManyWithoutEditorialInput {
+  create: [ArticleCreateWithoutEditorialInput!]
+  connect: [ArticleWhereUniqueInput!]
+}
+
+input ArticleCreateManyWithoutSelectedByInput {
+  create: [ArticleCreateWithoutSelectedByInput!]
+  connect: [ArticleWhereUniqueInput!]
+}
+
 input ArticleCreateOneWithoutPaymentInput {
   create: ArticleCreateWithoutPaymentInput
   connect: ArticleWhereUniqueInput
@@ -86,7 +100,9 @@ input ArticleCreateWithoutAuthorInput {
   resume: String
   published: Boolean
   file: String
-  edition: EditionCreateOneWithoutArticlesInput!
+  edition: EditionCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
+  editorial: EditionCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -96,6 +112,19 @@ input ArticleCreateWithoutEditionInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
+  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
+  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+  payment: PaymentCreateOneWithoutArticleInput
+}
+
+input ArticleCreateWithoutEditorialInput {
+  title: String
+  resume: String
+  published: Boolean
+  file: String
+  author: UserCreateOneWithoutArticlesInput!
+  edition: EditionCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -105,7 +134,20 @@ input ArticleCreateWithoutPaymentInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
-  edition: EditionCreateOneWithoutArticlesInput!
+  edition: EditionCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
+  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+}
+
+input ArticleCreateWithoutSelectedByInput {
+  title: String
+  resume: String
+  published: Boolean
+  file: String
+  author: UserCreateOneWithoutArticlesInput!
+  edition: EditionCreateOneWithoutSubmitedArticlesInput!
+  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+  payment: PaymentCreateOneWithoutArticleInput
 }
 
 """An edge in a connection."""
@@ -408,7 +450,9 @@ input ArticleUpdateInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
-  edition: EditionUpdateOneRequiredWithoutArticlesInput
+  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
+  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -448,6 +492,28 @@ input ArticleUpdateManyWithoutEditionInput {
   upsert: [ArticleUpsertWithWhereUniqueWithoutEditionInput!]
 }
 
+input ArticleUpdateManyWithoutEditorialInput {
+  create: [ArticleCreateWithoutEditorialInput!]
+  connect: [ArticleWhereUniqueInput!]
+  disconnect: [ArticleWhereUniqueInput!]
+  delete: [ArticleWhereUniqueInput!]
+  update: [ArticleUpdateWithWhereUniqueWithoutEditorialInput!]
+  updateMany: [ArticleUpdateManyWithWhereNestedInput!]
+  deleteMany: [ArticleScalarWhereInput!]
+  upsert: [ArticleUpsertWithWhereUniqueWithoutEditorialInput!]
+}
+
+input ArticleUpdateManyWithoutSelectedByInput {
+  create: [ArticleCreateWithoutSelectedByInput!]
+  connect: [ArticleWhereUniqueInput!]
+  disconnect: [ArticleWhereUniqueInput!]
+  delete: [ArticleWhereUniqueInput!]
+  update: [ArticleUpdateWithWhereUniqueWithoutSelectedByInput!]
+  updateMany: [ArticleUpdateManyWithWhereNestedInput!]
+  deleteMany: [ArticleScalarWhereInput!]
+  upsert: [ArticleUpsertWithWhereUniqueWithoutSelectedByInput!]
+}
+
 input ArticleUpdateManyWithWhereNestedInput {
   where: ArticleScalarWhereInput!
   data: ArticleUpdateManyDataInput!
@@ -465,7 +531,9 @@ input ArticleUpdateWithoutAuthorDataInput {
   resume: String
   published: Boolean
   file: String
-  edition: EditionUpdateOneRequiredWithoutArticlesInput
+  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
+  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -475,6 +543,19 @@ input ArticleUpdateWithoutEditionDataInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
+  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
+  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+  payment: PaymentUpdateOneWithoutArticleInput
+}
+
+input ArticleUpdateWithoutEditorialDataInput {
+  title: String
+  resume: String
+  published: Boolean
+  file: String
+  author: UserUpdateOneRequiredWithoutArticlesInput
+  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -484,7 +565,20 @@ input ArticleUpdateWithoutPaymentDataInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
-  edition: EditionUpdateOneRequiredWithoutArticlesInput
+  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
+  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+}
+
+input ArticleUpdateWithoutSelectedByDataInput {
+  title: String
+  resume: String
+  published: Boolean
+  file: String
+  author: UserUpdateOneRequiredWithoutArticlesInput
+  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
+  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+  payment: PaymentUpdateOneWithoutArticleInput
 }
 
 input ArticleUpdateWithWhereUniqueWithoutAuthorInput {
@@ -495,6 +589,16 @@ input ArticleUpdateWithWhereUniqueWithoutAuthorInput {
 input ArticleUpdateWithWhereUniqueWithoutEditionInput {
   where: ArticleWhereUniqueInput!
   data: ArticleUpdateWithoutEditionDataInput!
+}
+
+input ArticleUpdateWithWhereUniqueWithoutEditorialInput {
+  where: ArticleWhereUniqueInput!
+  data: ArticleUpdateWithoutEditorialDataInput!
+}
+
+input ArticleUpdateWithWhereUniqueWithoutSelectedByInput {
+  where: ArticleWhereUniqueInput!
+  data: ArticleUpdateWithoutSelectedByDataInput!
 }
 
 input ArticleUpsertWithoutPaymentInput {
@@ -512,6 +616,18 @@ input ArticleUpsertWithWhereUniqueWithoutEditionInput {
   where: ArticleWhereUniqueInput!
   update: ArticleUpdateWithoutEditionDataInput!
   create: ArticleCreateWithoutEditionInput!
+}
+
+input ArticleUpsertWithWhereUniqueWithoutEditorialInput {
+  where: ArticleWhereUniqueInput!
+  update: ArticleUpdateWithoutEditorialDataInput!
+  create: ArticleCreateWithoutEditorialInput!
+}
+
+input ArticleUpsertWithWhereUniqueWithoutSelectedByInput {
+  where: ArticleWhereUniqueInput!
+  update: ArticleUpdateWithoutSelectedByDataInput!
+  create: ArticleCreateWithoutSelectedByInput!
 }
 
 input ArticleWhereInput {
@@ -733,6 +849,12 @@ input ArticleWhereInput {
   updatedAt_gte: DateTime
   author: UserWhereInput
   edition: EditionWhereInput
+  selectedBy_every: EditionWhereInput
+  selectedBy_some: EditionWhereInput
+  selectedBy_none: EditionWhereInput
+  editorial_every: EditionWhereInput
+  editorial_some: EditionWhereInput
+  editorial_none: EditionWhereInput
   payment: PaymentWhereInput
 }
 
@@ -1609,11 +1731,14 @@ type Edition implements Node {
   id: ID!
   title: String
   key: String!
-  articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
+  submitedArticles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
+  selectedArticles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
+  selectedEditorials(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
@@ -1638,27 +1763,73 @@ input EditionCreateInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
-  articles: ArticleCreateManyWithoutEditionInput
+  submitedArticles: ArticleCreateManyWithoutEditionInput
+  selectedArticles: ArticleCreateManyWithoutSelectedByInput
+  selectedEditorials: ArticleCreateManyWithoutEditorialInput
 }
 
-input EditionCreateOneWithoutArticlesInput {
-  create: EditionCreateWithoutArticlesInput
+input EditionCreateManyWithoutSelectedArticlesInput {
+  create: [EditionCreateWithoutSelectedArticlesInput!]
+  connect: [EditionWhereUniqueInput!]
+}
+
+input EditionCreateManyWithoutSelectedEditorialsInput {
+  create: [EditionCreateWithoutSelectedEditorialsInput!]
+  connect: [EditionWhereUniqueInput!]
+}
+
+input EditionCreateOneWithoutSubmitedArticlesInput {
+  create: EditionCreateWithoutSubmitedArticlesInput
   connect: EditionWhereUniqueInput
 }
 
-input EditionCreateWithoutArticlesInput {
+input EditionCreateWithoutSelectedArticlesInput {
   title: String
   key: String!
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
+  submitedArticles: ArticleCreateManyWithoutEditionInput
+  selectedEditorials: ArticleCreateManyWithoutEditorialInput
+}
+
+input EditionCreateWithoutSelectedEditorialsInput {
+  title: String
+  key: String!
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  publishedCall: Boolean
+  published: Boolean
+  startCall: DateTime!
+  endCall: DateTime!
+  submitedArticles: ArticleCreateManyWithoutEditionInput
+  selectedArticles: ArticleCreateManyWithoutSelectedByInput
+}
+
+input EditionCreateWithoutSubmitedArticlesInput {
+  title: String
+  key: String!
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  publishedCall: Boolean
+  published: Boolean
+  startCall: DateTime!
+  endCall: DateTime!
+  selectedArticles: ArticleCreateManyWithoutSelectedByInput
+  selectedEditorials: ArticleCreateManyWithoutEditorialInput
 }
 
 """An edge in a connection."""
@@ -1685,6 +1856,8 @@ enum EditionOrderByInput {
   publicationPrediction_DESC
   contact_ASC
   contact_DESC
+  publishedCall_ASC
+  publishedCall_DESC
   published_ASC
   published_DESC
   startCall_ASC
@@ -1705,11 +1878,363 @@ type EditionPreviousValues {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input EditionScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EditionScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EditionScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EditionScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  key: String
+
+  """All values that are not equal to given value."""
+  key_not: String
+
+  """All values that are contained in given list."""
+  key_in: [String!]
+
+  """All values that are not contained in given list."""
+  key_not_in: [String!]
+
+  """All values less than the given value."""
+  key_lt: String
+
+  """All values less than or equal the given value."""
+  key_lte: String
+
+  """All values greater than the given value."""
+  key_gt: String
+
+  """All values greater than or equal the given value."""
+  key_gte: String
+
+  """All values containing the given string."""
+  key_contains: String
+
+  """All values not containing the given string."""
+  key_not_contains: String
+
+  """All values starting with the given string."""
+  key_starts_with: String
+
+  """All values not starting with the given string."""
+  key_not_starts_with: String
+
+  """All values ending with the given string."""
+  key_ends_with: String
+
+  """All values not ending with the given string."""
+  key_not_ends_with: String
+  body: String
+
+  """All values that are not equal to given value."""
+  body_not: String
+
+  """All values that are contained in given list."""
+  body_in: [String!]
+
+  """All values that are not contained in given list."""
+  body_not_in: [String!]
+
+  """All values less than the given value."""
+  body_lt: String
+
+  """All values less than or equal the given value."""
+  body_lte: String
+
+  """All values greater than the given value."""
+  body_gt: String
+
+  """All values greater than or equal the given value."""
+  body_gte: String
+
+  """All values containing the given string."""
+  body_contains: String
+
+  """All values not containing the given string."""
+  body_not_contains: String
+
+  """All values starting with the given string."""
+  body_starts_with: String
+
+  """All values not starting with the given string."""
+  body_not_starts_with: String
+
+  """All values ending with the given string."""
+  body_ends_with: String
+
+  """All values not ending with the given string."""
+  body_not_ends_with: String
+  evaluationPeriod: Int
+
+  """All values that are not equal to given value."""
+  evaluationPeriod_not: Int
+
+  """All values that are contained in given list."""
+  evaluationPeriod_in: [Int!]
+
+  """All values that are not contained in given list."""
+  evaluationPeriod_not_in: [Int!]
+
+  """All values less than the given value."""
+  evaluationPeriod_lt: Int
+
+  """All values less than or equal the given value."""
+  evaluationPeriod_lte: Int
+
+  """All values greater than the given value."""
+  evaluationPeriod_gt: Int
+
+  """All values greater than or equal the given value."""
+  evaluationPeriod_gte: Int
+  publicationPrediction: DateTime
+
+  """All values that are not equal to given value."""
+  publicationPrediction_not: DateTime
+
+  """All values that are contained in given list."""
+  publicationPrediction_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  publicationPrediction_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  publicationPrediction_lt: DateTime
+
+  """All values less than or equal the given value."""
+  publicationPrediction_lte: DateTime
+
+  """All values greater than the given value."""
+  publicationPrediction_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  publicationPrediction_gte: DateTime
+  contact: String
+
+  """All values that are not equal to given value."""
+  contact_not: String
+
+  """All values that are contained in given list."""
+  contact_in: [String!]
+
+  """All values that are not contained in given list."""
+  contact_not_in: [String!]
+
+  """All values less than the given value."""
+  contact_lt: String
+
+  """All values less than or equal the given value."""
+  contact_lte: String
+
+  """All values greater than the given value."""
+  contact_gt: String
+
+  """All values greater than or equal the given value."""
+  contact_gte: String
+
+  """All values containing the given string."""
+  contact_contains: String
+
+  """All values not containing the given string."""
+  contact_not_contains: String
+
+  """All values starting with the given string."""
+  contact_starts_with: String
+
+  """All values not starting with the given string."""
+  contact_not_starts_with: String
+
+  """All values ending with the given string."""
+  contact_ends_with: String
+
+  """All values not ending with the given string."""
+  contact_not_ends_with: String
+  publishedCall: Boolean
+
+  """All values that are not equal to given value."""
+  publishedCall_not: Boolean
+  published: Boolean
+
+  """All values that are not equal to given value."""
+  published_not: Boolean
+  startCall: DateTime
+
+  """All values that are not equal to given value."""
+  startCall_not: DateTime
+
+  """All values that are contained in given list."""
+  startCall_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  startCall_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  startCall_lt: DateTime
+
+  """All values less than or equal the given value."""
+  startCall_lte: DateTime
+
+  """All values greater than the given value."""
+  startCall_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  startCall_gte: DateTime
+  endCall: DateTime
+
+  """All values that are not equal to given value."""
+  endCall_not: DateTime
+
+  """All values that are contained in given list."""
+  endCall_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  endCall_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  endCall_lt: DateTime
+
+  """All values less than or equal the given value."""
+  endCall_lte: DateTime
+
+  """All values greater than the given value."""
+  endCall_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  endCall_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
 }
 
 type EditionSubscriptionPayload {
@@ -1758,10 +2283,26 @@ input EditionUpdateInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime
   endCall: DateTime
-  articles: ArticleUpdateManyWithoutEditionInput
+  submitedArticles: ArticleUpdateManyWithoutEditionInput
+  selectedArticles: ArticleUpdateManyWithoutSelectedByInput
+  selectedEditorials: ArticleUpdateManyWithoutEditorialInput
+}
+
+input EditionUpdateManyDataInput {
+  title: String
+  key: String
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  publishedCall: Boolean
+  published: Boolean
+  startCall: DateTime
+  endCall: DateTime
 }
 
 input EditionUpdateManyMutationInput {
@@ -1771,33 +2312,116 @@ input EditionUpdateManyMutationInput {
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime
   endCall: DateTime
 }
 
-input EditionUpdateOneRequiredWithoutArticlesInput {
-  create: EditionCreateWithoutArticlesInput
-  connect: EditionWhereUniqueInput
-  update: EditionUpdateWithoutArticlesDataInput
-  upsert: EditionUpsertWithoutArticlesInput
+input EditionUpdateManyWithoutSelectedArticlesInput {
+  create: [EditionCreateWithoutSelectedArticlesInput!]
+  connect: [EditionWhereUniqueInput!]
+  disconnect: [EditionWhereUniqueInput!]
+  delete: [EditionWhereUniqueInput!]
+  update: [EditionUpdateWithWhereUniqueWithoutSelectedArticlesInput!]
+  updateMany: [EditionUpdateManyWithWhereNestedInput!]
+  deleteMany: [EditionScalarWhereInput!]
+  upsert: [EditionUpsertWithWhereUniqueWithoutSelectedArticlesInput!]
 }
 
-input EditionUpdateWithoutArticlesDataInput {
+input EditionUpdateManyWithoutSelectedEditorialsInput {
+  create: [EditionCreateWithoutSelectedEditorialsInput!]
+  connect: [EditionWhereUniqueInput!]
+  disconnect: [EditionWhereUniqueInput!]
+  delete: [EditionWhereUniqueInput!]
+  update: [EditionUpdateWithWhereUniqueWithoutSelectedEditorialsInput!]
+  updateMany: [EditionUpdateManyWithWhereNestedInput!]
+  deleteMany: [EditionScalarWhereInput!]
+  upsert: [EditionUpsertWithWhereUniqueWithoutSelectedEditorialsInput!]
+}
+
+input EditionUpdateManyWithWhereNestedInput {
+  where: EditionScalarWhereInput!
+  data: EditionUpdateManyDataInput!
+}
+
+input EditionUpdateOneRequiredWithoutSubmitedArticlesInput {
+  create: EditionCreateWithoutSubmitedArticlesInput
+  connect: EditionWhereUniqueInput
+  update: EditionUpdateWithoutSubmitedArticlesDataInput
+  upsert: EditionUpsertWithoutSubmitedArticlesInput
+}
+
+input EditionUpdateWithoutSelectedArticlesDataInput {
   title: String
   key: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
+  publishedCall: Boolean
   published: Boolean
   startCall: DateTime
   endCall: DateTime
+  submitedArticles: ArticleUpdateManyWithoutEditionInput
+  selectedEditorials: ArticleUpdateManyWithoutEditorialInput
 }
 
-input EditionUpsertWithoutArticlesInput {
-  update: EditionUpdateWithoutArticlesDataInput!
-  create: EditionCreateWithoutArticlesInput!
+input EditionUpdateWithoutSelectedEditorialsDataInput {
+  title: String
+  key: String
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  publishedCall: Boolean
+  published: Boolean
+  startCall: DateTime
+  endCall: DateTime
+  submitedArticles: ArticleUpdateManyWithoutEditionInput
+  selectedArticles: ArticleUpdateManyWithoutSelectedByInput
+}
+
+input EditionUpdateWithoutSubmitedArticlesDataInput {
+  title: String
+  key: String
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  publishedCall: Boolean
+  published: Boolean
+  startCall: DateTime
+  endCall: DateTime
+  selectedArticles: ArticleUpdateManyWithoutSelectedByInput
+  selectedEditorials: ArticleUpdateManyWithoutEditorialInput
+}
+
+input EditionUpdateWithWhereUniqueWithoutSelectedArticlesInput {
+  where: EditionWhereUniqueInput!
+  data: EditionUpdateWithoutSelectedArticlesDataInput!
+}
+
+input EditionUpdateWithWhereUniqueWithoutSelectedEditorialsInput {
+  where: EditionWhereUniqueInput!
+  data: EditionUpdateWithoutSelectedEditorialsDataInput!
+}
+
+input EditionUpsertWithoutSubmitedArticlesInput {
+  update: EditionUpdateWithoutSubmitedArticlesDataInput!
+  create: EditionCreateWithoutSubmitedArticlesInput!
+}
+
+input EditionUpsertWithWhereUniqueWithoutSelectedArticlesInput {
+  where: EditionWhereUniqueInput!
+  update: EditionUpdateWithoutSelectedArticlesDataInput!
+  create: EditionCreateWithoutSelectedArticlesInput!
+}
+
+input EditionUpsertWithWhereUniqueWithoutSelectedEditorialsInput {
+  where: EditionWhereUniqueInput!
+  update: EditionUpdateWithoutSelectedEditorialsDataInput!
+  create: EditionCreateWithoutSelectedEditorialsInput!
 }
 
 input EditionWhereInput {
@@ -2053,6 +2677,10 @@ input EditionWhereInput {
 
   """All values not ending with the given string."""
   contact_not_ends_with: String
+  publishedCall: Boolean
+
+  """All values that are not equal to given value."""
+  publishedCall_not: Boolean
   published: Boolean
 
   """All values that are not equal to given value."""
@@ -2145,9 +2773,15 @@ input EditionWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
-  articles_every: ArticleWhereInput
-  articles_some: ArticleWhereInput
-  articles_none: ArticleWhereInput
+  submitedArticles_every: ArticleWhereInput
+  submitedArticles_some: ArticleWhereInput
+  submitedArticles_none: ArticleWhereInput
+  selectedArticles_every: ArticleWhereInput
+  selectedArticles_some: ArticleWhereInput
+  selectedArticles_none: ArticleWhereInput
+  selectedEditorials_every: ArticleWhereInput
+  selectedEditorials_some: ArticleWhereInput
+  selectedEditorials_none: ArticleWhereInput
 }
 
 input EditionWhereUniqueInput {
