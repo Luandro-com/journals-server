@@ -355,17 +355,18 @@ module.exports = () => {
       mutation($editionId: ID!) {
         publishEdition(editionId: $editionId) {
           id
+          published
         }
       }
     `
     mockFetch(publishEdition, { editionId }, tokens.admin)
       .then(res => {
-        t.ok(res.publishEdition)
+        t.equal(true, res.publishEdition.published)
       })
       .catch(err => console.log('ERRR;,', err))
     mockFetch(publishEdition, { editionId: editionId2 }, tokens.editor)
       .then(res => {
-        t.ok(res.publishEdition)
+        t.equal(true, res.publishEdition.published)
       })
     mockFetch(publishEdition, { editionId: editionId2 }, tokens.reader)
       .then(res => {
@@ -373,66 +374,66 @@ module.exports = () => {
       })
   })
   // UPDATE EDITION
-  // test(`Should update existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
-  //   t.plan(testEmails.length)
-  //   const updateEdition = `
-  //     mutation($editionId: ID! input: EditionInput!) {
-  //       updateEdition(editionId: $editionId) {
-  //         id
-  //       }
-  //     }
-  //   `
-  //   const variables = {
-  //     editionId,
-  //     input: {
-  //       title: faker.company.catchPhrase(),
-  //       key: camelcase(faker.company.catchPhrase()),
-  //       body: `<h1>Edição</h1>${faker.lorem.paragraphs()}`,
-  //       evaluationPeriod: 60,
-  //       publicationPrediction: new Date(Date.now() + 7000000).toISOString(),
-  //       contact: faker.phone.phoneNumber(),
-  //       startCall: new Date(Date.now() + 60000).toISOString(),
-  //       endCall: new Date(Date.now() + 6000000).toISOString(),
-  //     }
-  //   }
-  //   mockFetch(updateEdition, variables, tokens.admin)
-  //     .then(res => {
-  //       console.log('RES', res)
-  //       t.ok(res.updateEdition)
-  //     })
-  //     .catch(err => console.log('ERRR;,', err))
-  //   mockFetch(updateEdition, variables, tokens.editor)
-  //     .then(res => {
-  //       t.false(res.updateEdition)
-  //     })
-  //   mockFetch(updateEdition, variables, tokens.reader)
-  //     .then(res => {
-  //       t.false(res.updateEdition)
-  //     })
-  // })
+  test(`Should update existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const updateEdition = `
+      mutation($editionId: ID! $input: EditionUpdateInput!) {
+        updateEdition(editionId: $editionId input: $input) {
+          id
+          title
+          key
+        }
+      }
+    `
+    const variables = {
+      editionId,
+      input: {
+        title: faker.company.catchPhrase(),
+        key: camelcase(faker.company.catchPhrase()),
+        body: `<h1>Edição</h1>${faker.lorem.paragraphs()}`,
+        evaluationPeriod: 60,
+        publicationPrediction: new Date(Date.now() + 7000000).toISOString(),
+        contact: faker.phone.phoneNumber(),
+        startCall: new Date(Date.now() + 60000).toISOString(),
+        endCall: new Date(Date.now() + 6000000).toISOString(),
+      }
+    }
+    mockFetch(updateEdition, variables, tokens.admin)
+      .then(res => {
+        t.ok(res.updateEdition)
+      })
+      .catch(err => console.log('ERRR;,', err))
+    mockFetch(updateEdition, variables, tokens.editor)
+      .then(res => {
+        t.ok(res.updateEdition)
+      })
+    mockFetch(updateEdition, variables, tokens.reader)
+      .then(res => {
+        t.false(res.updateEdition)
+      })
+  })
   // DELETE EDITION
-  // test(`Should delete existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
-  //   t.plan(testEmails.length)
-  //   const deleteEdition = `
-  //     mutation($editionId: ID!) {
-  //       deleteEdition(editionId: $editionId) {
-  //         id
-  //       }
-  //     }
-  //   `
-  //   mockFetch(deleteEdition, { editionId }, tokens.admin)
-  //     .then(res => {
-  //       console.log('RES', res)
-  //       t.ok(res.deleteEdition)
-  //     })
-  //     .catch(err => console.log('ERRR;,', err))
-  //   mockFetch(deleteEdition, { editionId }, tokens.editor)
-  //     .then(res => {
-  //       t.false(res.deleteEdition)
-  //     })
-  //   mockFetch(deleteEdition, { editionId }, tokens.reader)
-  //     .then(res => {
-  //       t.false(res.deleteEdition)
-  //     })
-  // })
+  test(`Should delete existing edition if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const deleteEdition = `
+      mutation($editionId: ID!) {
+        deleteEdition(editionId: $editionId) {
+          id
+        }
+      }
+    `
+    mockFetch(deleteEdition, { editionId }, tokens.admin)
+      .then(res => {
+        t.ok(res.deleteEdition)
+      })
+      .catch(err => console.log('ERRR;,', err))
+    mockFetch(deleteEdition, { editionId }, tokens.editor)
+      .then(res => {
+        t.ok(res.deleteEdition)
+      })
+    mockFetch(deleteEdition, { editionId }, tokens.reader)
+      .then(res => {
+        t.false(res.deleteEdition)
+      })
+  })
 }

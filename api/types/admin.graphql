@@ -8,3 +8,14 @@ input EditionInput {
   startCall: DateTime!
   endCall: DateTime!
 }
+
+input EditionUpdateInput {
+  title: String
+  key: String
+  body: String
+  evaluationPeriod: Int
+  publicationPrediction: DateTime
+  contact: String
+  startCall: DateTime
+  endCall: DateTime
+}

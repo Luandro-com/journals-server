@@ -28,7 +28,7 @@ type Mutation {
   createEdition(input: EditionInput!): Edition
   publishEdition(editionId: ID!): Edition
   publishEditionCall(editionId: ID!): Edition
-  updateEdition(editionId: ID! input: EditionInput!): Edition
+  updateEdition(editionId: ID! input: EditionUpdateInput!): Edition
   deleteEdition(editionId: ID!): Edition
   selectEditorial(articleId: ID! editionId: ID!): Edition
   unselectEditorial(articleId: ID! editionId: ID!): Edition
