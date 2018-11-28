@@ -1,4 +1,4 @@
-const { getUserId } = require('../../auth/utils'
+const { getUserId } = require('../../services/auth/utils'
 )
 const admin = {
   async updateUsersRoles(parent, { userIds, role }, ctx, info) {

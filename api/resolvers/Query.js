@@ -1,4 +1,4 @@
-const { getUserId } = require('../auth/utils')
+const { getUserId } = require('../services/auth/utils')
 
 const Query = {
   user(parent, args, ctx, info) {
@@ -9,6 +9,10 @@ const Query = {
   async content(parent, args, ctx, info) {
     const res = await ctx.db.query.contents({}, info)
     return res[0]
+  },
+
+  async edition(parent, { editionKey }, ctx, info) {
+    return await ctx.db.query.edition({ where: { key: editionKey } }, info)
   },
 
   async editions(parent, args, ctx, info) {
@@ -35,6 +39,11 @@ const Query = {
   async payedArticles(parent, args, ctx, info) {
     return await ctx.db.query.articles({ where: { payment: { returnCode: '4' } }}, info)
   },
+
+  async uploads(parent, args, ctx, info) {
+    return await ctx.query.files({}, info)
+  }
+
 }
 
 module.exports = { Query }

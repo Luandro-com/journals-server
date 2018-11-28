@@ -1,6 +1,6 @@
 const camel = require('camelcase')
-const { getUserId } = require('../../auth/utils')
-const { simpleTransaction, } = require('../../payment')
+const { getUserId } = require('../../services/auth/utils')
+const { simpleTransaction } = require('../../services/payment')
 
 const journal = {
   async subscribe(parent, args, ctx, info) {

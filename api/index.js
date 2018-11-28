@@ -5,7 +5,7 @@ const { Prisma } = require('prisma-binding')
 const { sentry } = require('graphql-middleware-sentry')
 // const { graphqlUploadExpress } = require('graphql-upload')
 // const { forward } = require('graphql-middleware-forward-binding')
-const permissions = require('./auth/permissions')
+const permissions = require('./services/auth/permissions')
 
 const db = new Prisma({
   typeDefs: 'api/generated/prisma.graphql', // the auto-generated GraphQL schema of the Prisma API

@@ -1,17 +1,9 @@
-# import User, Content, DateTime, Payment, Edition from "generated/prisma.graphql"
+# import User, Content, DateTime, Payment, Edition, File from "generated/prisma.graphql"
 # import * from "types/user.graphql"
 # import * from "types/journal.graphql"
 # import * from "types/admin.graphql"
 # import * from "types/payment.graphql"
 scalar Upload
-
-type File {
-  id: ID!
-  path: String!
-  filename: String!
-  mimetype: String!
-  encoding: String!
-}
 
 type Query {
   user: User
@@ -19,6 +11,7 @@ type Query {
   admins: [User]
   payments: [Payment]
   editions: [Edition]
+  edition(editionKey: String!): Edition
   content: Content
   payedArticles: [Article]
   uploads: [File]
@@ -44,5 +37,5 @@ type Mutation {
   unselectEditorial(articleId: ID! editionId: ID!): Edition
   selectArticles(articleIds: [ID]! editionId: ID!): Edition
   unselectArticles(articleIds: [ID]! editionId: ID!): Edition
-  uploadPDF(file: Upload!): File
+  uploadFile(file: Upload!): File
 }

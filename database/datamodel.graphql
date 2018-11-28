@@ -124,4 +124,12 @@ type CreditCard {
   brand: String!
 }
 
+type File {
+  id: ID! @unique
+  path: String!
+  filename: String!
+  mimetype: String!
+  encoding: String @default(value: "utf8")
+}
+
 
