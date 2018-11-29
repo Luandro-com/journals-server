@@ -1,5 +1,5 @@
 const fs = require('fs')
-// import mkdirp from 'mkdirp'
+const mkdirp = require('mkdirp')
 
 const UPLOAD_DIR = './.uploads'
 
@@ -19,20 +19,20 @@ const storeFS = ({ stream }, path) => {
 }
 
 module.exports = async (upload, db, info) => {
-  // mkdirp.sync(UPLOAD_DIR)
-  console.log('IM IN UPLOAD', upload)
-  const { createReadStream, filename, mimetype } = await upload
-  const stream = createReadStream()
-  console.log('UPLOADING...', mimetype, filename, stream)
-  const res = await db.mutation.createFile({
-    data: { mimetype, filename }
-  }, info)
-  const storagePath = `${UPLOAD_DIR}/${res.id}-${filename}`
-  const path = await storeFS({ stream }, storagePath)
-  return await db.mutation.updateFile({
-    where: { id: res.id },
-    data: {
-      path,
-    }
-  }, info)
+  try {
+    mkdirp.sync(UPLOAD_DIR)
+    const { stream, filename, mimetype } = await upload
+    const res = await db.mutation.createFile({
+      data: { mimetype, filename }
+    }, `{ id }`)
+    const storagePath = `${UPLOAD_DIR}/${res.id}-${filename}`
+    const path = await storeFS({ stream }, storagePath)
+    return await db.mutation.updateFile({
+      where: { id: res.id },
+      data: {
+        path,
+      }
+    }, info)
+  }
+  catch (err) { throw err }
 }

@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const url = `http://localhost:4000/`
+const url = `http://localhost:4000`
 
 module.exports = async (query, variables, token) => {
   let body

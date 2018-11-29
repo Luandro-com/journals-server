@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Wed Nov 28 2018 20:54:11 GMT-0200 (-02)
+# timestamp: Thu Nov 29 2018 12:07:51 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -2795,7 +2795,7 @@ input EditionWhereUniqueInput {
 
 type File implements Node {
   id: ID!
-  path: String!
+  path: String
   filename: String!
   mimetype: String!
   encoding: String
@@ -2812,7 +2812,7 @@ type FileConnection {
 }
 
 input FileCreateInput {
-  path: String!
+  path: String
   filename: String!
   mimetype: String!
   encoding: String
@@ -2846,7 +2846,7 @@ enum FileOrderByInput {
 
 type FilePreviousValues {
   id: ID!
-  path: String!
+  path: String
   filename: String!
   mimetype: String!
   encoding: String

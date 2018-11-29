@@ -126,7 +126,7 @@ type CreditCard {
 
 type File {
   id: ID! @unique
-  path: String!
+  path: String
   filename: String!
   mimetype: String!
   encoding: String @default(value: "utf8")

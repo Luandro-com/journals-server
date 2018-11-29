@@ -3,6 +3,7 @@
 # import * from "types/journal.graphql"
 # import * from "types/admin.graphql"
 # import * from "types/payment.graphql"
+
 scalar Upload
 
 type Query {
@@ -37,5 +38,5 @@ type Mutation {
   unselectEditorial(articleId: ID! editionId: ID!): Edition
   selectArticles(articleIds: [ID]! editionId: ID!): Edition
   unselectArticles(articleIds: [ID]! editionId: ID!): Edition
-  uploadFile(file: Upload!): File
+  uploadFile(file: Upload!): File!
 }

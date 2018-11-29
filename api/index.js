@@ -3,7 +3,6 @@ const { GraphQLServer } = require('graphql-yoga')
 const cors = require('cors')
 const { Prisma } = require('prisma-binding')
 const { sentry } = require('graphql-middleware-sentry')
-// const { graphqlUploadExpress } = require('graphql-upload')
 // const { forward } = require('graphql-middleware-forward-binding')
 const permissions = require('./services/auth/permissions')
 
