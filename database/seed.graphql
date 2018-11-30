@@ -1,7 +1,7 @@
 mutation {
   createContent: createContent(data: {
     title: "Periodico Revistas Políticas Públicas"
-    about: "It's niceeeee"
+    description: "It's niceeeee"
   }) {
     title
   },
@@ -72,7 +72,6 @@ mutation {
     role: READER
     articles: {
       create: [{
-        file: "asdasdasd"
         issue: {
           connect:{
             key: "experiencias-do-urbanismo-no-brasil"

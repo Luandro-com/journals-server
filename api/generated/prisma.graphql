@@ -1,7 +1,15 @@
 # source: http://localhost:4466
-# timestamp: Fri Nov 30 2018 10:11:47 GMT-0200 (-02)
+# timestamp: Fri Nov 30 2018 11:37:04 GMT-0200 (-02)
 
 type AggregateArticle {
+  count: Int!
+}
+
+type AggregateArticleFile {
+  count: Int!
+}
+
+type AggregateCitation {
   count: Int!
 }
 
@@ -42,8 +50,10 @@ type Article implements Node {
   title: String
   resume: String
   author: User!
+  shortDescription: String
   published: Boolean
-  file: String
+  file: ArticleFile
+  citations(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Citation!]
   issue: Issue!
   selectedBy(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue!]
   editorial(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue!]
@@ -65,9 +75,11 @@ type ArticleConnection {
 input ArticleCreateInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserCreateOneWithoutArticlesInput!
+  file: ArticleFileCreateOneWithoutArticleIdInput
+  citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
@@ -94,6 +106,16 @@ input ArticleCreateManyWithoutSelectedByInput {
   connect: [ArticleWhereUniqueInput!]
 }
 
+input ArticleCreateOneWithoutCitationsInput {
+  create: ArticleCreateWithoutCitationsInput
+  connect: ArticleWhereUniqueInput
+}
+
+input ArticleCreateOneWithoutFileInput {
+  create: ArticleCreateWithoutFileInput
+  connect: ArticleWhereUniqueInput
+}
+
 input ArticleCreateOneWithoutPaymentInput {
   create: ArticleCreateWithoutPaymentInput
   connect: ArticleWhereUniqueInput
@@ -102,8 +124,23 @@ input ArticleCreateOneWithoutPaymentInput {
 input ArticleCreateWithoutAuthorInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
+  file: ArticleFileCreateOneWithoutArticleIdInput
+  citations: CitationCreateManyWithoutArticleInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
+  payment: PaymentCreateOneWithoutArticleInput
+}
+
+input ArticleCreateWithoutCitationsInput {
+  title: String
+  resume: String
+  shortDescription: String
+  published: Boolean
+  author: UserCreateOneWithoutArticlesInput!
+  file: ArticleFileCreateOneWithoutArticleIdInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
@@ -113,20 +150,37 @@ input ArticleCreateWithoutAuthorInput {
 input ArticleCreateWithoutEditorialInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserCreateOneWithoutArticlesInput!
+  file: ArticleFileCreateOneWithoutArticleIdInput
+  citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  payment: PaymentCreateOneWithoutArticleInput
+}
+
+input ArticleCreateWithoutFileInput {
+  title: String
+  resume: String
+  shortDescription: String
+  published: Boolean
+  author: UserCreateOneWithoutArticlesInput!
+  citations: CitationCreateManyWithoutArticleInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
 input ArticleCreateWithoutIssueInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserCreateOneWithoutArticlesInput!
+  file: ArticleFileCreateOneWithoutArticleIdInput
+  citations: CitationCreateManyWithoutArticleInput
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
@@ -135,9 +189,11 @@ input ArticleCreateWithoutIssueInput {
 input ArticleCreateWithoutPaymentInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserCreateOneWithoutArticlesInput!
+  file: ArticleFileCreateOneWithoutArticleIdInput
+  citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
@@ -146,9 +202,11 @@ input ArticleCreateWithoutPaymentInput {
 input ArticleCreateWithoutSelectedByInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserCreateOneWithoutArticlesInput!
+  file: ArticleFileCreateOneWithoutArticleIdInput
+  citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
@@ -163,6 +221,481 @@ type ArticleEdge {
   cursor: String!
 }
 
+type ArticleFile implements Node {
+  id: ID!
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+  revisions: Int
+  articleId: Article!
+  size: Int
+  originalFilename: String
+}
+
+"""A connection to a list of items."""
+type ArticleFileConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ArticleFileEdge]!
+  aggregate: AggregateArticleFile!
+}
+
+input ArticleFileCreateInput {
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+  revisions: Int
+  size: Int
+  originalFilename: String
+  articleId: ArticleCreateOneWithoutFileInput!
+}
+
+input ArticleFileCreateOneWithoutArticleIdInput {
+  create: ArticleFileCreateWithoutArticleIdInput
+  connect: ArticleFileWhereUniqueInput
+}
+
+input ArticleFileCreateWithoutArticleIdInput {
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+  revisions: Int
+  size: Int
+  originalFilename: String
+}
+
+"""An edge in a connection."""
+type ArticleFileEdge {
+  """The item at the end of the edge."""
+  node: ArticleFile!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ArticleFileOrderByInput {
+  id_ASC
+  id_DESC
+  path_ASC
+  path_DESC
+  filename_ASC
+  filename_DESC
+  mimetype_ASC
+  mimetype_DESC
+  encoding_ASC
+  encoding_DESC
+  revisions_ASC
+  revisions_DESC
+  size_ASC
+  size_DESC
+  originalFilename_ASC
+  originalFilename_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ArticleFilePreviousValues {
+  id: ID!
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+  revisions: Int
+  size: Int
+  originalFilename: String
+}
+
+type ArticleFileSubscriptionPayload {
+  mutation: MutationType!
+  node: ArticleFile
+  updatedFields: [String!]
+  previousValues: ArticleFilePreviousValues
+}
+
+input ArticleFileSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ArticleFileSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ArticleFileSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ArticleFileSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ArticleFileWhereInput
+}
+
+input ArticleFileUpdateInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+  revisions: Int
+  size: Int
+  originalFilename: String
+  articleId: ArticleUpdateOneRequiredWithoutFileInput
+}
+
+input ArticleFileUpdateManyMutationInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+  revisions: Int
+  size: Int
+  originalFilename: String
+}
+
+input ArticleFileUpdateOneWithoutArticleIdInput {
+  create: ArticleFileCreateWithoutArticleIdInput
+  connect: ArticleFileWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ArticleFileUpdateWithoutArticleIdDataInput
+  upsert: ArticleFileUpsertWithoutArticleIdInput
+}
+
+input ArticleFileUpdateWithoutArticleIdDataInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+  revisions: Int
+  size: Int
+  originalFilename: String
+}
+
+input ArticleFileUpsertWithoutArticleIdInput {
+  update: ArticleFileUpdateWithoutArticleIdDataInput!
+  create: ArticleFileCreateWithoutArticleIdInput!
+}
+
+input ArticleFileWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ArticleFileWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ArticleFileWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ArticleFileWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  path: String
+
+  """All values that are not equal to given value."""
+  path_not: String
+
+  """All values that are contained in given list."""
+  path_in: [String!]
+
+  """All values that are not contained in given list."""
+  path_not_in: [String!]
+
+  """All values less than the given value."""
+  path_lt: String
+
+  """All values less than or equal the given value."""
+  path_lte: String
+
+  """All values greater than the given value."""
+  path_gt: String
+
+  """All values greater than or equal the given value."""
+  path_gte: String
+
+  """All values containing the given string."""
+  path_contains: String
+
+  """All values not containing the given string."""
+  path_not_contains: String
+
+  """All values starting with the given string."""
+  path_starts_with: String
+
+  """All values not starting with the given string."""
+  path_not_starts_with: String
+
+  """All values ending with the given string."""
+  path_ends_with: String
+
+  """All values not ending with the given string."""
+  path_not_ends_with: String
+  filename: String
+
+  """All values that are not equal to given value."""
+  filename_not: String
+
+  """All values that are contained in given list."""
+  filename_in: [String!]
+
+  """All values that are not contained in given list."""
+  filename_not_in: [String!]
+
+  """All values less than the given value."""
+  filename_lt: String
+
+  """All values less than or equal the given value."""
+  filename_lte: String
+
+  """All values greater than the given value."""
+  filename_gt: String
+
+  """All values greater than or equal the given value."""
+  filename_gte: String
+
+  """All values containing the given string."""
+  filename_contains: String
+
+  """All values not containing the given string."""
+  filename_not_contains: String
+
+  """All values starting with the given string."""
+  filename_starts_with: String
+
+  """All values not starting with the given string."""
+  filename_not_starts_with: String
+
+  """All values ending with the given string."""
+  filename_ends_with: String
+
+  """All values not ending with the given string."""
+  filename_not_ends_with: String
+  mimetype: String
+
+  """All values that are not equal to given value."""
+  mimetype_not: String
+
+  """All values that are contained in given list."""
+  mimetype_in: [String!]
+
+  """All values that are not contained in given list."""
+  mimetype_not_in: [String!]
+
+  """All values less than the given value."""
+  mimetype_lt: String
+
+  """All values less than or equal the given value."""
+  mimetype_lte: String
+
+  """All values greater than the given value."""
+  mimetype_gt: String
+
+  """All values greater than or equal the given value."""
+  mimetype_gte: String
+
+  """All values containing the given string."""
+  mimetype_contains: String
+
+  """All values not containing the given string."""
+  mimetype_not_contains: String
+
+  """All values starting with the given string."""
+  mimetype_starts_with: String
+
+  """All values not starting with the given string."""
+  mimetype_not_starts_with: String
+
+  """All values ending with the given string."""
+  mimetype_ends_with: String
+
+  """All values not ending with the given string."""
+  mimetype_not_ends_with: String
+  encoding: String
+
+  """All values that are not equal to given value."""
+  encoding_not: String
+
+  """All values that are contained in given list."""
+  encoding_in: [String!]
+
+  """All values that are not contained in given list."""
+  encoding_not_in: [String!]
+
+  """All values less than the given value."""
+  encoding_lt: String
+
+  """All values less than or equal the given value."""
+  encoding_lte: String
+
+  """All values greater than the given value."""
+  encoding_gt: String
+
+  """All values greater than or equal the given value."""
+  encoding_gte: String
+
+  """All values containing the given string."""
+  encoding_contains: String
+
+  """All values not containing the given string."""
+  encoding_not_contains: String
+
+  """All values starting with the given string."""
+  encoding_starts_with: String
+
+  """All values not starting with the given string."""
+  encoding_not_starts_with: String
+
+  """All values ending with the given string."""
+  encoding_ends_with: String
+
+  """All values not ending with the given string."""
+  encoding_not_ends_with: String
+  revisions: Int
+
+  """All values that are not equal to given value."""
+  revisions_not: Int
+
+  """All values that are contained in given list."""
+  revisions_in: [Int!]
+
+  """All values that are not contained in given list."""
+  revisions_not_in: [Int!]
+
+  """All values less than the given value."""
+  revisions_lt: Int
+
+  """All values less than or equal the given value."""
+  revisions_lte: Int
+
+  """All values greater than the given value."""
+  revisions_gt: Int
+
+  """All values greater than or equal the given value."""
+  revisions_gte: Int
+  size: Int
+
+  """All values that are not equal to given value."""
+  size_not: Int
+
+  """All values that are contained in given list."""
+  size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  size_not_in: [Int!]
+
+  """All values less than the given value."""
+  size_lt: Int
+
+  """All values less than or equal the given value."""
+  size_lte: Int
+
+  """All values greater than the given value."""
+  size_gt: Int
+
+  """All values greater than or equal the given value."""
+  size_gte: Int
+  originalFilename: String
+
+  """All values that are not equal to given value."""
+  originalFilename_not: String
+
+  """All values that are contained in given list."""
+  originalFilename_in: [String!]
+
+  """All values that are not contained in given list."""
+  originalFilename_not_in: [String!]
+
+  """All values less than the given value."""
+  originalFilename_lt: String
+
+  """All values less than or equal the given value."""
+  originalFilename_lte: String
+
+  """All values greater than the given value."""
+  originalFilename_gt: String
+
+  """All values greater than or equal the given value."""
+  originalFilename_gte: String
+
+  """All values containing the given string."""
+  originalFilename_contains: String
+
+  """All values not containing the given string."""
+  originalFilename_not_contains: String
+
+  """All values starting with the given string."""
+  originalFilename_starts_with: String
+
+  """All values not starting with the given string."""
+  originalFilename_not_starts_with: String
+
+  """All values ending with the given string."""
+  originalFilename_ends_with: String
+
+  """All values not ending with the given string."""
+  originalFilename_not_ends_with: String
+  articleId: ArticleWhereInput
+}
+
+input ArticleFileWhereUniqueInput {
+  id: ID
+}
+
 enum ArticleOrderByInput {
   id_ASC
   id_DESC
@@ -170,10 +703,10 @@ enum ArticleOrderByInput {
   title_DESC
   resume_ASC
   resume_DESC
+  shortDescription_ASC
+  shortDescription_DESC
   published_ASC
   published_DESC
-  file_ASC
-  file_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -184,8 +717,8 @@ type ArticlePreviousValues {
   id: ID!
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -319,50 +852,50 @@ input ArticleScalarWhereInput {
 
   """All values not ending with the given string."""
   resume_not_ends_with: String
+  shortDescription: String
+
+  """All values that are not equal to given value."""
+  shortDescription_not: String
+
+  """All values that are contained in given list."""
+  shortDescription_in: [String!]
+
+  """All values that are not contained in given list."""
+  shortDescription_not_in: [String!]
+
+  """All values less than the given value."""
+  shortDescription_lt: String
+
+  """All values less than or equal the given value."""
+  shortDescription_lte: String
+
+  """All values greater than the given value."""
+  shortDescription_gt: String
+
+  """All values greater than or equal the given value."""
+  shortDescription_gte: String
+
+  """All values containing the given string."""
+  shortDescription_contains: String
+
+  """All values not containing the given string."""
+  shortDescription_not_contains: String
+
+  """All values starting with the given string."""
+  shortDescription_starts_with: String
+
+  """All values not starting with the given string."""
+  shortDescription_not_starts_with: String
+
+  """All values ending with the given string."""
+  shortDescription_ends_with: String
+
+  """All values not ending with the given string."""
+  shortDescription_not_ends_with: String
   published: Boolean
 
   """All values that are not equal to given value."""
   published_not: Boolean
-  file: String
-
-  """All values that are not equal to given value."""
-  file_not: String
-
-  """All values that are contained in given list."""
-  file_in: [String!]
-
-  """All values that are not contained in given list."""
-  file_not_in: [String!]
-
-  """All values less than the given value."""
-  file_lt: String
-
-  """All values less than or equal the given value."""
-  file_lte: String
-
-  """All values greater than the given value."""
-  file_gt: String
-
-  """All values greater than or equal the given value."""
-  file_gte: String
-
-  """All values containing the given string."""
-  file_contains: String
-
-  """All values not containing the given string."""
-  file_not_contains: String
-
-  """All values starting with the given string."""
-  file_starts_with: String
-
-  """All values not starting with the given string."""
-  file_not_starts_with: String
-
-  """All values ending with the given string."""
-  file_ends_with: String
-
-  """All values not ending with the given string."""
-  file_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -451,9 +984,11 @@ input ArticleSubscriptionWhereInput {
 input ArticleUpdateInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
+  file: ArticleFileUpdateOneWithoutArticleIdInput
+  citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
@@ -463,15 +998,15 @@ input ArticleUpdateInput {
 input ArticleUpdateManyDataInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
 }
 
 input ArticleUpdateManyMutationInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
 }
 
 input ArticleUpdateManyWithoutAuthorInput {
@@ -523,6 +1058,20 @@ input ArticleUpdateManyWithWhereNestedInput {
   data: ArticleUpdateManyDataInput!
 }
 
+input ArticleUpdateOneRequiredWithoutCitationsInput {
+  create: ArticleCreateWithoutCitationsInput
+  connect: ArticleWhereUniqueInput
+  update: ArticleUpdateWithoutCitationsDataInput
+  upsert: ArticleUpsertWithoutCitationsInput
+}
+
+input ArticleUpdateOneRequiredWithoutFileInput {
+  create: ArticleCreateWithoutFileInput
+  connect: ArticleWhereUniqueInput
+  update: ArticleUpdateWithoutFileDataInput
+  upsert: ArticleUpsertWithoutFileInput
+}
+
 input ArticleUpdateOneRequiredWithoutPaymentInput {
   create: ArticleCreateWithoutPaymentInput
   connect: ArticleWhereUniqueInput
@@ -533,8 +1082,23 @@ input ArticleUpdateOneRequiredWithoutPaymentInput {
 input ArticleUpdateWithoutAuthorDataInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
+  file: ArticleFileUpdateOneWithoutArticleIdInput
+  citations: CitationUpdateManyWithoutArticleInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
+  payment: PaymentUpdateOneWithoutArticleInput
+}
+
+input ArticleUpdateWithoutCitationsDataInput {
+  title: String
+  resume: String
+  shortDescription: String
+  published: Boolean
+  author: UserUpdateOneRequiredWithoutArticlesInput
+  file: ArticleFileUpdateOneWithoutArticleIdInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
@@ -544,20 +1108,37 @@ input ArticleUpdateWithoutAuthorDataInput {
 input ArticleUpdateWithoutEditorialDataInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
+  file: ArticleFileUpdateOneWithoutArticleIdInput
+  citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  payment: PaymentUpdateOneWithoutArticleInput
+}
+
+input ArticleUpdateWithoutFileDataInput {
+  title: String
+  resume: String
+  shortDescription: String
+  published: Boolean
+  author: UserUpdateOneRequiredWithoutArticlesInput
+  citations: CitationUpdateManyWithoutArticleInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
 input ArticleUpdateWithoutIssueDataInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
+  file: ArticleFileUpdateOneWithoutArticleIdInput
+  citations: CitationUpdateManyWithoutArticleInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
@@ -566,9 +1147,11 @@ input ArticleUpdateWithoutIssueDataInput {
 input ArticleUpdateWithoutPaymentDataInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
+  file: ArticleFileUpdateOneWithoutArticleIdInput
+  citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
@@ -577,9 +1160,11 @@ input ArticleUpdateWithoutPaymentDataInput {
 input ArticleUpdateWithoutSelectedByDataInput {
   title: String
   resume: String
+  shortDescription: String
   published: Boolean
-  file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
+  file: ArticleFileUpdateOneWithoutArticleIdInput
+  citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
@@ -603,6 +1188,16 @@ input ArticleUpdateWithWhereUniqueWithoutIssueInput {
 input ArticleUpdateWithWhereUniqueWithoutSelectedByInput {
   where: ArticleWhereUniqueInput!
   data: ArticleUpdateWithoutSelectedByDataInput!
+}
+
+input ArticleUpsertWithoutCitationsInput {
+  update: ArticleUpdateWithoutCitationsDataInput!
+  create: ArticleCreateWithoutCitationsInput!
+}
+
+input ArticleUpsertWithoutFileInput {
+  update: ArticleUpdateWithoutFileDataInput!
+  create: ArticleCreateWithoutFileInput!
 }
 
 input ArticleUpsertWithoutPaymentInput {
@@ -763,50 +1358,50 @@ input ArticleWhereInput {
 
   """All values not ending with the given string."""
   resume_not_ends_with: String
+  shortDescription: String
+
+  """All values that are not equal to given value."""
+  shortDescription_not: String
+
+  """All values that are contained in given list."""
+  shortDescription_in: [String!]
+
+  """All values that are not contained in given list."""
+  shortDescription_not_in: [String!]
+
+  """All values less than the given value."""
+  shortDescription_lt: String
+
+  """All values less than or equal the given value."""
+  shortDescription_lte: String
+
+  """All values greater than the given value."""
+  shortDescription_gt: String
+
+  """All values greater than or equal the given value."""
+  shortDescription_gte: String
+
+  """All values containing the given string."""
+  shortDescription_contains: String
+
+  """All values not containing the given string."""
+  shortDescription_not_contains: String
+
+  """All values starting with the given string."""
+  shortDescription_starts_with: String
+
+  """All values not starting with the given string."""
+  shortDescription_not_starts_with: String
+
+  """All values ending with the given string."""
+  shortDescription_ends_with: String
+
+  """All values not ending with the given string."""
+  shortDescription_not_ends_with: String
   published: Boolean
 
   """All values that are not equal to given value."""
   published_not: Boolean
-  file: String
-
-  """All values that are not equal to given value."""
-  file_not: String
-
-  """All values that are contained in given list."""
-  file_in: [String!]
-
-  """All values that are not contained in given list."""
-  file_not_in: [String!]
-
-  """All values less than the given value."""
-  file_lt: String
-
-  """All values less than or equal the given value."""
-  file_lte: String
-
-  """All values greater than the given value."""
-  file_gt: String
-
-  """All values greater than or equal the given value."""
-  file_gte: String
-
-  """All values containing the given string."""
-  file_contains: String
-
-  """All values not containing the given string."""
-  file_not_contains: String
-
-  """All values starting with the given string."""
-  file_starts_with: String
-
-  """All values not starting with the given string."""
-  file_not_starts_with: String
-
-  """All values ending with the given string."""
-  file_ends_with: String
-
-  """All values not ending with the given string."""
-  file_not_ends_with: String
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -852,6 +1447,10 @@ input ArticleWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   author: UserWhereInput
+  file: ArticleFileWhereInput
+  citations_every: CitationWhereInput
+  citations_some: CitationWhereInput
+  citations_none: CitationWhereInput
   issue: IssueWhereInput
   selectedBy_every: IssueWhereInput
   selectedBy_some: IssueWhereInput
@@ -871,9 +1470,347 @@ type BatchPayload {
   count: Long!
 }
 
+type Citation implements Node {
+  id: ID!
+  article: Article!
+  text: String!
+}
+
+"""A connection to a list of items."""
+type CitationConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [CitationEdge]!
+  aggregate: AggregateCitation!
+}
+
+input CitationCreateInput {
+  text: String!
+  article: ArticleCreateOneWithoutCitationsInput!
+}
+
+input CitationCreateManyWithoutArticleInput {
+  create: [CitationCreateWithoutArticleInput!]
+  connect: [CitationWhereUniqueInput!]
+}
+
+input CitationCreateWithoutArticleInput {
+  text: String!
+}
+
+"""An edge in a connection."""
+type CitationEdge {
+  """The item at the end of the edge."""
+  node: Citation!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum CitationOrderByInput {
+  id_ASC
+  id_DESC
+  text_ASC
+  text_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type CitationPreviousValues {
+  id: ID!
+  text: String!
+}
+
+input CitationScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CitationScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CitationScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CitationScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  text: String
+
+  """All values that are not equal to given value."""
+  text_not: String
+
+  """All values that are contained in given list."""
+  text_in: [String!]
+
+  """All values that are not contained in given list."""
+  text_not_in: [String!]
+
+  """All values less than the given value."""
+  text_lt: String
+
+  """All values less than or equal the given value."""
+  text_lte: String
+
+  """All values greater than the given value."""
+  text_gt: String
+
+  """All values greater than or equal the given value."""
+  text_gte: String
+
+  """All values containing the given string."""
+  text_contains: String
+
+  """All values not containing the given string."""
+  text_not_contains: String
+
+  """All values starting with the given string."""
+  text_starts_with: String
+
+  """All values not starting with the given string."""
+  text_not_starts_with: String
+
+  """All values ending with the given string."""
+  text_ends_with: String
+
+  """All values not ending with the given string."""
+  text_not_ends_with: String
+}
+
+type CitationSubscriptionPayload {
+  mutation: MutationType!
+  node: Citation
+  updatedFields: [String!]
+  previousValues: CitationPreviousValues
+}
+
+input CitationSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CitationSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CitationSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CitationSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: CitationWhereInput
+}
+
+input CitationUpdateInput {
+  text: String
+  article: ArticleUpdateOneRequiredWithoutCitationsInput
+}
+
+input CitationUpdateManyDataInput {
+  text: String
+}
+
+input CitationUpdateManyMutationInput {
+  text: String
+}
+
+input CitationUpdateManyWithoutArticleInput {
+  create: [CitationCreateWithoutArticleInput!]
+  connect: [CitationWhereUniqueInput!]
+  disconnect: [CitationWhereUniqueInput!]
+  delete: [CitationWhereUniqueInput!]
+  update: [CitationUpdateWithWhereUniqueWithoutArticleInput!]
+  updateMany: [CitationUpdateManyWithWhereNestedInput!]
+  deleteMany: [CitationScalarWhereInput!]
+  upsert: [CitationUpsertWithWhereUniqueWithoutArticleInput!]
+}
+
+input CitationUpdateManyWithWhereNestedInput {
+  where: CitationScalarWhereInput!
+  data: CitationUpdateManyDataInput!
+}
+
+input CitationUpdateWithoutArticleDataInput {
+  text: String
+}
+
+input CitationUpdateWithWhereUniqueWithoutArticleInput {
+  where: CitationWhereUniqueInput!
+  data: CitationUpdateWithoutArticleDataInput!
+}
+
+input CitationUpsertWithWhereUniqueWithoutArticleInput {
+  where: CitationWhereUniqueInput!
+  update: CitationUpdateWithoutArticleDataInput!
+  create: CitationCreateWithoutArticleInput!
+}
+
+input CitationWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CitationWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CitationWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CitationWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  text: String
+
+  """All values that are not equal to given value."""
+  text_not: String
+
+  """All values that are contained in given list."""
+  text_in: [String!]
+
+  """All values that are not contained in given list."""
+  text_not_in: [String!]
+
+  """All values less than the given value."""
+  text_lt: String
+
+  """All values less than or equal the given value."""
+  text_lte: String
+
+  """All values greater than the given value."""
+  text_gt: String
+
+  """All values greater than or equal the given value."""
+  text_gte: String
+
+  """All values containing the given string."""
+  text_contains: String
+
+  """All values not containing the given string."""
+  text_not_contains: String
+
+  """All values starting with the given string."""
+  text_starts_with: String
+
+  """All values not starting with the given string."""
+  text_not_starts_with: String
+
+  """All values ending with the given string."""
+  text_ends_with: String
+
+  """All values not ending with the given string."""
+  text_not_ends_with: String
+  article: ArticleWhereInput
+}
+
+input CitationWhereUniqueInput {
+  id: ID
+}
+
 type Content {
   title: String
-  about: String
+  logo: String
+  sections: [Section!]!
+  authorGuideline: String
+  description: String
+  scope: String
+  contact: String
+  footer: String
+  librarianInfo: String
+  privacyStatement: String
+  proofInstructions: String
+  publicationFrequency: String
+  purchaseArticleDescription: String
+  reviewGuidelines: String
+  waiverPolicy: String
   updatedAt: DateTime!
   createdAt: DateTime!
 }
@@ -890,7 +1827,24 @@ type ContentConnection {
 
 input ContentCreateInput {
   title: String
-  about: String
+  logo: String
+  authorGuideline: String
+  description: String
+  scope: String
+  contact: String
+  footer: String
+  librarianInfo: String
+  privacyStatement: String
+  proofInstructions: String
+  publicationFrequency: String
+  purchaseArticleDescription: String
+  reviewGuidelines: String
+  waiverPolicy: String
+  sections: ContentCreatesectionsInput
+}
+
+input ContentCreatesectionsInput {
+  set: [Section!]
 }
 
 """An edge in a connection."""
@@ -905,8 +1859,32 @@ type ContentEdge {
 enum ContentOrderByInput {
   title_ASC
   title_DESC
-  about_ASC
-  about_DESC
+  logo_ASC
+  logo_DESC
+  authorGuideline_ASC
+  authorGuideline_DESC
+  description_ASC
+  description_DESC
+  scope_ASC
+  scope_DESC
+  contact_ASC
+  contact_DESC
+  footer_ASC
+  footer_DESC
+  librarianInfo_ASC
+  librarianInfo_DESC
+  privacyStatement_ASC
+  privacyStatement_DESC
+  proofInstructions_ASC
+  proofInstructions_DESC
+  publicationFrequency_ASC
+  publicationFrequency_DESC
+  purchaseArticleDescription_ASC
+  purchaseArticleDescription_DESC
+  reviewGuidelines_ASC
+  reviewGuidelines_DESC
+  waiverPolicy_ASC
+  waiverPolicy_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -917,7 +1895,20 @@ enum ContentOrderByInput {
 
 type ContentPreviousValues {
   title: String
-  about: String
+  logo: String
+  sections: [Section!]!
+  authorGuideline: String
+  description: String
+  scope: String
+  contact: String
+  footer: String
+  librarianInfo: String
+  privacyStatement: String
+  proofInstructions: String
+  publicationFrequency: String
+  purchaseArticleDescription: String
+  reviewGuidelines: String
+  waiverPolicy: String
   updatedAt: DateTime!
   createdAt: DateTime!
 }
@@ -963,7 +1954,24 @@ input ContentSubscriptionWhereInput {
 
 input ContentUpdateManyMutationInput {
   title: String
-  about: String
+  logo: String
+  authorGuideline: String
+  description: String
+  scope: String
+  contact: String
+  footer: String
+  librarianInfo: String
+  privacyStatement: String
+  proofInstructions: String
+  publicationFrequency: String
+  purchaseArticleDescription: String
+  reviewGuidelines: String
+  waiverPolicy: String
+  sections: ContentUpdatesectionsInput
+}
+
+input ContentUpdatesectionsInput {
+  set: [Section!]
 }
 
 input ContentWhereInput {
@@ -1015,46 +2023,526 @@ input ContentWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
-  about: String
+  logo: String
 
   """All values that are not equal to given value."""
-  about_not: String
+  logo_not: String
 
   """All values that are contained in given list."""
-  about_in: [String!]
+  logo_in: [String!]
 
   """All values that are not contained in given list."""
-  about_not_in: [String!]
+  logo_not_in: [String!]
 
   """All values less than the given value."""
-  about_lt: String
+  logo_lt: String
 
   """All values less than or equal the given value."""
-  about_lte: String
+  logo_lte: String
 
   """All values greater than the given value."""
-  about_gt: String
+  logo_gt: String
 
   """All values greater than or equal the given value."""
-  about_gte: String
+  logo_gte: String
 
   """All values containing the given string."""
-  about_contains: String
+  logo_contains: String
 
   """All values not containing the given string."""
-  about_not_contains: String
+  logo_not_contains: String
 
   """All values starting with the given string."""
-  about_starts_with: String
+  logo_starts_with: String
 
   """All values not starting with the given string."""
-  about_not_starts_with: String
+  logo_not_starts_with: String
 
   """All values ending with the given string."""
-  about_ends_with: String
+  logo_ends_with: String
 
   """All values not ending with the given string."""
-  about_not_ends_with: String
+  logo_not_ends_with: String
+  authorGuideline: String
+
+  """All values that are not equal to given value."""
+  authorGuideline_not: String
+
+  """All values that are contained in given list."""
+  authorGuideline_in: [String!]
+
+  """All values that are not contained in given list."""
+  authorGuideline_not_in: [String!]
+
+  """All values less than the given value."""
+  authorGuideline_lt: String
+
+  """All values less than or equal the given value."""
+  authorGuideline_lte: String
+
+  """All values greater than the given value."""
+  authorGuideline_gt: String
+
+  """All values greater than or equal the given value."""
+  authorGuideline_gte: String
+
+  """All values containing the given string."""
+  authorGuideline_contains: String
+
+  """All values not containing the given string."""
+  authorGuideline_not_contains: String
+
+  """All values starting with the given string."""
+  authorGuideline_starts_with: String
+
+  """All values not starting with the given string."""
+  authorGuideline_not_starts_with: String
+
+  """All values ending with the given string."""
+  authorGuideline_ends_with: String
+
+  """All values not ending with the given string."""
+  authorGuideline_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  scope: String
+
+  """All values that are not equal to given value."""
+  scope_not: String
+
+  """All values that are contained in given list."""
+  scope_in: [String!]
+
+  """All values that are not contained in given list."""
+  scope_not_in: [String!]
+
+  """All values less than the given value."""
+  scope_lt: String
+
+  """All values less than or equal the given value."""
+  scope_lte: String
+
+  """All values greater than the given value."""
+  scope_gt: String
+
+  """All values greater than or equal the given value."""
+  scope_gte: String
+
+  """All values containing the given string."""
+  scope_contains: String
+
+  """All values not containing the given string."""
+  scope_not_contains: String
+
+  """All values starting with the given string."""
+  scope_starts_with: String
+
+  """All values not starting with the given string."""
+  scope_not_starts_with: String
+
+  """All values ending with the given string."""
+  scope_ends_with: String
+
+  """All values not ending with the given string."""
+  scope_not_ends_with: String
+  contact: String
+
+  """All values that are not equal to given value."""
+  contact_not: String
+
+  """All values that are contained in given list."""
+  contact_in: [String!]
+
+  """All values that are not contained in given list."""
+  contact_not_in: [String!]
+
+  """All values less than the given value."""
+  contact_lt: String
+
+  """All values less than or equal the given value."""
+  contact_lte: String
+
+  """All values greater than the given value."""
+  contact_gt: String
+
+  """All values greater than or equal the given value."""
+  contact_gte: String
+
+  """All values containing the given string."""
+  contact_contains: String
+
+  """All values not containing the given string."""
+  contact_not_contains: String
+
+  """All values starting with the given string."""
+  contact_starts_with: String
+
+  """All values not starting with the given string."""
+  contact_not_starts_with: String
+
+  """All values ending with the given string."""
+  contact_ends_with: String
+
+  """All values not ending with the given string."""
+  contact_not_ends_with: String
+  footer: String
+
+  """All values that are not equal to given value."""
+  footer_not: String
+
+  """All values that are contained in given list."""
+  footer_in: [String!]
+
+  """All values that are not contained in given list."""
+  footer_not_in: [String!]
+
+  """All values less than the given value."""
+  footer_lt: String
+
+  """All values less than or equal the given value."""
+  footer_lte: String
+
+  """All values greater than the given value."""
+  footer_gt: String
+
+  """All values greater than or equal the given value."""
+  footer_gte: String
+
+  """All values containing the given string."""
+  footer_contains: String
+
+  """All values not containing the given string."""
+  footer_not_contains: String
+
+  """All values starting with the given string."""
+  footer_starts_with: String
+
+  """All values not starting with the given string."""
+  footer_not_starts_with: String
+
+  """All values ending with the given string."""
+  footer_ends_with: String
+
+  """All values not ending with the given string."""
+  footer_not_ends_with: String
+  librarianInfo: String
+
+  """All values that are not equal to given value."""
+  librarianInfo_not: String
+
+  """All values that are contained in given list."""
+  librarianInfo_in: [String!]
+
+  """All values that are not contained in given list."""
+  librarianInfo_not_in: [String!]
+
+  """All values less than the given value."""
+  librarianInfo_lt: String
+
+  """All values less than or equal the given value."""
+  librarianInfo_lte: String
+
+  """All values greater than the given value."""
+  librarianInfo_gt: String
+
+  """All values greater than or equal the given value."""
+  librarianInfo_gte: String
+
+  """All values containing the given string."""
+  librarianInfo_contains: String
+
+  """All values not containing the given string."""
+  librarianInfo_not_contains: String
+
+  """All values starting with the given string."""
+  librarianInfo_starts_with: String
+
+  """All values not starting with the given string."""
+  librarianInfo_not_starts_with: String
+
+  """All values ending with the given string."""
+  librarianInfo_ends_with: String
+
+  """All values not ending with the given string."""
+  librarianInfo_not_ends_with: String
+  privacyStatement: String
+
+  """All values that are not equal to given value."""
+  privacyStatement_not: String
+
+  """All values that are contained in given list."""
+  privacyStatement_in: [String!]
+
+  """All values that are not contained in given list."""
+  privacyStatement_not_in: [String!]
+
+  """All values less than the given value."""
+  privacyStatement_lt: String
+
+  """All values less than or equal the given value."""
+  privacyStatement_lte: String
+
+  """All values greater than the given value."""
+  privacyStatement_gt: String
+
+  """All values greater than or equal the given value."""
+  privacyStatement_gte: String
+
+  """All values containing the given string."""
+  privacyStatement_contains: String
+
+  """All values not containing the given string."""
+  privacyStatement_not_contains: String
+
+  """All values starting with the given string."""
+  privacyStatement_starts_with: String
+
+  """All values not starting with the given string."""
+  privacyStatement_not_starts_with: String
+
+  """All values ending with the given string."""
+  privacyStatement_ends_with: String
+
+  """All values not ending with the given string."""
+  privacyStatement_not_ends_with: String
+  proofInstructions: String
+
+  """All values that are not equal to given value."""
+  proofInstructions_not: String
+
+  """All values that are contained in given list."""
+  proofInstructions_in: [String!]
+
+  """All values that are not contained in given list."""
+  proofInstructions_not_in: [String!]
+
+  """All values less than the given value."""
+  proofInstructions_lt: String
+
+  """All values less than or equal the given value."""
+  proofInstructions_lte: String
+
+  """All values greater than the given value."""
+  proofInstructions_gt: String
+
+  """All values greater than or equal the given value."""
+  proofInstructions_gte: String
+
+  """All values containing the given string."""
+  proofInstructions_contains: String
+
+  """All values not containing the given string."""
+  proofInstructions_not_contains: String
+
+  """All values starting with the given string."""
+  proofInstructions_starts_with: String
+
+  """All values not starting with the given string."""
+  proofInstructions_not_starts_with: String
+
+  """All values ending with the given string."""
+  proofInstructions_ends_with: String
+
+  """All values not ending with the given string."""
+  proofInstructions_not_ends_with: String
+  publicationFrequency: String
+
+  """All values that are not equal to given value."""
+  publicationFrequency_not: String
+
+  """All values that are contained in given list."""
+  publicationFrequency_in: [String!]
+
+  """All values that are not contained in given list."""
+  publicationFrequency_not_in: [String!]
+
+  """All values less than the given value."""
+  publicationFrequency_lt: String
+
+  """All values less than or equal the given value."""
+  publicationFrequency_lte: String
+
+  """All values greater than the given value."""
+  publicationFrequency_gt: String
+
+  """All values greater than or equal the given value."""
+  publicationFrequency_gte: String
+
+  """All values containing the given string."""
+  publicationFrequency_contains: String
+
+  """All values not containing the given string."""
+  publicationFrequency_not_contains: String
+
+  """All values starting with the given string."""
+  publicationFrequency_starts_with: String
+
+  """All values not starting with the given string."""
+  publicationFrequency_not_starts_with: String
+
+  """All values ending with the given string."""
+  publicationFrequency_ends_with: String
+
+  """All values not ending with the given string."""
+  publicationFrequency_not_ends_with: String
+  purchaseArticleDescription: String
+
+  """All values that are not equal to given value."""
+  purchaseArticleDescription_not: String
+
+  """All values that are contained in given list."""
+  purchaseArticleDescription_in: [String!]
+
+  """All values that are not contained in given list."""
+  purchaseArticleDescription_not_in: [String!]
+
+  """All values less than the given value."""
+  purchaseArticleDescription_lt: String
+
+  """All values less than or equal the given value."""
+  purchaseArticleDescription_lte: String
+
+  """All values greater than the given value."""
+  purchaseArticleDescription_gt: String
+
+  """All values greater than or equal the given value."""
+  purchaseArticleDescription_gte: String
+
+  """All values containing the given string."""
+  purchaseArticleDescription_contains: String
+
+  """All values not containing the given string."""
+  purchaseArticleDescription_not_contains: String
+
+  """All values starting with the given string."""
+  purchaseArticleDescription_starts_with: String
+
+  """All values not starting with the given string."""
+  purchaseArticleDescription_not_starts_with: String
+
+  """All values ending with the given string."""
+  purchaseArticleDescription_ends_with: String
+
+  """All values not ending with the given string."""
+  purchaseArticleDescription_not_ends_with: String
+  reviewGuidelines: String
+
+  """All values that are not equal to given value."""
+  reviewGuidelines_not: String
+
+  """All values that are contained in given list."""
+  reviewGuidelines_in: [String!]
+
+  """All values that are not contained in given list."""
+  reviewGuidelines_not_in: [String!]
+
+  """All values less than the given value."""
+  reviewGuidelines_lt: String
+
+  """All values less than or equal the given value."""
+  reviewGuidelines_lte: String
+
+  """All values greater than the given value."""
+  reviewGuidelines_gt: String
+
+  """All values greater than or equal the given value."""
+  reviewGuidelines_gte: String
+
+  """All values containing the given string."""
+  reviewGuidelines_contains: String
+
+  """All values not containing the given string."""
+  reviewGuidelines_not_contains: String
+
+  """All values starting with the given string."""
+  reviewGuidelines_starts_with: String
+
+  """All values not starting with the given string."""
+  reviewGuidelines_not_starts_with: String
+
+  """All values ending with the given string."""
+  reviewGuidelines_ends_with: String
+
+  """All values not ending with the given string."""
+  reviewGuidelines_not_ends_with: String
+  waiverPolicy: String
+
+  """All values that are not equal to given value."""
+  waiverPolicy_not: String
+
+  """All values that are contained in given list."""
+  waiverPolicy_in: [String!]
+
+  """All values that are not contained in given list."""
+  waiverPolicy_not_in: [String!]
+
+  """All values less than the given value."""
+  waiverPolicy_lt: String
+
+  """All values less than or equal the given value."""
+  waiverPolicy_lte: String
+
+  """All values greater than the given value."""
+  waiverPolicy_gt: String
+
+  """All values greater than or equal the given value."""
+  waiverPolicy_gte: String
+
+  """All values containing the given string."""
+  waiverPolicy_contains: String
+
+  """All values not containing the given string."""
+  waiverPolicy_not_contains: String
+
+  """All values starting with the given string."""
+  waiverPolicy_starts_with: String
+
+  """All values not starting with the given string."""
+  waiverPolicy_not_starts_with: String
+
+  """All values ending with the given string."""
+  waiverPolicy_ends_with: String
+
+  """All values not ending with the given string."""
+  waiverPolicy_not_ends_with: String
   updatedAt: DateTime
 
   """All values that are not equal to given value."""
@@ -2060,8 +3548,11 @@ input FileWhereUniqueInput {
 
 type Issue implements Node {
   id: ID!
-  title: String
   key: String!
+  title: String
+  volume: Int
+  number: Int
+  year: String
   submitedArticles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
   selectedArticles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
   selectedEditorials(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
@@ -2088,8 +3579,11 @@ type IssueConnection {
 }
 
 input IssueCreateInput {
-  title: String
   key: String!
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2119,8 +3613,11 @@ input IssueCreateOneWithoutSubmitedArticlesInput {
 }
 
 input IssueCreateWithoutSelectedArticlesInput {
-  title: String
   key: String!
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2134,8 +3631,11 @@ input IssueCreateWithoutSelectedArticlesInput {
 }
 
 input IssueCreateWithoutSelectedEditorialsInput {
-  title: String
   key: String!
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2149,8 +3649,11 @@ input IssueCreateWithoutSelectedEditorialsInput {
 }
 
 input IssueCreateWithoutSubmitedArticlesInput {
-  title: String
   key: String!
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2175,10 +3678,16 @@ type IssueEdge {
 enum IssueOrderByInput {
   id_ASC
   id_DESC
-  title_ASC
-  title_DESC
   key_ASC
   key_DESC
+  title_ASC
+  title_DESC
+  volume_ASC
+  volume_DESC
+  number_ASC
+  number_DESC
+  year_ASC
+  year_DESC
   body_ASC
   body_DESC
   evaluationPeriod_ASC
@@ -2203,8 +3712,11 @@ enum IssueOrderByInput {
 
 type IssuePreviousValues {
   id: ID!
-  title: String
   key: String!
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2266,46 +3778,6 @@ input IssueScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  title: String
-
-  """All values that are not equal to given value."""
-  title_not: String
-
-  """All values that are contained in given list."""
-  title_in: [String!]
-
-  """All values that are not contained in given list."""
-  title_not_in: [String!]
-
-  """All values less than the given value."""
-  title_lt: String
-
-  """All values less than or equal the given value."""
-  title_lte: String
-
-  """All values greater than the given value."""
-  title_gt: String
-
-  """All values greater than or equal the given value."""
-  title_gte: String
-
-  """All values containing the given string."""
-  title_contains: String
-
-  """All values not containing the given string."""
-  title_not_contains: String
-
-  """All values starting with the given string."""
-  title_starts_with: String
-
-  """All values not starting with the given string."""
-  title_not_starts_with: String
-
-  """All values ending with the given string."""
-  title_ends_with: String
-
-  """All values not ending with the given string."""
-  title_not_ends_with: String
   key: String
 
   """All values that are not equal to given value."""
@@ -2346,6 +3818,130 @@ input IssueScalarWhereInput {
 
   """All values not ending with the given string."""
   key_not_ends_with: String
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  volume: Int
+
+  """All values that are not equal to given value."""
+  volume_not: Int
+
+  """All values that are contained in given list."""
+  volume_in: [Int!]
+
+  """All values that are not contained in given list."""
+  volume_not_in: [Int!]
+
+  """All values less than the given value."""
+  volume_lt: Int
+
+  """All values less than or equal the given value."""
+  volume_lte: Int
+
+  """All values greater than the given value."""
+  volume_gt: Int
+
+  """All values greater than or equal the given value."""
+  volume_gte: Int
+  number: Int
+
+  """All values that are not equal to given value."""
+  number_not: Int
+
+  """All values that are contained in given list."""
+  number_in: [Int!]
+
+  """All values that are not contained in given list."""
+  number_not_in: [Int!]
+
+  """All values less than the given value."""
+  number_lt: Int
+
+  """All values less than or equal the given value."""
+  number_lte: Int
+
+  """All values greater than the given value."""
+  number_gt: Int
+
+  """All values greater than or equal the given value."""
+  number_gte: Int
+  year: String
+
+  """All values that are not equal to given value."""
+  year_not: String
+
+  """All values that are contained in given list."""
+  year_in: [String!]
+
+  """All values that are not contained in given list."""
+  year_not_in: [String!]
+
+  """All values less than the given value."""
+  year_lt: String
+
+  """All values less than or equal the given value."""
+  year_lte: String
+
+  """All values greater than the given value."""
+  year_gt: String
+
+  """All values greater than or equal the given value."""
+  year_gte: String
+
+  """All values containing the given string."""
+  year_contains: String
+
+  """All values not containing the given string."""
+  year_not_contains: String
+
+  """All values starting with the given string."""
+  year_starts_with: String
+
+  """All values not starting with the given string."""
+  year_not_starts_with: String
+
+  """All values ending with the given string."""
+  year_ends_with: String
+
+  """All values not ending with the given string."""
+  year_not_ends_with: String
   body: String
 
   """All values that are not equal to given value."""
@@ -2608,8 +4204,11 @@ input IssueSubscriptionWhereInput {
 }
 
 input IssueUpdateInput {
-  title: String
   key: String
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2624,8 +4223,11 @@ input IssueUpdateInput {
 }
 
 input IssueUpdateManyDataInput {
-  title: String
   key: String
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2637,8 +4239,11 @@ input IssueUpdateManyDataInput {
 }
 
 input IssueUpdateManyMutationInput {
-  title: String
   key: String
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2684,8 +4289,11 @@ input IssueUpdateOneRequiredWithoutSubmitedArticlesInput {
 }
 
 input IssueUpdateWithoutSelectedArticlesDataInput {
-  title: String
   key: String
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2699,8 +4307,11 @@ input IssueUpdateWithoutSelectedArticlesDataInput {
 }
 
 input IssueUpdateWithoutSelectedEditorialsDataInput {
-  title: String
   key: String
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2714,8 +4325,11 @@ input IssueUpdateWithoutSelectedEditorialsDataInput {
 }
 
 input IssueUpdateWithoutSubmitedArticlesDataInput {
-  title: String
   key: String
+  title: String
+  volume: Int
+  number: Int
+  year: String
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -2804,46 +4418,6 @@ input IssueWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  title: String
-
-  """All values that are not equal to given value."""
-  title_not: String
-
-  """All values that are contained in given list."""
-  title_in: [String!]
-
-  """All values that are not contained in given list."""
-  title_not_in: [String!]
-
-  """All values less than the given value."""
-  title_lt: String
-
-  """All values less than or equal the given value."""
-  title_lte: String
-
-  """All values greater than the given value."""
-  title_gt: String
-
-  """All values greater than or equal the given value."""
-  title_gte: String
-
-  """All values containing the given string."""
-  title_contains: String
-
-  """All values not containing the given string."""
-  title_not_contains: String
-
-  """All values starting with the given string."""
-  title_starts_with: String
-
-  """All values not starting with the given string."""
-  title_not_starts_with: String
-
-  """All values ending with the given string."""
-  title_ends_with: String
-
-  """All values not ending with the given string."""
-  title_not_ends_with: String
   key: String
 
   """All values that are not equal to given value."""
@@ -2884,6 +4458,130 @@ input IssueWhereInput {
 
   """All values not ending with the given string."""
   key_not_ends_with: String
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  volume: Int
+
+  """All values that are not equal to given value."""
+  volume_not: Int
+
+  """All values that are contained in given list."""
+  volume_in: [Int!]
+
+  """All values that are not contained in given list."""
+  volume_not_in: [Int!]
+
+  """All values less than the given value."""
+  volume_lt: Int
+
+  """All values less than or equal the given value."""
+  volume_lte: Int
+
+  """All values greater than the given value."""
+  volume_gt: Int
+
+  """All values greater than or equal the given value."""
+  volume_gte: Int
+  number: Int
+
+  """All values that are not equal to given value."""
+  number_not: Int
+
+  """All values that are contained in given list."""
+  number_in: [Int!]
+
+  """All values that are not contained in given list."""
+  number_not_in: [Int!]
+
+  """All values less than the given value."""
+  number_lt: Int
+
+  """All values less than or equal the given value."""
+  number_lte: Int
+
+  """All values greater than the given value."""
+  number_gt: Int
+
+  """All values greater than or equal the given value."""
+  number_gte: Int
+  year: String
+
+  """All values that are not equal to given value."""
+  year_not: String
+
+  """All values that are contained in given list."""
+  year_in: [String!]
+
+  """All values that are not contained in given list."""
+  year_not_in: [String!]
+
+  """All values less than the given value."""
+  year_lt: String
+
+  """All values less than or equal the given value."""
+  year_lte: String
+
+  """All values greater than the given value."""
+  year_gt: String
+
+  """All values greater than or equal the given value."""
+  year_gte: String
+
+  """All values containing the given string."""
+  year_contains: String
+
+  """All values not containing the given string."""
+  year_not_contains: String
+
+  """All values starting with the given string."""
+  year_starts_with: String
+
+  """All values not starting with the given string."""
+  year_not_starts_with: String
+
+  """All values ending with the given string."""
+  year_ends_with: String
+
+  """All values not ending with the given string."""
+  year_not_ends_with: String
   body: String
 
   """All values that are not equal to given value."""
@@ -3135,32 +4833,40 @@ type Mutation {
   createContent(data: ContentCreateInput!): Content!
   createIssue(data: IssueCreateInput!): Issue!
   createArticle(data: ArticleCreateInput!): Article!
+  createCitation(data: CitationCreateInput!): Citation!
   createPayment(data: PaymentCreateInput!): Payment!
   createFile(data: FileCreateInput!): File!
+  createArticleFile(data: ArticleFileCreateInput!): ArticleFile!
   createCreditCard(data: CreditCardCreateInput!): CreditCard!
   createCupom(data: CupomCreateInput!): Cupom!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateNewsletterSubscription(data: NewsletterSubscriptionUpdateInput!, where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
   updateIssue(data: IssueUpdateInput!, where: IssueWhereUniqueInput!): Issue
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
+  updateCitation(data: CitationUpdateInput!, where: CitationWhereUniqueInput!): Citation
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
+  updateArticleFile(data: ArticleFileUpdateInput!, where: ArticleFileWhereUniqueInput!): ArticleFile
   updateCreditCard(data: CreditCardUpdateInput!, where: CreditCardWhereUniqueInput!): CreditCard
   updateCupom(data: CupomUpdateInput!, where: CupomWhereUniqueInput!): Cupom
   deleteUser(where: UserWhereUniqueInput!): User
   deleteNewsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
   deleteIssue(where: IssueWhereUniqueInput!): Issue
   deleteArticle(where: ArticleWhereUniqueInput!): Article
+  deleteCitation(where: CitationWhereUniqueInput!): Citation
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteFile(where: FileWhereUniqueInput!): File
+  deleteArticleFile(where: ArticleFileWhereUniqueInput!): ArticleFile
   deleteCreditCard(where: CreditCardWhereUniqueInput!): CreditCard
   deleteCupom(where: CupomWhereUniqueInput!): Cupom
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertNewsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!, create: NewsletterSubscriptionCreateInput!, update: NewsletterSubscriptionUpdateInput!): NewsletterSubscription!
   upsertIssue(where: IssueWhereUniqueInput!, create: IssueCreateInput!, update: IssueUpdateInput!): Issue!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
+  upsertCitation(where: CitationWhereUniqueInput!, create: CitationCreateInput!, update: CitationUpdateInput!): Citation!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
+  upsertArticleFile(where: ArticleFileWhereUniqueInput!, create: ArticleFileCreateInput!, update: ArticleFileUpdateInput!): ArticleFile!
   upsertCreditCard(where: CreditCardWhereUniqueInput!, create: CreditCardCreateInput!, update: CreditCardUpdateInput!): CreditCard!
   upsertCupom(where: CupomWhereUniqueInput!, create: CupomCreateInput!, update: CupomUpdateInput!): Cupom!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -3168,8 +4874,10 @@ type Mutation {
   updateManyContents(data: ContentUpdateManyMutationInput!, where: ContentWhereInput): BatchPayload!
   updateManyIssues(data: IssueUpdateManyMutationInput!, where: IssueWhereInput): BatchPayload!
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
+  updateManyCitations(data: CitationUpdateManyMutationInput!, where: CitationWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
+  updateManyArticleFiles(data: ArticleFileUpdateManyMutationInput!, where: ArticleFileWhereInput): BatchPayload!
   updateManyCreditCards(data: CreditCardUpdateManyMutationInput!, where: CreditCardWhereInput): BatchPayload!
   updateManyCupoms(data: CupomUpdateManyMutationInput!, where: CupomWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
@@ -3177,8 +4885,10 @@ type Mutation {
   deleteManyContents(where: ContentWhereInput): BatchPayload!
   deleteManyIssues(where: IssueWhereInput): BatchPayload!
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
+  deleteManyCitations(where: CitationWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
+  deleteManyArticleFiles(where: ArticleFileWhereInput): BatchPayload!
   deleteManyCreditCards(where: CreditCardWhereInput): BatchPayload!
   deleteManyCupoms(where: CupomWhereInput): BatchPayload!
   executeRaw(database: PrismaDatabase, query: String!): Json!
@@ -5285,16 +6995,20 @@ type Query {
   contents(where: ContentWhereInput, orderBy: ContentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Content]!
   issues(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue]!
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
+  citations(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Citation]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
+  articleFiles(where: ArticleFileWhereInput, orderBy: ArticleFileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ArticleFile]!
   creditCards(where: CreditCardWhereInput, orderBy: CreditCardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CreditCard]!
   cupoms(where: CupomWhereInput, orderBy: CupomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Cupom]!
   user(where: UserWhereUniqueInput!): User
   newsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
   issue(where: IssueWhereUniqueInput!): Issue
   article(where: ArticleWhereUniqueInput!): Article
+  citation(where: CitationWhereUniqueInput!): Citation
   payment(where: PaymentWhereUniqueInput!): Payment
   file(where: FileWhereUniqueInput!): File
+  articleFile(where: ArticleFileWhereUniqueInput!): ArticleFile
   creditCard(where: CreditCardWhereUniqueInput!): CreditCard
   cupom(where: CupomWhereUniqueInput!): Cupom
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -5302,8 +7016,10 @@ type Query {
   contentsConnection(where: ContentWhereInput, orderBy: ContentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContentConnection!
   issuesConnection(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IssueConnection!
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
+  citationsConnection(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CitationConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+  articleFilesConnection(where: ArticleFileWhereInput, orderBy: ArticleFileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleFileConnection!
   creditCardsConnection(where: CreditCardWhereInput, orderBy: CreditCardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CreditCardConnection!
   cupomsConnection(where: CupomWhereInput, orderBy: CupomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CupomConnection!
 
@@ -5321,14 +7037,22 @@ enum Role {
   AUTHOR
 }
 
+enum Section {
+  ISSUEBANNER
+  PODCASTS
+  CALLS
+}
+
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   newsletterSubscription(where: NewsletterSubscriptionSubscriptionWhereInput): NewsletterSubscriptionSubscriptionPayload
   content(where: ContentSubscriptionWhereInput): ContentSubscriptionPayload
   issue(where: IssueSubscriptionWhereInput): IssueSubscriptionPayload
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
+  citation(where: CitationSubscriptionWhereInput): CitationSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
+  articleFile(where: ArticleFileSubscriptionWhereInput): ArticleFileSubscriptionPayload
   creditCard(where: CreditCardSubscriptionWhereInput): CreditCardSubscriptionPayload
   cupom(where: CupomSubscriptionWhereInput): CupomSubscriptionPayload
 }

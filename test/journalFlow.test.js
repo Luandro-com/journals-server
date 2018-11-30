@@ -101,7 +101,7 @@ module.exports = () => {
     const content = `{
       content {
         title
-        about
+        description
       }
     }`
     mockFetch(content, null, token)
@@ -180,7 +180,6 @@ module.exports = () => {
     const variables = {
       input: {
         IssueId,
-        file: faker.image.imageUrl(),
         title: faker.company.catchPhrase(),
         resume: faker.company.catchPhraseDescriptor(),
       }
