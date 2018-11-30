@@ -24,7 +24,7 @@ const journal = {
   async createArticle(parent, { input }, ctx, info) {
     let validInputs = {}
     Object.keys(input).filter(k => {
-      if (k !== 'editionId') {
+      if (k !== 'IssueId') {
         validInputs[k] = input[k]
       }
     })
@@ -37,9 +37,9 @@ const journal = {
             id
           }
         },
-        edition: {
+        issue: {
           connect: {
-            id: input.editionId
+            id: input.IssueId
           }
         }
       }

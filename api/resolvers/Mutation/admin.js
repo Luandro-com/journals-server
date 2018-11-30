@@ -8,84 +8,84 @@ const admin = {
     })
     if (res) return res.count
   },
-  async createEdition(parent, { input }, ctx, info) {
+  async createIssue(parent, { input }, ctx, info) {
     try {
-      return await ctx.db.mutation.createEdition({
+      return await ctx.db.mutation.createIssue({
         data: { ...input }
       }, info)
     } catch (err) { throw err }
   },
-  async publishEditionCall(parent, { editionId }, ctx, info) {
+  async publishIssueCall(parent, { IssueId }, ctx, info) {
     try {
-      return await ctx.db.mutation.updateEdition({
-        where: { id: editionId },
+      return await ctx.db.mutation.updateIssue({
+        where: { id: IssueId },
         data: { publishedCall: true }
       }, info)
     } catch (err) { throw err }
   },
-  async publishEdition(parent, { editionId }, ctx, info) {
+  async publishIssue(parent, { IssueId }, ctx, info) {
     try {
-      const editionInfo = await ctx.db.query.edition({ where: { id: editionId } }, `{ publishedCall selectedArticles { id }}`)
-      if (editionInfo.selectedArticles.length > 0 && editionInfo.publishedCall) return await ctx.db.mutation.updateEdition({
-        where: { id: editionId },
+      const IssueInfo = await ctx.db.query.issue({ where: { id: IssueId } }, `{ publishedCall selectedArticles { id }}`)
+      if (IssueInfo.selectedArticles.length > 0 && IssueInfo.publishedCall) return await ctx.db.mutation.updateIssue({
+        where: { id: IssueId },
         data: { published: true }
       }, info)
       else throw 'No articles selected or call not published'
     } catch (err) { throw err }
   },
-  async updateEdition(parent, { editionId, input }, ctx, info) {
+  async updateIssue(parent, { IssueId, input }, ctx, info) {
     try {
-      return await ctx.db.mutation.updateEdition({
-        where: { id: editionId },
+      return await ctx.db.mutation.updateIssue({
+        where: { id: IssueId },
         data: { ...input }
       }, info)
     } catch (err) { throw err }
   },
-  async deleteEdition(parent, { editionId }, ctx, info) {
+  async deleteIssue(parent, { IssueId }, ctx, info) {
     try {
-      return await ctx.db.mutation.deleteEdition({
-        where: { id: editionId }
+      return await ctx.db.mutation.deleteIssue({
+        where: { id: IssueId }
       }, info)
     } catch (err) { throw err }
   },
-  async selectEditorial(parent, { articleId, editionId }, ctx, info) {
+  async selectEditorial(parent, { articleId, IssueId }, ctx, info) {
     try {
-      return await ctx.db.mutation.updateEdition({
+      return await ctx.db.mutation.updateIssue({
         data: { selectedEditorials: { connect: [ { id: articleId } ]}},
-        where: { id: editionId },
+        where: { id: IssueId },
       }, info)
     } catch (err) { throw err }
   },
-  async unselectEditorial(parent, { articleId, editionId }, ctx, info) {
+  async unselectEditorial(parent, { articleId, IssueId }, ctx, info) {
     try {
-      return await ctx.db.mutation.updateEdition({
+      return await ctx.db.mutation.updateIssue({
         data: { selectedEditorials: { disconnect: [ { id: articleId } ]}},
-        where: { id: editionId },
+        where: { id: IssueId },
       }, info)
     } catch (err) { throw err }
   },
-  async selectArticles(parent, { articleIds, editionId }, ctx, info) {
+  async selectArticles(parent, { articleIds, IssueId }, ctx, info) {
     const validarticleIds = articleIds.map(a => {
       return {
         id: a
       }
     })
     try {
-      return await ctx.db.mutation.updateEdition({
-        where: { id: editionId },
+      return await ctx.db.mutation.updateIssue({
+        where: { id: IssueId },
         data: { selectedArticles: { connect: validarticleIds } },
       }, info)
     } catch (err) { throw err }
   },
-  async unselectArticles(parent, { articleIds, editionId }, ctx, info) {
+  async unselectArticles(parent, { articleIds, IssueId }, ctx, info) {
     const validArticleIds = articleIds.map(a => {
       return {
         id: a
       }
     })
     try {
-      return await ctx.db.mutation.updateEdition({
-        where: { id: editionId },
+      return await ctx.db.mutation.updateIssue({
+        where: { id: IssueId },
         data: { selectedArticles: { disconnect: validArticleIds } },
       }, info)
     } catch (err) { throw err }

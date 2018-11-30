@@ -7,7 +7,7 @@ const testEmail = faker.internet.email()
 const testPassword = faker.internet.password()
 
 let token
-let editionId
+let IssueId
 let articleId
 let articleId2
 
@@ -72,10 +72,10 @@ module.exports = () => {
       t.end()
     })
   })
-  // READ EDITIONS
-  test(`should return editions that are published`, (t) => {
-    const editions = `{
-      editions {
+  // READ ISSUES
+  test(`should return issues that are published`, (t) => {
+    const issues = `{
+      issues {
         id
         title
         published
@@ -88,11 +88,11 @@ module.exports = () => {
         }
       }
     }`
-    mockFetch(editions, null, token)
+    mockFetch(issues, null, token)
     .then(res => {
       console.log('RES', res)
-      editionId = res.editions[0].id
-      t.equal(true, res.editions.filter(e => (!e.published && !e.publishedCall)).length === 0)
+      IssueId = res.issues[0].id
+      t.equal(true, res.issues.filter(e => (!e.published && !e.publishedCall)).length === 0)
       t.end()
     })
   })
@@ -179,7 +179,7 @@ module.exports = () => {
     `
     const variables = {
       input: {
-        editionId,
+        IssueId,
         file: faker.image.imageUrl(),
         title: faker.company.catchPhrase(),
         resume: faker.company.catchPhraseDescriptor(),

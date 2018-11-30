@@ -11,12 +11,12 @@ const Query = {
     return res[0]
   },
 
-  async edition(parent, { editionKey }, ctx, info) {
-    return await ctx.db.query.edition({ where: { key: editionKey } }, info)
+  async issue(parent, { IssueKey }, ctx, info) {
+    return await ctx.db.query.issue({ where: { key: IssueKey } }, info)
   },
 
-  async editions(parent, args, ctx, info) {
-    return await ctx.db.query.editions({ where: { OR: [
+  async issues(parent, args, ctx, info) {
+    return await ctx.db.query.issues({ where: { OR: [
       { published: true },
       { publishedCall: true },
     ] }}, info)

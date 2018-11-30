@@ -1,5 +1,5 @@
 input ArticleInput {
-  editionId: ID!
+  IssueId: ID!
   file: String
   title: String
   resume: String

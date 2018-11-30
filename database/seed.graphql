@@ -5,7 +5,7 @@ mutation {
   }) {
     title
   },
-  createFirstEdition: createEdition(data: {
+  createFirstIssue: createIssue(data: {
     key: "experiencias-do-pretexto"
     title: "Experiências no Pretexto do Pretérito"
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
@@ -19,7 +19,7 @@ mutation {
   }) {
     id
   },
-  createSecondEdition: createEdition(data: {
+  createSecondIssue: createIssue(data: {
     key: "experiencias-do-urbanismo-no-brasil"
     title: "Experiências no Ensino do Urbanismo no Brasil"
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
@@ -33,7 +33,7 @@ mutation {
   }) {
     id
   },
-  createThirdEdition: createEdition(data: {
+  createThirdIssue: createIssue(data: {
     key: "experiencias-do-urbanismo-no-brasil-revolta"
     title: "Experiências no Ensino do Urbanismo no Brasil A Revolta do Proletariado"
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
@@ -73,7 +73,7 @@ mutation {
     articles: {
       create: [{
         file: "asdasdasd"
-        edition: {
+        issue: {
           connect:{
             key: "experiencias-do-urbanismo-no-brasil"
           }

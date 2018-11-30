@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Nov 29 2018 12:07:51 GMT-0200 (-02)
+# timestamp: Fri Nov 30 2018 10:11:47 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -17,11 +17,11 @@ type AggregateCupom {
   count: Int!
 }
 
-type AggregateEdition {
+type AggregateFile {
   count: Int!
 }
 
-type AggregateFile {
+type AggregateIssue {
   count: Int!
 }
 
@@ -44,9 +44,9 @@ type Article implements Node {
   author: User!
   published: Boolean
   file: String
-  edition: Edition!
-  selectedBy(where: EditionWhereInput, orderBy: EditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Edition!]
-  editorial(where: EditionWhereInput, orderBy: EditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Edition!]
+  issue: Issue!
+  selectedBy(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue!]
+  editorial(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue!]
   createdAt: DateTime!
   updatedAt: DateTime!
   payment: Payment
@@ -68,9 +68,9 @@ input ArticleCreateInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
-  edition: EditionCreateOneWithoutSubmitedArticlesInput!
-  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
-  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -79,13 +79,13 @@ input ArticleCreateManyWithoutAuthorInput {
   connect: [ArticleWhereUniqueInput!]
 }
 
-input ArticleCreateManyWithoutEditionInput {
-  create: [ArticleCreateWithoutEditionInput!]
+input ArticleCreateManyWithoutEditorialInput {
+  create: [ArticleCreateWithoutEditorialInput!]
   connect: [ArticleWhereUniqueInput!]
 }
 
-input ArticleCreateManyWithoutEditorialInput {
-  create: [ArticleCreateWithoutEditorialInput!]
+input ArticleCreateManyWithoutIssueInput {
+  create: [ArticleCreateWithoutIssueInput!]
   connect: [ArticleWhereUniqueInput!]
 }
 
@@ -104,20 +104,9 @@ input ArticleCreateWithoutAuthorInput {
   resume: String
   published: Boolean
   file: String
-  edition: EditionCreateOneWithoutSubmitedArticlesInput!
-  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
-  editorial: EditionCreateManyWithoutSelectedEditorialsInput
-  payment: PaymentCreateOneWithoutArticleInput
-}
-
-input ArticleCreateWithoutEditionInput {
-  title: String
-  resume: String
-  published: Boolean
-  file: String
-  author: UserCreateOneWithoutArticlesInput!
-  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
-  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -127,8 +116,19 @@ input ArticleCreateWithoutEditorialInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
-  edition: EditionCreateOneWithoutSubmitedArticlesInput!
-  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  payment: PaymentCreateOneWithoutArticleInput
+}
+
+input ArticleCreateWithoutIssueInput {
+  title: String
+  resume: String
+  published: Boolean
+  file: String
+  author: UserCreateOneWithoutArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -138,9 +138,9 @@ input ArticleCreateWithoutPaymentInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
-  edition: EditionCreateOneWithoutSubmitedArticlesInput!
-  selectedBy: EditionCreateManyWithoutSelectedArticlesInput
-  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
 }
 
 input ArticleCreateWithoutSelectedByInput {
@@ -149,8 +149,8 @@ input ArticleCreateWithoutSelectedByInput {
   published: Boolean
   file: String
   author: UserCreateOneWithoutArticlesInput!
-  edition: EditionCreateOneWithoutSubmitedArticlesInput!
-  editorial: EditionCreateManyWithoutSelectedEditorialsInput
+  issue: IssueCreateOneWithoutSubmitedArticlesInput!
+  editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -454,9 +454,9 @@ input ArticleUpdateInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
-  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
-  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
-  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -485,17 +485,6 @@ input ArticleUpdateManyWithoutAuthorInput {
   upsert: [ArticleUpsertWithWhereUniqueWithoutAuthorInput!]
 }
 
-input ArticleUpdateManyWithoutEditionInput {
-  create: [ArticleCreateWithoutEditionInput!]
-  connect: [ArticleWhereUniqueInput!]
-  disconnect: [ArticleWhereUniqueInput!]
-  delete: [ArticleWhereUniqueInput!]
-  update: [ArticleUpdateWithWhereUniqueWithoutEditionInput!]
-  updateMany: [ArticleUpdateManyWithWhereNestedInput!]
-  deleteMany: [ArticleScalarWhereInput!]
-  upsert: [ArticleUpsertWithWhereUniqueWithoutEditionInput!]
-}
-
 input ArticleUpdateManyWithoutEditorialInput {
   create: [ArticleCreateWithoutEditorialInput!]
   connect: [ArticleWhereUniqueInput!]
@@ -505,6 +494,17 @@ input ArticleUpdateManyWithoutEditorialInput {
   updateMany: [ArticleUpdateManyWithWhereNestedInput!]
   deleteMany: [ArticleScalarWhereInput!]
   upsert: [ArticleUpsertWithWhereUniqueWithoutEditorialInput!]
+}
+
+input ArticleUpdateManyWithoutIssueInput {
+  create: [ArticleCreateWithoutIssueInput!]
+  connect: [ArticleWhereUniqueInput!]
+  disconnect: [ArticleWhereUniqueInput!]
+  delete: [ArticleWhereUniqueInput!]
+  update: [ArticleUpdateWithWhereUniqueWithoutIssueInput!]
+  updateMany: [ArticleUpdateManyWithWhereNestedInput!]
+  deleteMany: [ArticleScalarWhereInput!]
+  upsert: [ArticleUpsertWithWhereUniqueWithoutIssueInput!]
 }
 
 input ArticleUpdateManyWithoutSelectedByInput {
@@ -535,20 +535,9 @@ input ArticleUpdateWithoutAuthorDataInput {
   resume: String
   published: Boolean
   file: String
-  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
-  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
-  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
-  payment: PaymentUpdateOneWithoutArticleInput
-}
-
-input ArticleUpdateWithoutEditionDataInput {
-  title: String
-  resume: String
-  published: Boolean
-  file: String
-  author: UserUpdateOneRequiredWithoutArticlesInput
-  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
-  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -558,8 +547,19 @@ input ArticleUpdateWithoutEditorialDataInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
-  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
-  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  payment: PaymentUpdateOneWithoutArticleInput
+}
+
+input ArticleUpdateWithoutIssueDataInput {
+  title: String
+  resume: String
+  published: Boolean
+  file: String
+  author: UserUpdateOneRequiredWithoutArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -569,9 +569,9 @@ input ArticleUpdateWithoutPaymentDataInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
-  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
-  selectedBy: EditionUpdateManyWithoutSelectedArticlesInput
-  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
 }
 
 input ArticleUpdateWithoutSelectedByDataInput {
@@ -580,8 +580,8 @@ input ArticleUpdateWithoutSelectedByDataInput {
   published: Boolean
   file: String
   author: UserUpdateOneRequiredWithoutArticlesInput
-  edition: EditionUpdateOneRequiredWithoutSubmitedArticlesInput
-  editorial: EditionUpdateManyWithoutSelectedEditorialsInput
+  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
+  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -590,14 +590,14 @@ input ArticleUpdateWithWhereUniqueWithoutAuthorInput {
   data: ArticleUpdateWithoutAuthorDataInput!
 }
 
-input ArticleUpdateWithWhereUniqueWithoutEditionInput {
-  where: ArticleWhereUniqueInput!
-  data: ArticleUpdateWithoutEditionDataInput!
-}
-
 input ArticleUpdateWithWhereUniqueWithoutEditorialInput {
   where: ArticleWhereUniqueInput!
   data: ArticleUpdateWithoutEditorialDataInput!
+}
+
+input ArticleUpdateWithWhereUniqueWithoutIssueInput {
+  where: ArticleWhereUniqueInput!
+  data: ArticleUpdateWithoutIssueDataInput!
 }
 
 input ArticleUpdateWithWhereUniqueWithoutSelectedByInput {
@@ -616,16 +616,16 @@ input ArticleUpsertWithWhereUniqueWithoutAuthorInput {
   create: ArticleCreateWithoutAuthorInput!
 }
 
-input ArticleUpsertWithWhereUniqueWithoutEditionInput {
-  where: ArticleWhereUniqueInput!
-  update: ArticleUpdateWithoutEditionDataInput!
-  create: ArticleCreateWithoutEditionInput!
-}
-
 input ArticleUpsertWithWhereUniqueWithoutEditorialInput {
   where: ArticleWhereUniqueInput!
   update: ArticleUpdateWithoutEditorialDataInput!
   create: ArticleCreateWithoutEditorialInput!
+}
+
+input ArticleUpsertWithWhereUniqueWithoutIssueInput {
+  where: ArticleWhereUniqueInput!
+  update: ArticleUpdateWithoutIssueDataInput!
+  create: ArticleCreateWithoutIssueInput!
 }
 
 input ArticleUpsertWithWhereUniqueWithoutSelectedByInput {
@@ -852,13 +852,13 @@ input ArticleWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   author: UserWhereInput
-  edition: EditionWhereInput
-  selectedBy_every: EditionWhereInput
-  selectedBy_some: EditionWhereInput
-  selectedBy_none: EditionWhereInput
-  editorial_every: EditionWhereInput
-  editorial_some: EditionWhereInput
-  editorial_none: EditionWhereInput
+  issue: IssueWhereInput
+  selectedBy_every: IssueWhereInput
+  selectedBy_some: IssueWhereInput
+  selectedBy_none: IssueWhereInput
+  editorial_every: IssueWhereInput
+  editorial_some: IssueWhereInput
+  editorial_none: IssueWhereInput
   payment: PaymentWhereInput
 }
 
@@ -1731,7 +1731,334 @@ input CupomWhereUniqueInput {
 
 scalar DateTime
 
-type Edition implements Node {
+type File implements Node {
+  id: ID!
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+}
+
+"""A connection to a list of items."""
+type FileConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [FileEdge]!
+  aggregate: AggregateFile!
+}
+
+input FileCreateInput {
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+}
+
+"""An edge in a connection."""
+type FileEdge {
+  """The item at the end of the edge."""
+  node: File!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum FileOrderByInput {
+  id_ASC
+  id_DESC
+  path_ASC
+  path_DESC
+  filename_ASC
+  filename_DESC
+  mimetype_ASC
+  mimetype_DESC
+  encoding_ASC
+  encoding_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type FilePreviousValues {
+  id: ID!
+  path: String
+  filename: String!
+  mimetype: String!
+  encoding: String
+}
+
+type FileSubscriptionPayload {
+  mutation: MutationType!
+  node: File
+  updatedFields: [String!]
+  previousValues: FilePreviousValues
+}
+
+input FileSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FileSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FileSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FileSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: FileWhereInput
+}
+
+input FileUpdateInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+}
+
+input FileUpdateManyMutationInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+}
+
+input FileWhereInput {
+  """Logical AND on all given filters."""
+  AND: [FileWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [FileWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [FileWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  path: String
+
+  """All values that are not equal to given value."""
+  path_not: String
+
+  """All values that are contained in given list."""
+  path_in: [String!]
+
+  """All values that are not contained in given list."""
+  path_not_in: [String!]
+
+  """All values less than the given value."""
+  path_lt: String
+
+  """All values less than or equal the given value."""
+  path_lte: String
+
+  """All values greater than the given value."""
+  path_gt: String
+
+  """All values greater than or equal the given value."""
+  path_gte: String
+
+  """All values containing the given string."""
+  path_contains: String
+
+  """All values not containing the given string."""
+  path_not_contains: String
+
+  """All values starting with the given string."""
+  path_starts_with: String
+
+  """All values not starting with the given string."""
+  path_not_starts_with: String
+
+  """All values ending with the given string."""
+  path_ends_with: String
+
+  """All values not ending with the given string."""
+  path_not_ends_with: String
+  filename: String
+
+  """All values that are not equal to given value."""
+  filename_not: String
+
+  """All values that are contained in given list."""
+  filename_in: [String!]
+
+  """All values that are not contained in given list."""
+  filename_not_in: [String!]
+
+  """All values less than the given value."""
+  filename_lt: String
+
+  """All values less than or equal the given value."""
+  filename_lte: String
+
+  """All values greater than the given value."""
+  filename_gt: String
+
+  """All values greater than or equal the given value."""
+  filename_gte: String
+
+  """All values containing the given string."""
+  filename_contains: String
+
+  """All values not containing the given string."""
+  filename_not_contains: String
+
+  """All values starting with the given string."""
+  filename_starts_with: String
+
+  """All values not starting with the given string."""
+  filename_not_starts_with: String
+
+  """All values ending with the given string."""
+  filename_ends_with: String
+
+  """All values not ending with the given string."""
+  filename_not_ends_with: String
+  mimetype: String
+
+  """All values that are not equal to given value."""
+  mimetype_not: String
+
+  """All values that are contained in given list."""
+  mimetype_in: [String!]
+
+  """All values that are not contained in given list."""
+  mimetype_not_in: [String!]
+
+  """All values less than the given value."""
+  mimetype_lt: String
+
+  """All values less than or equal the given value."""
+  mimetype_lte: String
+
+  """All values greater than the given value."""
+  mimetype_gt: String
+
+  """All values greater than or equal the given value."""
+  mimetype_gte: String
+
+  """All values containing the given string."""
+  mimetype_contains: String
+
+  """All values not containing the given string."""
+  mimetype_not_contains: String
+
+  """All values starting with the given string."""
+  mimetype_starts_with: String
+
+  """All values not starting with the given string."""
+  mimetype_not_starts_with: String
+
+  """All values ending with the given string."""
+  mimetype_ends_with: String
+
+  """All values not ending with the given string."""
+  mimetype_not_ends_with: String
+  encoding: String
+
+  """All values that are not equal to given value."""
+  encoding_not: String
+
+  """All values that are contained in given list."""
+  encoding_in: [String!]
+
+  """All values that are not contained in given list."""
+  encoding_not_in: [String!]
+
+  """All values less than the given value."""
+  encoding_lt: String
+
+  """All values less than or equal the given value."""
+  encoding_lte: String
+
+  """All values greater than the given value."""
+  encoding_gt: String
+
+  """All values greater than or equal the given value."""
+  encoding_gte: String
+
+  """All values containing the given string."""
+  encoding_contains: String
+
+  """All values not containing the given string."""
+  encoding_not_contains: String
+
+  """All values starting with the given string."""
+  encoding_starts_with: String
+
+  """All values not starting with the given string."""
+  encoding_not_starts_with: String
+
+  """All values ending with the given string."""
+  encoding_ends_with: String
+
+  """All values not ending with the given string."""
+  encoding_not_ends_with: String
+}
+
+input FileWhereUniqueInput {
+  id: ID
+}
+
+type Issue implements Node {
   id: ID!
   title: String
   key: String!
@@ -1751,16 +2078,16 @@ type Edition implements Node {
 }
 
 """A connection to a list of items."""
-type EditionConnection {
+type IssueConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [EditionEdge]!
-  aggregate: AggregateEdition!
+  edges: [IssueEdge]!
+  aggregate: AggregateIssue!
 }
 
-input EditionCreateInput {
+input IssueCreateInput {
   title: String
   key: String!
   body: String
@@ -1771,27 +2098,27 @@ input EditionCreateInput {
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
-  submitedArticles: ArticleCreateManyWithoutEditionInput
+  submitedArticles: ArticleCreateManyWithoutIssueInput
   selectedArticles: ArticleCreateManyWithoutSelectedByInput
   selectedEditorials: ArticleCreateManyWithoutEditorialInput
 }
 
-input EditionCreateManyWithoutSelectedArticlesInput {
-  create: [EditionCreateWithoutSelectedArticlesInput!]
-  connect: [EditionWhereUniqueInput!]
+input IssueCreateManyWithoutSelectedArticlesInput {
+  create: [IssueCreateWithoutSelectedArticlesInput!]
+  connect: [IssueWhereUniqueInput!]
 }
 
-input EditionCreateManyWithoutSelectedEditorialsInput {
-  create: [EditionCreateWithoutSelectedEditorialsInput!]
-  connect: [EditionWhereUniqueInput!]
+input IssueCreateManyWithoutSelectedEditorialsInput {
+  create: [IssueCreateWithoutSelectedEditorialsInput!]
+  connect: [IssueWhereUniqueInput!]
 }
 
-input EditionCreateOneWithoutSubmitedArticlesInput {
-  create: EditionCreateWithoutSubmitedArticlesInput
-  connect: EditionWhereUniqueInput
+input IssueCreateOneWithoutSubmitedArticlesInput {
+  create: IssueCreateWithoutSubmitedArticlesInput
+  connect: IssueWhereUniqueInput
 }
 
-input EditionCreateWithoutSelectedArticlesInput {
+input IssueCreateWithoutSelectedArticlesInput {
   title: String
   key: String!
   body: String
@@ -1802,11 +2129,11 @@ input EditionCreateWithoutSelectedArticlesInput {
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
-  submitedArticles: ArticleCreateManyWithoutEditionInput
+  submitedArticles: ArticleCreateManyWithoutIssueInput
   selectedEditorials: ArticleCreateManyWithoutEditorialInput
 }
 
-input EditionCreateWithoutSelectedEditorialsInput {
+input IssueCreateWithoutSelectedEditorialsInput {
   title: String
   key: String!
   body: String
@@ -1817,11 +2144,11 @@ input EditionCreateWithoutSelectedEditorialsInput {
   published: Boolean
   startCall: DateTime!
   endCall: DateTime!
-  submitedArticles: ArticleCreateManyWithoutEditionInput
+  submitedArticles: ArticleCreateManyWithoutIssueInput
   selectedArticles: ArticleCreateManyWithoutSelectedByInput
 }
 
-input EditionCreateWithoutSubmitedArticlesInput {
+input IssueCreateWithoutSubmitedArticlesInput {
   title: String
   key: String!
   body: String
@@ -1837,15 +2164,15 @@ input EditionCreateWithoutSubmitedArticlesInput {
 }
 
 """An edge in a connection."""
-type EditionEdge {
+type IssueEdge {
   """The item at the end of the edge."""
-  node: Edition!
+  node: Issue!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum EditionOrderByInput {
+enum IssueOrderByInput {
   id_ASC
   id_DESC
   title_ASC
@@ -1874,7 +2201,7 @@ enum EditionOrderByInput {
   updatedAt_DESC
 }
 
-type EditionPreviousValues {
+type IssuePreviousValues {
   id: ID!
   title: String
   key: String!
@@ -1890,15 +2217,15 @@ type EditionPreviousValues {
   updatedAt: DateTime!
 }
 
-input EditionScalarWhereInput {
+input IssueScalarWhereInput {
   """Logical AND on all given filters."""
-  AND: [EditionScalarWhereInput!]
+  AND: [IssueScalarWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [EditionScalarWhereInput!]
+  OR: [IssueScalarWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [EditionScalarWhereInput!]
+  NOT: [IssueScalarWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -2241,22 +2568,22 @@ input EditionScalarWhereInput {
   updatedAt_gte: DateTime
 }
 
-type EditionSubscriptionPayload {
+type IssueSubscriptionPayload {
   mutation: MutationType!
-  node: Edition
+  node: Issue
   updatedFields: [String!]
-  previousValues: EditionPreviousValues
+  previousValues: IssuePreviousValues
 }
 
-input EditionSubscriptionWhereInput {
+input IssueSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [EditionSubscriptionWhereInput!]
+  AND: [IssueSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [EditionSubscriptionWhereInput!]
+  OR: [IssueSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [EditionSubscriptionWhereInput!]
+  NOT: [IssueSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -2277,10 +2604,10 @@ input EditionSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: EditionWhereInput
+  node: IssueWhereInput
 }
 
-input EditionUpdateInput {
+input IssueUpdateInput {
   title: String
   key: String
   body: String
@@ -2291,12 +2618,12 @@ input EditionUpdateInput {
   published: Boolean
   startCall: DateTime
   endCall: DateTime
-  submitedArticles: ArticleUpdateManyWithoutEditionInput
+  submitedArticles: ArticleUpdateManyWithoutIssueInput
   selectedArticles: ArticleUpdateManyWithoutSelectedByInput
   selectedEditorials: ArticleUpdateManyWithoutEditorialInput
 }
 
-input EditionUpdateManyDataInput {
+input IssueUpdateManyDataInput {
   title: String
   key: String
   body: String
@@ -2309,7 +2636,7 @@ input EditionUpdateManyDataInput {
   endCall: DateTime
 }
 
-input EditionUpdateManyMutationInput {
+input IssueUpdateManyMutationInput {
   title: String
   key: String
   body: String
@@ -2322,41 +2649,41 @@ input EditionUpdateManyMutationInput {
   endCall: DateTime
 }
 
-input EditionUpdateManyWithoutSelectedArticlesInput {
-  create: [EditionCreateWithoutSelectedArticlesInput!]
-  connect: [EditionWhereUniqueInput!]
-  disconnect: [EditionWhereUniqueInput!]
-  delete: [EditionWhereUniqueInput!]
-  update: [EditionUpdateWithWhereUniqueWithoutSelectedArticlesInput!]
-  updateMany: [EditionUpdateManyWithWhereNestedInput!]
-  deleteMany: [EditionScalarWhereInput!]
-  upsert: [EditionUpsertWithWhereUniqueWithoutSelectedArticlesInput!]
+input IssueUpdateManyWithoutSelectedArticlesInput {
+  create: [IssueCreateWithoutSelectedArticlesInput!]
+  connect: [IssueWhereUniqueInput!]
+  disconnect: [IssueWhereUniqueInput!]
+  delete: [IssueWhereUniqueInput!]
+  update: [IssueUpdateWithWhereUniqueWithoutSelectedArticlesInput!]
+  updateMany: [IssueUpdateManyWithWhereNestedInput!]
+  deleteMany: [IssueScalarWhereInput!]
+  upsert: [IssueUpsertWithWhereUniqueWithoutSelectedArticlesInput!]
 }
 
-input EditionUpdateManyWithoutSelectedEditorialsInput {
-  create: [EditionCreateWithoutSelectedEditorialsInput!]
-  connect: [EditionWhereUniqueInput!]
-  disconnect: [EditionWhereUniqueInput!]
-  delete: [EditionWhereUniqueInput!]
-  update: [EditionUpdateWithWhereUniqueWithoutSelectedEditorialsInput!]
-  updateMany: [EditionUpdateManyWithWhereNestedInput!]
-  deleteMany: [EditionScalarWhereInput!]
-  upsert: [EditionUpsertWithWhereUniqueWithoutSelectedEditorialsInput!]
+input IssueUpdateManyWithoutSelectedEditorialsInput {
+  create: [IssueCreateWithoutSelectedEditorialsInput!]
+  connect: [IssueWhereUniqueInput!]
+  disconnect: [IssueWhereUniqueInput!]
+  delete: [IssueWhereUniqueInput!]
+  update: [IssueUpdateWithWhereUniqueWithoutSelectedEditorialsInput!]
+  updateMany: [IssueUpdateManyWithWhereNestedInput!]
+  deleteMany: [IssueScalarWhereInput!]
+  upsert: [IssueUpsertWithWhereUniqueWithoutSelectedEditorialsInput!]
 }
 
-input EditionUpdateManyWithWhereNestedInput {
-  where: EditionScalarWhereInput!
-  data: EditionUpdateManyDataInput!
+input IssueUpdateManyWithWhereNestedInput {
+  where: IssueScalarWhereInput!
+  data: IssueUpdateManyDataInput!
 }
 
-input EditionUpdateOneRequiredWithoutSubmitedArticlesInput {
-  create: EditionCreateWithoutSubmitedArticlesInput
-  connect: EditionWhereUniqueInput
-  update: EditionUpdateWithoutSubmitedArticlesDataInput
-  upsert: EditionUpsertWithoutSubmitedArticlesInput
+input IssueUpdateOneRequiredWithoutSubmitedArticlesInput {
+  create: IssueCreateWithoutSubmitedArticlesInput
+  connect: IssueWhereUniqueInput
+  update: IssueUpdateWithoutSubmitedArticlesDataInput
+  upsert: IssueUpsertWithoutSubmitedArticlesInput
 }
 
-input EditionUpdateWithoutSelectedArticlesDataInput {
+input IssueUpdateWithoutSelectedArticlesDataInput {
   title: String
   key: String
   body: String
@@ -2367,11 +2694,11 @@ input EditionUpdateWithoutSelectedArticlesDataInput {
   published: Boolean
   startCall: DateTime
   endCall: DateTime
-  submitedArticles: ArticleUpdateManyWithoutEditionInput
+  submitedArticles: ArticleUpdateManyWithoutIssueInput
   selectedEditorials: ArticleUpdateManyWithoutEditorialInput
 }
 
-input EditionUpdateWithoutSelectedEditorialsDataInput {
+input IssueUpdateWithoutSelectedEditorialsDataInput {
   title: String
   key: String
   body: String
@@ -2382,11 +2709,11 @@ input EditionUpdateWithoutSelectedEditorialsDataInput {
   published: Boolean
   startCall: DateTime
   endCall: DateTime
-  submitedArticles: ArticleUpdateManyWithoutEditionInput
+  submitedArticles: ArticleUpdateManyWithoutIssueInput
   selectedArticles: ArticleUpdateManyWithoutSelectedByInput
 }
 
-input EditionUpdateWithoutSubmitedArticlesDataInput {
+input IssueUpdateWithoutSubmitedArticlesDataInput {
   title: String
   key: String
   body: String
@@ -2401,42 +2728,42 @@ input EditionUpdateWithoutSubmitedArticlesDataInput {
   selectedEditorials: ArticleUpdateManyWithoutEditorialInput
 }
 
-input EditionUpdateWithWhereUniqueWithoutSelectedArticlesInput {
-  where: EditionWhereUniqueInput!
-  data: EditionUpdateWithoutSelectedArticlesDataInput!
+input IssueUpdateWithWhereUniqueWithoutSelectedArticlesInput {
+  where: IssueWhereUniqueInput!
+  data: IssueUpdateWithoutSelectedArticlesDataInput!
 }
 
-input EditionUpdateWithWhereUniqueWithoutSelectedEditorialsInput {
-  where: EditionWhereUniqueInput!
-  data: EditionUpdateWithoutSelectedEditorialsDataInput!
+input IssueUpdateWithWhereUniqueWithoutSelectedEditorialsInput {
+  where: IssueWhereUniqueInput!
+  data: IssueUpdateWithoutSelectedEditorialsDataInput!
 }
 
-input EditionUpsertWithoutSubmitedArticlesInput {
-  update: EditionUpdateWithoutSubmitedArticlesDataInput!
-  create: EditionCreateWithoutSubmitedArticlesInput!
+input IssueUpsertWithoutSubmitedArticlesInput {
+  update: IssueUpdateWithoutSubmitedArticlesDataInput!
+  create: IssueCreateWithoutSubmitedArticlesInput!
 }
 
-input EditionUpsertWithWhereUniqueWithoutSelectedArticlesInput {
-  where: EditionWhereUniqueInput!
-  update: EditionUpdateWithoutSelectedArticlesDataInput!
-  create: EditionCreateWithoutSelectedArticlesInput!
+input IssueUpsertWithWhereUniqueWithoutSelectedArticlesInput {
+  where: IssueWhereUniqueInput!
+  update: IssueUpdateWithoutSelectedArticlesDataInput!
+  create: IssueCreateWithoutSelectedArticlesInput!
 }
 
-input EditionUpsertWithWhereUniqueWithoutSelectedEditorialsInput {
-  where: EditionWhereUniqueInput!
-  update: EditionUpdateWithoutSelectedEditorialsDataInput!
-  create: EditionCreateWithoutSelectedEditorialsInput!
+input IssueUpsertWithWhereUniqueWithoutSelectedEditorialsInput {
+  where: IssueWhereUniqueInput!
+  update: IssueUpdateWithoutSelectedEditorialsDataInput!
+  create: IssueCreateWithoutSelectedEditorialsInput!
 }
 
-input EditionWhereInput {
+input IssueWhereInput {
   """Logical AND on all given filters."""
-  AND: [EditionWhereInput!]
+  AND: [IssueWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [EditionWhereInput!]
+  OR: [IssueWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [EditionWhereInput!]
+  NOT: [IssueWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -2788,336 +3115,9 @@ input EditionWhereInput {
   selectedEditorials_none: ArticleWhereInput
 }
 
-input EditionWhereUniqueInput {
+input IssueWhereUniqueInput {
   id: ID
   key: String
-}
-
-type File implements Node {
-  id: ID!
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-}
-
-"""A connection to a list of items."""
-type FileConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [FileEdge]!
-  aggregate: AggregateFile!
-}
-
-input FileCreateInput {
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-}
-
-"""An edge in a connection."""
-type FileEdge {
-  """The item at the end of the edge."""
-  node: File!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum FileOrderByInput {
-  id_ASC
-  id_DESC
-  path_ASC
-  path_DESC
-  filename_ASC
-  filename_DESC
-  mimetype_ASC
-  mimetype_DESC
-  encoding_ASC
-  encoding_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type FilePreviousValues {
-  id: ID!
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-}
-
-type FileSubscriptionPayload {
-  mutation: MutationType!
-  node: File
-  updatedFields: [String!]
-  previousValues: FilePreviousValues
-}
-
-input FileSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FileSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FileSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FileSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: FileWhereInput
-}
-
-input FileUpdateInput {
-  path: String
-  filename: String
-  mimetype: String
-  encoding: String
-}
-
-input FileUpdateManyMutationInput {
-  path: String
-  filename: String
-  mimetype: String
-  encoding: String
-}
-
-input FileWhereInput {
-  """Logical AND on all given filters."""
-  AND: [FileWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [FileWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [FileWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  path: String
-
-  """All values that are not equal to given value."""
-  path_not: String
-
-  """All values that are contained in given list."""
-  path_in: [String!]
-
-  """All values that are not contained in given list."""
-  path_not_in: [String!]
-
-  """All values less than the given value."""
-  path_lt: String
-
-  """All values less than or equal the given value."""
-  path_lte: String
-
-  """All values greater than the given value."""
-  path_gt: String
-
-  """All values greater than or equal the given value."""
-  path_gte: String
-
-  """All values containing the given string."""
-  path_contains: String
-
-  """All values not containing the given string."""
-  path_not_contains: String
-
-  """All values starting with the given string."""
-  path_starts_with: String
-
-  """All values not starting with the given string."""
-  path_not_starts_with: String
-
-  """All values ending with the given string."""
-  path_ends_with: String
-
-  """All values not ending with the given string."""
-  path_not_ends_with: String
-  filename: String
-
-  """All values that are not equal to given value."""
-  filename_not: String
-
-  """All values that are contained in given list."""
-  filename_in: [String!]
-
-  """All values that are not contained in given list."""
-  filename_not_in: [String!]
-
-  """All values less than the given value."""
-  filename_lt: String
-
-  """All values less than or equal the given value."""
-  filename_lte: String
-
-  """All values greater than the given value."""
-  filename_gt: String
-
-  """All values greater than or equal the given value."""
-  filename_gte: String
-
-  """All values containing the given string."""
-  filename_contains: String
-
-  """All values not containing the given string."""
-  filename_not_contains: String
-
-  """All values starting with the given string."""
-  filename_starts_with: String
-
-  """All values not starting with the given string."""
-  filename_not_starts_with: String
-
-  """All values ending with the given string."""
-  filename_ends_with: String
-
-  """All values not ending with the given string."""
-  filename_not_ends_with: String
-  mimetype: String
-
-  """All values that are not equal to given value."""
-  mimetype_not: String
-
-  """All values that are contained in given list."""
-  mimetype_in: [String!]
-
-  """All values that are not contained in given list."""
-  mimetype_not_in: [String!]
-
-  """All values less than the given value."""
-  mimetype_lt: String
-
-  """All values less than or equal the given value."""
-  mimetype_lte: String
-
-  """All values greater than the given value."""
-  mimetype_gt: String
-
-  """All values greater than or equal the given value."""
-  mimetype_gte: String
-
-  """All values containing the given string."""
-  mimetype_contains: String
-
-  """All values not containing the given string."""
-  mimetype_not_contains: String
-
-  """All values starting with the given string."""
-  mimetype_starts_with: String
-
-  """All values not starting with the given string."""
-  mimetype_not_starts_with: String
-
-  """All values ending with the given string."""
-  mimetype_ends_with: String
-
-  """All values not ending with the given string."""
-  mimetype_not_ends_with: String
-  encoding: String
-
-  """All values that are not equal to given value."""
-  encoding_not: String
-
-  """All values that are contained in given list."""
-  encoding_in: [String!]
-
-  """All values that are not contained in given list."""
-  encoding_not_in: [String!]
-
-  """All values less than the given value."""
-  encoding_lt: String
-
-  """All values less than or equal the given value."""
-  encoding_lte: String
-
-  """All values greater than the given value."""
-  encoding_gt: String
-
-  """All values greater than or equal the given value."""
-  encoding_gte: String
-
-  """All values containing the given string."""
-  encoding_contains: String
-
-  """All values not containing the given string."""
-  encoding_not_contains: String
-
-  """All values starting with the given string."""
-  encoding_starts_with: String
-
-  """All values not starting with the given string."""
-  encoding_not_starts_with: String
-
-  """All values ending with the given string."""
-  encoding_ends_with: String
-
-  """All values not ending with the given string."""
-  encoding_not_ends_with: String
-}
-
-input FileWhereUniqueInput {
-  id: ID
 }
 
 """Raw JSON value"""
@@ -3133,7 +3133,7 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createNewsletterSubscription(data: NewsletterSubscriptionCreateInput!): NewsletterSubscription!
   createContent(data: ContentCreateInput!): Content!
-  createEdition(data: EditionCreateInput!): Edition!
+  createIssue(data: IssueCreateInput!): Issue!
   createArticle(data: ArticleCreateInput!): Article!
   createPayment(data: PaymentCreateInput!): Payment!
   createFile(data: FileCreateInput!): File!
@@ -3141,7 +3141,7 @@ type Mutation {
   createCupom(data: CupomCreateInput!): Cupom!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateNewsletterSubscription(data: NewsletterSubscriptionUpdateInput!, where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
-  updateEdition(data: EditionUpdateInput!, where: EditionWhereUniqueInput!): Edition
+  updateIssue(data: IssueUpdateInput!, where: IssueWhereUniqueInput!): Issue
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
@@ -3149,7 +3149,7 @@ type Mutation {
   updateCupom(data: CupomUpdateInput!, where: CupomWhereUniqueInput!): Cupom
   deleteUser(where: UserWhereUniqueInput!): User
   deleteNewsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
-  deleteEdition(where: EditionWhereUniqueInput!): Edition
+  deleteIssue(where: IssueWhereUniqueInput!): Issue
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteFile(where: FileWhereUniqueInput!): File
@@ -3157,7 +3157,7 @@ type Mutation {
   deleteCupom(where: CupomWhereUniqueInput!): Cupom
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertNewsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!, create: NewsletterSubscriptionCreateInput!, update: NewsletterSubscriptionUpdateInput!): NewsletterSubscription!
-  upsertEdition(where: EditionWhereUniqueInput!, create: EditionCreateInput!, update: EditionUpdateInput!): Edition!
+  upsertIssue(where: IssueWhereUniqueInput!, create: IssueCreateInput!, update: IssueUpdateInput!): Issue!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
@@ -3166,7 +3166,7 @@ type Mutation {
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyNewsletterSubscriptions(data: NewsletterSubscriptionUpdateManyMutationInput!, where: NewsletterSubscriptionWhereInput): BatchPayload!
   updateManyContents(data: ContentUpdateManyMutationInput!, where: ContentWhereInput): BatchPayload!
-  updateManyEditions(data: EditionUpdateManyMutationInput!, where: EditionWhereInput): BatchPayload!
+  updateManyIssues(data: IssueUpdateManyMutationInput!, where: IssueWhereInput): BatchPayload!
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
@@ -3175,7 +3175,7 @@ type Mutation {
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyNewsletterSubscriptions(where: NewsletterSubscriptionWhereInput): BatchPayload!
   deleteManyContents(where: ContentWhereInput): BatchPayload!
-  deleteManyEditions(where: EditionWhereInput): BatchPayload!
+  deleteManyIssues(where: IssueWhereInput): BatchPayload!
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
@@ -5283,7 +5283,7 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   newsletterSubscriptions(where: NewsletterSubscriptionWhereInput, orderBy: NewsletterSubscriptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [NewsletterSubscription]!
   contents(where: ContentWhereInput, orderBy: ContentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Content]!
-  editions(where: EditionWhereInput, orderBy: EditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Edition]!
+  issues(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue]!
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
@@ -5291,7 +5291,7 @@ type Query {
   cupoms(where: CupomWhereInput, orderBy: CupomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Cupom]!
   user(where: UserWhereUniqueInput!): User
   newsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
-  edition(where: EditionWhereUniqueInput!): Edition
+  issue(where: IssueWhereUniqueInput!): Issue
   article(where: ArticleWhereUniqueInput!): Article
   payment(where: PaymentWhereUniqueInput!): Payment
   file(where: FileWhereUniqueInput!): File
@@ -5300,7 +5300,7 @@ type Query {
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   newsletterSubscriptionsConnection(where: NewsletterSubscriptionWhereInput, orderBy: NewsletterSubscriptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NewsletterSubscriptionConnection!
   contentsConnection(where: ContentWhereInput, orderBy: ContentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContentConnection!
-  editionsConnection(where: EditionWhereInput, orderBy: EditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EditionConnection!
+  issuesConnection(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): IssueConnection!
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
@@ -5325,7 +5325,7 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   newsletterSubscription(where: NewsletterSubscriptionSubscriptionWhereInput): NewsletterSubscriptionSubscriptionPayload
   content(where: ContentSubscriptionWhereInput): ContentSubscriptionPayload
-  edition(where: EditionSubscriptionWhereInput): EditionSubscriptionPayload
+  issue(where: IssueSubscriptionWhereInput): IssueSubscriptionPayload
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
@@ -5339,6 +5339,7 @@ type User implements Node {
   password: String!
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5368,6 +5369,7 @@ input UserCreateInput {
   password: String!
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5395,6 +5397,7 @@ input UserCreateWithoutArticlesInput {
   password: String!
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5411,6 +5414,7 @@ input UserCreateWithoutPaymentsInput {
   password: String!
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5442,6 +5446,8 @@ enum UserOrderByInput {
   firstName_DESC
   lastName_ASC
   lastName_DESC
+  initials_ASC
+  initials_DESC
   about_ASC
   about_DESC
   image_ASC
@@ -5470,6 +5476,7 @@ type UserPreviousValues {
   password: String!
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5526,6 +5533,7 @@ input UserUpdateInput {
   password: String
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5543,6 +5551,7 @@ input UserUpdateManyMutationInput {
   password: String
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5572,6 +5581,7 @@ input UserUpdateWithoutArticlesDataInput {
   password: String
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5588,6 +5598,7 @@ input UserUpdateWithoutPaymentsDataInput {
   password: String
   firstName: String
   lastName: String
+  initials: String
   about: String
   image: String
   subscribed: Boolean
@@ -5818,6 +5829,46 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   lastName_not_ends_with: String
+  initials: String
+
+  """All values that are not equal to given value."""
+  initials_not: String
+
+  """All values that are contained in given list."""
+  initials_in: [String!]
+
+  """All values that are not contained in given list."""
+  initials_not_in: [String!]
+
+  """All values less than the given value."""
+  initials_lt: String
+
+  """All values less than or equal the given value."""
+  initials_lte: String
+
+  """All values greater than the given value."""
+  initials_gt: String
+
+  """All values greater than or equal the given value."""
+  initials_gte: String
+
+  """All values containing the given string."""
+  initials_contains: String
+
+  """All values not containing the given string."""
+  initials_not_contains: String
+
+  """All values starting with the given string."""
+  initials_starts_with: String
+
+  """All values not starting with the given string."""
+  initials_not_starts_with: String
+
+  """All values ending with the given string."""
+  initials_ends_with: String
+
+  """All values not ending with the given string."""
+  initials_not_ends_with: String
   about: String
 
   """All values that are not equal to given value."""

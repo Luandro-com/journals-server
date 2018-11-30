@@ -1,4 +1,4 @@
-input EditionInput {
+input IssueInput {
   title: String
   key: String!
   body: String
@@ -9,7 +9,7 @@ input EditionInput {
   endCall: DateTime!
 }
 
-input EditionUpdateInput {
+input IssueUpdateInput {
   title: String
   key: String
   body: String

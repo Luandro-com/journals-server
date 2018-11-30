@@ -1,4 +1,4 @@
-# import User, Content, DateTime, Payment, Edition, File from "generated/prisma.graphql"
+# import User, Content, DateTime, Payment, Issue, File from "generated/prisma.graphql"
 # import * from "types/user.graphql"
 # import * from "types/journal.graphql"
 # import * from "types/admin.graphql"
@@ -11,8 +11,8 @@ type Query {
   users: [User]
   admins: [User]
   payments: [Payment]
-  editions: [Edition]
-  edition(editionKey: String!): Edition
+  issues: [Issue]
+  issue(IssueKey: String!): Issue
   content: Content
   payedArticles: [Article]
   uploads: [File]
@@ -29,14 +29,14 @@ type Mutation {
   publishArticle(articleId: ID!): Article
   deleteArticle(articleId: ID!): Article
   payment(input: PaymentInput): Payment
-  createEdition(input: EditionInput!): Edition
-  publishEdition(editionId: ID!): Edition
-  publishEditionCall(editionId: ID!): Edition
-  updateEdition(editionId: ID! input: EditionUpdateInput!): Edition
-  deleteEdition(editionId: ID!): Edition
-  selectEditorial(articleId: ID! editionId: ID!): Edition
-  unselectEditorial(articleId: ID! editionId: ID!): Edition
-  selectArticles(articleIds: [ID]! editionId: ID!): Edition
-  unselectArticles(articleIds: [ID]! editionId: ID!): Edition
+  createIssue(input: IssueInput!): Issue
+  publishIssue(IssueId: ID!): Issue
+  publishIssueCall(IssueId: ID!): Issue
+  updateIssue(IssueId: ID! input: IssueUpdateInput!): Issue
+  deleteIssue(IssueId: ID!): Issue
+  selectEditorial(articleId: ID! IssueId: ID!): Issue
+  unselectEditorial(articleId: ID! IssueId: ID!): Issue
+  selectArticles(articleIds: [ID]! IssueId: ID!): Issue
+  unselectArticles(articleIds: [ID]! IssueId: ID!): Issue
   uploadFile(file: Upload!): File!
 }
