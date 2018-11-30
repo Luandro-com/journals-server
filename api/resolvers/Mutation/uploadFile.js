@@ -1,7 +1,7 @@
 const { localUpload } = require('../../services/upload')
 
 module.exports = async (parent, { file }, ctx, info) => {
-  if (!process.env.PRODUCTION) {
+  if (!process.env.NODE_ENV === 'production') {
     throw 'NOT READY FOR PRODUCTION'
   } else {
     console.log('FILE', file)
