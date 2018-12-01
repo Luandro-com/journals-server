@@ -66,7 +66,7 @@ type Issue {
   year: String
   submitedArticles: [Article!]! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
   selectedArticles: [Article!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
-  selectedEditorials: [Article!]! @relation(name: "EditorialArticles")
+  selectedEditorials: [Article!]! @relation(name: "EditorialArticles", onDelete: SET_NULL)
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -86,11 +86,11 @@ type Article {
   author: User!
   shortDescription: String
   published: Boolean @default(value: "false")
-  file: ArticleFile
+  file: File
   citations: [Citation!]!
   issue: Issue! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
   selectedBy: [Issue!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
-  editorial: [Issue!]! @relation(name: "EditorialArticles")
+  editorial: [Issue!]! @relation(name: "EditorialArticles", onDelete: SET_NULL)
   createdAt: DateTime!
   updatedAt: DateTime!
   payment: Payment
@@ -165,15 +165,11 @@ type File {
   url: String! @unique
 }
 
-type ArticleFile {
+type ResetPasswordRequest {
   id: ID! @unique
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String @default(value: "utf8")
-  revisions: Int
-  articleId: Article!
-  size: Int
-  originalFilename: String
+  hash: String! @unique
+  reset: Boolean @default(value: "false")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
 }
-

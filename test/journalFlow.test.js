@@ -7,7 +7,7 @@ const testEmail = faker.internet.email()
 const testPassword = faker.internet.password()
 
 let token
-let IssueId
+let issueId
 let articleId
 let articleId2
 
@@ -91,7 +91,7 @@ module.exports = () => {
     mockFetch(issues, null, token)
     .then(res => {
       console.log('RES', res)
-      IssueId = res.issues[0].id
+      issueId = res.issues[0].id
       t.equal(true, res.issues.filter(e => (!e.published && !e.publishedCall)).length === 0)
       t.end()
     })
@@ -179,7 +179,7 @@ module.exports = () => {
     `
     const variables = {
       input: {
-        IssueId,
+        issueId,
         title: faker.company.catchPhrase(),
         resume: faker.company.catchPhraseDescriptor(),
       }

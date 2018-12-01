@@ -1,11 +1,7 @@
 # source: http://localhost:4466
-# timestamp: Sat Dec 01 2018 10:09:03 GMT-0200 (-02)
+# timestamp: Sat Dec 01 2018 16:28:30 GMT-0200 (-02)
 
 type AggregateArticle {
-  count: Int!
-}
-
-type AggregateArticleFile {
   count: Int!
 }
 
@@ -41,6 +37,10 @@ type AggregatePayment {
   count: Int!
 }
 
+type AggregateResetPasswordRequest {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -52,7 +52,7 @@ type Article implements Node {
   author: User!
   shortDescription: String
   published: Boolean
-  file: ArticleFile
+  file: File
   citations(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Citation!]
   issue: Issue!
   selectedBy(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue!]
@@ -78,7 +78,7 @@ input ArticleCreateInput {
   shortDescription: String
   published: Boolean
   author: UserCreateOneWithoutArticlesInput!
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
@@ -111,11 +111,6 @@ input ArticleCreateOneWithoutCitationsInput {
   connect: ArticleWhereUniqueInput
 }
 
-input ArticleCreateOneWithoutFileInput {
-  create: ArticleCreateWithoutFileInput
-  connect: ArticleWhereUniqueInput
-}
-
 input ArticleCreateOneWithoutPaymentInput {
   create: ArticleCreateWithoutPaymentInput
   connect: ArticleWhereUniqueInput
@@ -126,7 +121,7 @@ input ArticleCreateWithoutAuthorInput {
   resume: String
   shortDescription: String
   published: Boolean
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
@@ -140,7 +135,7 @@ input ArticleCreateWithoutCitationsInput {
   shortDescription: String
   published: Boolean
   author: UserCreateOneWithoutArticlesInput!
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
@@ -153,23 +148,10 @@ input ArticleCreateWithoutEditorialInput {
   shortDescription: String
   published: Boolean
   author: UserCreateOneWithoutArticlesInput!
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
-  payment: PaymentCreateOneWithoutArticleInput
-}
-
-input ArticleCreateWithoutFileInput {
-  title: String
-  resume: String
-  shortDescription: String
-  published: Boolean
-  author: UserCreateOneWithoutArticlesInput!
-  citations: CitationCreateManyWithoutArticleInput
-  issue: IssueCreateOneWithoutSubmitedArticlesInput!
-  selectedBy: IssueCreateManyWithoutSelectedArticlesInput
-  editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
 }
 
@@ -179,7 +161,7 @@ input ArticleCreateWithoutIssueInput {
   shortDescription: String
   published: Boolean
   author: UserCreateOneWithoutArticlesInput!
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
@@ -192,7 +174,7 @@ input ArticleCreateWithoutPaymentInput {
   shortDescription: String
   published: Boolean
   author: UserCreateOneWithoutArticlesInput!
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
@@ -205,7 +187,7 @@ input ArticleCreateWithoutSelectedByInput {
   shortDescription: String
   published: Boolean
   author: UserCreateOneWithoutArticlesInput!
-  file: ArticleFileCreateOneWithoutArticleIdInput
+  file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
@@ -219,481 +201,6 @@ type ArticleEdge {
 
   """A cursor for use in pagination."""
   cursor: String!
-}
-
-type ArticleFile implements Node {
-  id: ID!
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-  revisions: Int
-  articleId: Article!
-  size: Int
-  originalFilename: String
-}
-
-"""A connection to a list of items."""
-type ArticleFileConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [ArticleFileEdge]!
-  aggregate: AggregateArticleFile!
-}
-
-input ArticleFileCreateInput {
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-  revisions: Int
-  size: Int
-  originalFilename: String
-  articleId: ArticleCreateOneWithoutFileInput!
-}
-
-input ArticleFileCreateOneWithoutArticleIdInput {
-  create: ArticleFileCreateWithoutArticleIdInput
-  connect: ArticleFileWhereUniqueInput
-}
-
-input ArticleFileCreateWithoutArticleIdInput {
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-  revisions: Int
-  size: Int
-  originalFilename: String
-}
-
-"""An edge in a connection."""
-type ArticleFileEdge {
-  """The item at the end of the edge."""
-  node: ArticleFile!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum ArticleFileOrderByInput {
-  id_ASC
-  id_DESC
-  path_ASC
-  path_DESC
-  filename_ASC
-  filename_DESC
-  mimetype_ASC
-  mimetype_DESC
-  encoding_ASC
-  encoding_DESC
-  revisions_ASC
-  revisions_DESC
-  size_ASC
-  size_DESC
-  originalFilename_ASC
-  originalFilename_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type ArticleFilePreviousValues {
-  id: ID!
-  path: String
-  filename: String!
-  mimetype: String!
-  encoding: String
-  revisions: Int
-  size: Int
-  originalFilename: String
-}
-
-type ArticleFileSubscriptionPayload {
-  mutation: MutationType!
-  node: ArticleFile
-  updatedFields: [String!]
-  previousValues: ArticleFilePreviousValues
-}
-
-input ArticleFileSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ArticleFileSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ArticleFileSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ArticleFileSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: ArticleFileWhereInput
-}
-
-input ArticleFileUpdateInput {
-  path: String
-  filename: String
-  mimetype: String
-  encoding: String
-  revisions: Int
-  size: Int
-  originalFilename: String
-  articleId: ArticleUpdateOneRequiredWithoutFileInput
-}
-
-input ArticleFileUpdateManyMutationInput {
-  path: String
-  filename: String
-  mimetype: String
-  encoding: String
-  revisions: Int
-  size: Int
-  originalFilename: String
-}
-
-input ArticleFileUpdateOneWithoutArticleIdInput {
-  create: ArticleFileCreateWithoutArticleIdInput
-  connect: ArticleFileWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: ArticleFileUpdateWithoutArticleIdDataInput
-  upsert: ArticleFileUpsertWithoutArticleIdInput
-}
-
-input ArticleFileUpdateWithoutArticleIdDataInput {
-  path: String
-  filename: String
-  mimetype: String
-  encoding: String
-  revisions: Int
-  size: Int
-  originalFilename: String
-}
-
-input ArticleFileUpsertWithoutArticleIdInput {
-  update: ArticleFileUpdateWithoutArticleIdDataInput!
-  create: ArticleFileCreateWithoutArticleIdInput!
-}
-
-input ArticleFileWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ArticleFileWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ArticleFileWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ArticleFileWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  path: String
-
-  """All values that are not equal to given value."""
-  path_not: String
-
-  """All values that are contained in given list."""
-  path_in: [String!]
-
-  """All values that are not contained in given list."""
-  path_not_in: [String!]
-
-  """All values less than the given value."""
-  path_lt: String
-
-  """All values less than or equal the given value."""
-  path_lte: String
-
-  """All values greater than the given value."""
-  path_gt: String
-
-  """All values greater than or equal the given value."""
-  path_gte: String
-
-  """All values containing the given string."""
-  path_contains: String
-
-  """All values not containing the given string."""
-  path_not_contains: String
-
-  """All values starting with the given string."""
-  path_starts_with: String
-
-  """All values not starting with the given string."""
-  path_not_starts_with: String
-
-  """All values ending with the given string."""
-  path_ends_with: String
-
-  """All values not ending with the given string."""
-  path_not_ends_with: String
-  filename: String
-
-  """All values that are not equal to given value."""
-  filename_not: String
-
-  """All values that are contained in given list."""
-  filename_in: [String!]
-
-  """All values that are not contained in given list."""
-  filename_not_in: [String!]
-
-  """All values less than the given value."""
-  filename_lt: String
-
-  """All values less than or equal the given value."""
-  filename_lte: String
-
-  """All values greater than the given value."""
-  filename_gt: String
-
-  """All values greater than or equal the given value."""
-  filename_gte: String
-
-  """All values containing the given string."""
-  filename_contains: String
-
-  """All values not containing the given string."""
-  filename_not_contains: String
-
-  """All values starting with the given string."""
-  filename_starts_with: String
-
-  """All values not starting with the given string."""
-  filename_not_starts_with: String
-
-  """All values ending with the given string."""
-  filename_ends_with: String
-
-  """All values not ending with the given string."""
-  filename_not_ends_with: String
-  mimetype: String
-
-  """All values that are not equal to given value."""
-  mimetype_not: String
-
-  """All values that are contained in given list."""
-  mimetype_in: [String!]
-
-  """All values that are not contained in given list."""
-  mimetype_not_in: [String!]
-
-  """All values less than the given value."""
-  mimetype_lt: String
-
-  """All values less than or equal the given value."""
-  mimetype_lte: String
-
-  """All values greater than the given value."""
-  mimetype_gt: String
-
-  """All values greater than or equal the given value."""
-  mimetype_gte: String
-
-  """All values containing the given string."""
-  mimetype_contains: String
-
-  """All values not containing the given string."""
-  mimetype_not_contains: String
-
-  """All values starting with the given string."""
-  mimetype_starts_with: String
-
-  """All values not starting with the given string."""
-  mimetype_not_starts_with: String
-
-  """All values ending with the given string."""
-  mimetype_ends_with: String
-
-  """All values not ending with the given string."""
-  mimetype_not_ends_with: String
-  encoding: String
-
-  """All values that are not equal to given value."""
-  encoding_not: String
-
-  """All values that are contained in given list."""
-  encoding_in: [String!]
-
-  """All values that are not contained in given list."""
-  encoding_not_in: [String!]
-
-  """All values less than the given value."""
-  encoding_lt: String
-
-  """All values less than or equal the given value."""
-  encoding_lte: String
-
-  """All values greater than the given value."""
-  encoding_gt: String
-
-  """All values greater than or equal the given value."""
-  encoding_gte: String
-
-  """All values containing the given string."""
-  encoding_contains: String
-
-  """All values not containing the given string."""
-  encoding_not_contains: String
-
-  """All values starting with the given string."""
-  encoding_starts_with: String
-
-  """All values not starting with the given string."""
-  encoding_not_starts_with: String
-
-  """All values ending with the given string."""
-  encoding_ends_with: String
-
-  """All values not ending with the given string."""
-  encoding_not_ends_with: String
-  revisions: Int
-
-  """All values that are not equal to given value."""
-  revisions_not: Int
-
-  """All values that are contained in given list."""
-  revisions_in: [Int!]
-
-  """All values that are not contained in given list."""
-  revisions_not_in: [Int!]
-
-  """All values less than the given value."""
-  revisions_lt: Int
-
-  """All values less than or equal the given value."""
-  revisions_lte: Int
-
-  """All values greater than the given value."""
-  revisions_gt: Int
-
-  """All values greater than or equal the given value."""
-  revisions_gte: Int
-  size: Int
-
-  """All values that are not equal to given value."""
-  size_not: Int
-
-  """All values that are contained in given list."""
-  size_in: [Int!]
-
-  """All values that are not contained in given list."""
-  size_not_in: [Int!]
-
-  """All values less than the given value."""
-  size_lt: Int
-
-  """All values less than or equal the given value."""
-  size_lte: Int
-
-  """All values greater than the given value."""
-  size_gt: Int
-
-  """All values greater than or equal the given value."""
-  size_gte: Int
-  originalFilename: String
-
-  """All values that are not equal to given value."""
-  originalFilename_not: String
-
-  """All values that are contained in given list."""
-  originalFilename_in: [String!]
-
-  """All values that are not contained in given list."""
-  originalFilename_not_in: [String!]
-
-  """All values less than the given value."""
-  originalFilename_lt: String
-
-  """All values less than or equal the given value."""
-  originalFilename_lte: String
-
-  """All values greater than the given value."""
-  originalFilename_gt: String
-
-  """All values greater than or equal the given value."""
-  originalFilename_gte: String
-
-  """All values containing the given string."""
-  originalFilename_contains: String
-
-  """All values not containing the given string."""
-  originalFilename_not_contains: String
-
-  """All values starting with the given string."""
-  originalFilename_starts_with: String
-
-  """All values not starting with the given string."""
-  originalFilename_not_starts_with: String
-
-  """All values ending with the given string."""
-  originalFilename_ends_with: String
-
-  """All values not ending with the given string."""
-  originalFilename_not_ends_with: String
-  articleId: ArticleWhereInput
-}
-
-input ArticleFileWhereUniqueInput {
-  id: ID
 }
 
 enum ArticleOrderByInput {
@@ -987,7 +494,7 @@ input ArticleUpdateInput {
   shortDescription: String
   published: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
@@ -1065,13 +572,6 @@ input ArticleUpdateOneRequiredWithoutCitationsInput {
   upsert: ArticleUpsertWithoutCitationsInput
 }
 
-input ArticleUpdateOneRequiredWithoutFileInput {
-  create: ArticleCreateWithoutFileInput
-  connect: ArticleWhereUniqueInput
-  update: ArticleUpdateWithoutFileDataInput
-  upsert: ArticleUpsertWithoutFileInput
-}
-
 input ArticleUpdateOneRequiredWithoutPaymentInput {
   create: ArticleCreateWithoutPaymentInput
   connect: ArticleWhereUniqueInput
@@ -1084,7 +584,7 @@ input ArticleUpdateWithoutAuthorDataInput {
   resume: String
   shortDescription: String
   published: Boolean
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
@@ -1098,7 +598,7 @@ input ArticleUpdateWithoutCitationsDataInput {
   shortDescription: String
   published: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
@@ -1111,23 +611,10 @@ input ArticleUpdateWithoutEditorialDataInput {
   shortDescription: String
   published: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
-  payment: PaymentUpdateOneWithoutArticleInput
-}
-
-input ArticleUpdateWithoutFileDataInput {
-  title: String
-  resume: String
-  shortDescription: String
-  published: Boolean
-  author: UserUpdateOneRequiredWithoutArticlesInput
-  citations: CitationUpdateManyWithoutArticleInput
-  issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
-  selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
-  editorial: IssueUpdateManyWithoutSelectedEditorialsInput
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
@@ -1137,7 +624,7 @@ input ArticleUpdateWithoutIssueDataInput {
   shortDescription: String
   published: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
@@ -1150,7 +637,7 @@ input ArticleUpdateWithoutPaymentDataInput {
   shortDescription: String
   published: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   selectedBy: IssueUpdateManyWithoutSelectedArticlesInput
@@ -1163,7 +650,7 @@ input ArticleUpdateWithoutSelectedByDataInput {
   shortDescription: String
   published: Boolean
   author: UserUpdateOneRequiredWithoutArticlesInput
-  file: ArticleFileUpdateOneWithoutArticleIdInput
+  file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
   editorial: IssueUpdateManyWithoutSelectedEditorialsInput
@@ -1193,11 +680,6 @@ input ArticleUpdateWithWhereUniqueWithoutSelectedByInput {
 input ArticleUpsertWithoutCitationsInput {
   update: ArticleUpdateWithoutCitationsDataInput!
   create: ArticleCreateWithoutCitationsInput!
-}
-
-input ArticleUpsertWithoutFileInput {
-  update: ArticleUpdateWithoutFileDataInput!
-  create: ArticleCreateWithoutFileInput!
 }
 
 input ArticleUpsertWithoutPaymentInput {
@@ -1447,7 +929,7 @@ input ArticleWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   author: UserWhereInput
-  file: ArticleFileWhereInput
+  file: FileWhereInput
   citations_every: CitationWhereInput
   citations_some: CitationWhereInput
   citations_none: CitationWhereInput
@@ -3246,6 +2728,11 @@ input FileCreateInput {
   url: String!
 }
 
+input FileCreateOneInput {
+  create: FileCreateInput
+  connect: FileWhereUniqueInput
+}
+
 """An edge in a connection."""
 type FileEdge {
   """The item at the end of the edge."""
@@ -3321,6 +2808,13 @@ input FileSubscriptionWhereInput {
   node: FileWhereInput
 }
 
+input FileUpdateDataInput {
+  filename: String
+  mimetype: String
+  encoding: String
+  url: String
+}
+
 input FileUpdateInput {
   filename: String
   mimetype: String
@@ -3333,6 +2827,20 @@ input FileUpdateManyMutationInput {
   mimetype: String
   encoding: String
   url: String
+}
+
+input FileUpdateOneInput {
+  create: FileCreateInput
+  connect: FileWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: FileUpdateDataInput
+  upsert: FileUpsertNestedInput
+}
+
+input FileUpsertNestedInput {
+  update: FileUpdateDataInput!
+  create: FileCreateInput!
 }
 
 input FileWhereInput {
@@ -4884,40 +4392,40 @@ type Mutation {
   createArticle(data: ArticleCreateInput!): Article!
   createCitation(data: CitationCreateInput!): Citation!
   createPayment(data: PaymentCreateInput!): Payment!
-  createFile(data: FileCreateInput!): File!
-  createArticleFile(data: ArticleFileCreateInput!): ArticleFile!
+  createResetPasswordRequest(data: ResetPasswordRequestCreateInput!): ResetPasswordRequest!
   createCreditCard(data: CreditCardCreateInput!): CreditCard!
   createCupom(data: CupomCreateInput!): Cupom!
+  createFile(data: FileCreateInput!): File!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateNewsletterSubscription(data: NewsletterSubscriptionUpdateInput!, where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
   updateIssue(data: IssueUpdateInput!, where: IssueWhereUniqueInput!): Issue
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateCitation(data: CitationUpdateInput!, where: CitationWhereUniqueInput!): Citation
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
-  updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
-  updateArticleFile(data: ArticleFileUpdateInput!, where: ArticleFileWhereUniqueInput!): ArticleFile
+  updateResetPasswordRequest(data: ResetPasswordRequestUpdateInput!, where: ResetPasswordRequestWhereUniqueInput!): ResetPasswordRequest
   updateCreditCard(data: CreditCardUpdateInput!, where: CreditCardWhereUniqueInput!): CreditCard
   updateCupom(data: CupomUpdateInput!, where: CupomWhereUniqueInput!): Cupom
+  updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   deleteUser(where: UserWhereUniqueInput!): User
   deleteNewsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
   deleteIssue(where: IssueWhereUniqueInput!): Issue
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteCitation(where: CitationWhereUniqueInput!): Citation
   deletePayment(where: PaymentWhereUniqueInput!): Payment
-  deleteFile(where: FileWhereUniqueInput!): File
-  deleteArticleFile(where: ArticleFileWhereUniqueInput!): ArticleFile
+  deleteResetPasswordRequest(where: ResetPasswordRequestWhereUniqueInput!): ResetPasswordRequest
   deleteCreditCard(where: CreditCardWhereUniqueInput!): CreditCard
   deleteCupom(where: CupomWhereUniqueInput!): Cupom
+  deleteFile(where: FileWhereUniqueInput!): File
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertNewsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!, create: NewsletterSubscriptionCreateInput!, update: NewsletterSubscriptionUpdateInput!): NewsletterSubscription!
   upsertIssue(where: IssueWhereUniqueInput!, create: IssueCreateInput!, update: IssueUpdateInput!): Issue!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertCitation(where: CitationWhereUniqueInput!, create: CitationCreateInput!, update: CitationUpdateInput!): Citation!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
-  upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
-  upsertArticleFile(where: ArticleFileWhereUniqueInput!, create: ArticleFileCreateInput!, update: ArticleFileUpdateInput!): ArticleFile!
+  upsertResetPasswordRequest(where: ResetPasswordRequestWhereUniqueInput!, create: ResetPasswordRequestCreateInput!, update: ResetPasswordRequestUpdateInput!): ResetPasswordRequest!
   upsertCreditCard(where: CreditCardWhereUniqueInput!, create: CreditCardCreateInput!, update: CreditCardUpdateInput!): CreditCard!
   upsertCupom(where: CupomWhereUniqueInput!, create: CupomCreateInput!, update: CupomUpdateInput!): Cupom!
+  upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyNewsletterSubscriptions(data: NewsletterSubscriptionUpdateManyMutationInput!, where: NewsletterSubscriptionWhereInput): BatchPayload!
   updateManyContents(data: ContentUpdateManyMutationInput!, where: ContentWhereInput): BatchPayload!
@@ -4925,10 +4433,10 @@ type Mutation {
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyCitations(data: CitationUpdateManyMutationInput!, where: CitationWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
-  updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
-  updateManyArticleFiles(data: ArticleFileUpdateManyMutationInput!, where: ArticleFileWhereInput): BatchPayload!
+  updateManyResetPasswordRequests(data: ResetPasswordRequestUpdateManyMutationInput!, where: ResetPasswordRequestWhereInput): BatchPayload!
   updateManyCreditCards(data: CreditCardUpdateManyMutationInput!, where: CreditCardWhereInput): BatchPayload!
   updateManyCupoms(data: CupomUpdateManyMutationInput!, where: CupomWhereInput): BatchPayload!
+  updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyNewsletterSubscriptions(where: NewsletterSubscriptionWhereInput): BatchPayload!
   deleteManyContents(where: ContentWhereInput): BatchPayload!
@@ -4936,10 +4444,10 @@ type Mutation {
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyCitations(where: CitationWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
-  deleteManyFiles(where: FileWhereInput): BatchPayload!
-  deleteManyArticleFiles(where: ArticleFileWhereInput): BatchPayload!
+  deleteManyResetPasswordRequests(where: ResetPasswordRequestWhereInput): BatchPayload!
   deleteManyCreditCards(where: CreditCardWhereInput): BatchPayload!
   deleteManyCupoms(where: CupomWhereInput): BatchPayload!
+  deleteManyFiles(where: FileWhereInput): BatchPayload!
   executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
@@ -7046,20 +6554,20 @@ type Query {
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   citations(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Citation]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
-  files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
-  articleFiles(where: ArticleFileWhereInput, orderBy: ArticleFileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ArticleFile]!
+  resetPasswordRequests(where: ResetPasswordRequestWhereInput, orderBy: ResetPasswordRequestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ResetPasswordRequest]!
   creditCards(where: CreditCardWhereInput, orderBy: CreditCardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CreditCard]!
   cupoms(where: CupomWhereInput, orderBy: CupomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Cupom]!
+  files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   user(where: UserWhereUniqueInput!): User
   newsletterSubscription(where: NewsletterSubscriptionWhereUniqueInput!): NewsletterSubscription
   issue(where: IssueWhereUniqueInput!): Issue
   article(where: ArticleWhereUniqueInput!): Article
   citation(where: CitationWhereUniqueInput!): Citation
   payment(where: PaymentWhereUniqueInput!): Payment
-  file(where: FileWhereUniqueInput!): File
-  articleFile(where: ArticleFileWhereUniqueInput!): ArticleFile
+  resetPasswordRequest(where: ResetPasswordRequestWhereUniqueInput!): ResetPasswordRequest
   creditCard(where: CreditCardWhereUniqueInput!): CreditCard
   cupom(where: CupomWhereUniqueInput!): Cupom
+  file(where: FileWhereUniqueInput!): File
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   newsletterSubscriptionsConnection(where: NewsletterSubscriptionWhereInput, orderBy: NewsletterSubscriptionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NewsletterSubscriptionConnection!
   contentsConnection(where: ContentWhereInput, orderBy: ContentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContentConnection!
@@ -7067,16 +6575,309 @@ type Query {
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   citationsConnection(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CitationConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
-  filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
-  articleFilesConnection(where: ArticleFileWhereInput, orderBy: ArticleFileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleFileConnection!
+  resetPasswordRequestsConnection(where: ResetPasswordRequestWhereInput, orderBy: ResetPasswordRequestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResetPasswordRequestConnection!
   creditCardsConnection(where: CreditCardWhereInput, orderBy: CreditCardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CreditCardConnection!
   cupomsConnection(where: CupomWhereInput, orderBy: CupomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CupomConnection!
+  filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
 
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
     id: ID!
   ): Node
+}
+
+type ResetPasswordRequest implements Node {
+  id: ID!
+  hash: String!
+  reset: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+}
+
+"""A connection to a list of items."""
+type ResetPasswordRequestConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ResetPasswordRequestEdge]!
+  aggregate: AggregateResetPasswordRequest!
+}
+
+input ResetPasswordRequestCreateInput {
+  hash: String!
+  reset: Boolean
+  email: String!
+}
+
+"""An edge in a connection."""
+type ResetPasswordRequestEdge {
+  """The item at the end of the edge."""
+  node: ResetPasswordRequest!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ResetPasswordRequestOrderByInput {
+  id_ASC
+  id_DESC
+  hash_ASC
+  hash_DESC
+  reset_ASC
+  reset_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  email_ASC
+  email_DESC
+}
+
+type ResetPasswordRequestPreviousValues {
+  id: ID!
+  hash: String!
+  reset: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+}
+
+type ResetPasswordRequestSubscriptionPayload {
+  mutation: MutationType!
+  node: ResetPasswordRequest
+  updatedFields: [String!]
+  previousValues: ResetPasswordRequestPreviousValues
+}
+
+input ResetPasswordRequestSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResetPasswordRequestSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResetPasswordRequestSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResetPasswordRequestSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ResetPasswordRequestWhereInput
+}
+
+input ResetPasswordRequestUpdateInput {
+  hash: String
+  reset: Boolean
+  email: String
+}
+
+input ResetPasswordRequestUpdateManyMutationInput {
+  hash: String
+  reset: Boolean
+  email: String
+}
+
+input ResetPasswordRequestWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResetPasswordRequestWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResetPasswordRequestWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResetPasswordRequestWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  hash: String
+
+  """All values that are not equal to given value."""
+  hash_not: String
+
+  """All values that are contained in given list."""
+  hash_in: [String!]
+
+  """All values that are not contained in given list."""
+  hash_not_in: [String!]
+
+  """All values less than the given value."""
+  hash_lt: String
+
+  """All values less than or equal the given value."""
+  hash_lte: String
+
+  """All values greater than the given value."""
+  hash_gt: String
+
+  """All values greater than or equal the given value."""
+  hash_gte: String
+
+  """All values containing the given string."""
+  hash_contains: String
+
+  """All values not containing the given string."""
+  hash_not_contains: String
+
+  """All values starting with the given string."""
+  hash_starts_with: String
+
+  """All values not starting with the given string."""
+  hash_not_starts_with: String
+
+  """All values ending with the given string."""
+  hash_ends_with: String
+
+  """All values not ending with the given string."""
+  hash_not_ends_with: String
+  reset: Boolean
+
+  """All values that are not equal to given value."""
+  reset_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+}
+
+input ResetPasswordRequestWhereUniqueInput {
+  id: ID
+  hash: String
 }
 
 enum Role {
@@ -7100,10 +6901,10 @@ type Subscription {
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   citation(where: CitationSubscriptionWhereInput): CitationSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
-  file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
-  articleFile(where: ArticleFileSubscriptionWhereInput): ArticleFileSubscriptionPayload
+  resetPasswordRequest(where: ResetPasswordRequestSubscriptionWhereInput): ResetPasswordRequestSubscriptionPayload
   creditCard(where: CreditCardSubscriptionWhereInput): CreditCardSubscriptionPayload
   cupom(where: CupomSubscriptionWhereInput): CupomSubscriptionPayload
+  file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
 }
 
 type User implements Node {

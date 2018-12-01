@@ -15,56 +15,56 @@ const admin = {
       }, info)
     } catch (err) { throw err }
   },
-  async publishIssueCall(parent, { IssueId }, ctx, info) {
+  async publishIssueCall(parent, { issueId }, ctx, info) {
     try {
       return await ctx.db.mutation.updateIssue({
-        where: { id: IssueId },
+        where: { id: issueId },
         data: { publishedCall: true }
       }, info)
     } catch (err) { throw err }
   },
-  async publishIssue(parent, { IssueId }, ctx, info) {
+  async publishIssue(parent, { issueId }, ctx, info) {
     try {
-      const IssueInfo = await ctx.db.query.issue({ where: { id: IssueId } }, `{ publishedCall selectedArticles { id }}`)
+      const IssueInfo = await ctx.db.query.issue({ where: { id: issueId } }, `{ publishedCall selectedArticles { id }}`)
       if (IssueInfo.selectedArticles.length > 0 && IssueInfo.publishedCall) return await ctx.db.mutation.updateIssue({
-        where: { id: IssueId },
+        where: { id: issueId },
         data: { published: true }
       }, info)
       else throw 'No articles selected or call not published'
     } catch (err) { throw err }
   },
-  async updateIssue(parent, { IssueId, input }, ctx, info) {
+  async updateIssue(parent, { issueId, input }, ctx, info) {
     try {
       return await ctx.db.mutation.updateIssue({
-        where: { id: IssueId },
+        where: { id: issueId },
         data: { ...input }
       }, info)
     } catch (err) { throw err }
   },
-  async deleteIssue(parent, { IssueId }, ctx, info) {
+  async deleteIssue(parent, { issueId }, ctx, info) {
     try {
       return await ctx.db.mutation.deleteIssue({
-        where: { id: IssueId }
+        where: { id: issueId }
       }, info)
     } catch (err) { throw err }
   },
-  async selectEditorial(parent, { articleId, IssueId }, ctx, info) {
+  async selectEditorial(parent, { articleId, issueId }, ctx, info) {
     try {
       return await ctx.db.mutation.updateIssue({
         data: { selectedEditorials: { connect: [ { id: articleId } ]}},
-        where: { id: IssueId },
+        where: { id: issueId },
       }, info)
     } catch (err) { throw err }
   },
-  async unselectEditorial(parent, { articleId, IssueId }, ctx, info) {
+  async unselectEditorial(parent, { articleId, issueId }, ctx, info) {
     try {
       return await ctx.db.mutation.updateIssue({
         data: { selectedEditorials: { disconnect: [ { id: articleId } ]}},
-        where: { id: IssueId },
+        where: { id: issueId },
       }, info)
     } catch (err) { throw err }
   },
-  async selectArticles(parent, { articleIds, IssueId }, ctx, info) {
+  async selectArticles(parent, { articleIds, issueId }, ctx, info) {
     const validarticleIds = articleIds.map(a => {
       return {
         id: a
@@ -72,12 +72,12 @@ const admin = {
     })
     try {
       return await ctx.db.mutation.updateIssue({
-        where: { id: IssueId },
+        where: { id: issueId },
         data: { selectedArticles: { connect: validarticleIds } },
       }, info)
     } catch (err) { throw err }
   },
-  async unselectArticles(parent, { articleIds, IssueId }, ctx, info) {
+  async unselectArticles(parent, { articleIds, issueId }, ctx, info) {
     const validArticleIds = articleIds.map(a => {
       return {
         id: a
@@ -85,7 +85,7 @@ const admin = {
     })
     try {
       return await ctx.db.mutation.updateIssue({
-        where: { id: IssueId },
+        where: { id: issueId },
         data: { selectedArticles: { disconnect: validArticleIds } },
       }, info)
     } catch (err) { throw err }

@@ -12,7 +12,7 @@ let tokens = {
   editor: '',
 }
 let userId
-let IssueId
+let issueId
 let IssueId2
 let articles
 
@@ -202,7 +202,7 @@ module.exports = () => {
     }
     mockFetch(createIssue, variables, tokens.admin)
       .then(res => {
-        IssueId = res.createIssue.id
+        issueId = res.createIssue.id
         t.ok(res.createIssue)
       })
       .catch(err => console.log('ERRR;,', err))
@@ -220,24 +220,24 @@ module.exports = () => {
   test(`Should publish a call for existing issue if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const publishIssueCall = `
-      mutation($IssueId: ID!) {
-        publishIssueCall(IssueId: $IssueId) {
+      mutation($issueId: ID!) {
+        publishIssueCall(issueId: $issueId) {
           id
           publishedCall
         }
       }
     `
-    mockFetch(publishIssueCall, { IssueId }, tokens.admin)
+    mockFetch(publishIssueCall, { issueId }, tokens.admin)
       .then(res => {
         console.log('RES', res)
         t.equal(true, res.publishIssueCall.publishedCall)
       })
-    mockFetch(publishIssueCall, { IssueId: IssueId2 }, tokens.editor)
+    mockFetch(publishIssueCall, { issueId: IssueId2 }, tokens.editor)
       .then(res => {
         console.log('RES2', res)
         t.equal(true, res.publishIssueCall.publishedCall)
       })
-    mockFetch(publishIssueCall, { IssueId: IssueId2 }, tokens.reader)
+    mockFetch(publishIssueCall, { issueId: IssueId2 }, tokens.reader)
       .then(res => {
         t.false(res.publishIssueCall)
       })
@@ -246,8 +246,8 @@ module.exports = () => {
   test(`Should select articles for issue if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const selectArticles = `
-      mutation($articleIds: [ID]! $IssueId: ID!) {
-        selectArticles(IssueId: $IssueId articleIds: $articleIds) {
+      mutation($articleIds: [ID]! $issueId: ID!) {
+        selectArticles(issueId: $issueId articleIds: $articleIds) {
           id
           selectedArticles {
             id
@@ -255,15 +255,15 @@ module.exports = () => {
         }
       }
     `
-    mockFetch(selectArticles, { articleIds: articles, IssueId }, tokens.admin)
+    mockFetch(selectArticles, { articleIds: articles, issueId }, tokens.admin)
       .then(res => {
         t.deepEqual(articles, res.selectArticles.selectedArticles.map(a => a.id))
       })
-    mockFetch(selectArticles,  { articleIds: articles, IssueId: IssueId2 }, tokens.editor)
+    mockFetch(selectArticles,  { articleIds: articles, issueId: IssueId2 }, tokens.editor)
       .then(res => {
         t.deepEqual(articles, res.selectArticles.selectedArticles.map(a => a.id))
       })
-    mockFetch(selectArticles,  { articleIds: articles, IssueId: IssueId2 }, tokens.reader)
+    mockFetch(selectArticles,  { articleIds: articles, issueId: IssueId2 }, tokens.reader)
       .then(res => {
         t.false(res.selectArticles)
       })
@@ -274,8 +274,8 @@ module.exports = () => {
     const articlesLessOne = articles.filter((a, key) => key !== 0)
     console.log('articlesLessOne', articlesLessOne)
     const unselectArticles = `
-      mutation($articleIds: [ID]! $IssueId: ID!) {
-        unselectArticles(IssueId: $IssueId articleIds: $articleIds) {
+      mutation($articleIds: [ID]! $issueId: ID!) {
+        unselectArticles(issueId: $issueId articleIds: $articleIds) {
           id
           selectedArticles {
             id
@@ -283,15 +283,15 @@ module.exports = () => {
         }
       }
     `
-    mockFetch(unselectArticles, { articleIds: articlesLessOne, IssueId }, tokens.admin)
+    mockFetch(unselectArticles, { articleIds: articlesLessOne, issueId }, tokens.admin)
       .then(res => {
         t.equal(1, res.unselectArticles.selectedArticles.length)
       })
-    mockFetch(unselectArticles,  { articleIds: articlesLessOne, IssueId: IssueId2 }, tokens.editor)
+    mockFetch(unselectArticles,  { articleIds: articlesLessOne, issueId: IssueId2 }, tokens.editor)
       .then(res => {
         t.equal(1, res.unselectArticles.selectedArticles.length)
       })
-    mockFetch(unselectArticles,  { articleIds: articlesLessOne, IssueId: IssueId2 }, tokens.reader)
+    mockFetch(unselectArticles,  { articleIds: articlesLessOne, issueId: IssueId2 }, tokens.reader)
       .then(res => {
         t.false(res.unselectArticles)
       })
@@ -300,8 +300,8 @@ module.exports = () => {
   test(`Should select articles for issue editorial if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const selectEditorial = `
-      mutation($articleId: ID! $IssueId: ID!) {
-        selectEditorial(IssueId: $IssueId articleId: $articleId) {
+      mutation($articleId: ID! $issueId: ID!) {
+        selectEditorial(issueId: $issueId articleId: $articleId) {
           id
           selectedEditorials {
             id
@@ -309,15 +309,15 @@ module.exports = () => {
         }
       }
     `
-    mockFetch(selectEditorial, { articleId: articles[1], IssueId }, tokens.admin)
+    mockFetch(selectEditorial, { articleId: articles[1], issueId }, tokens.admin)
       .then(res => {
         t.equal(1, res.selectEditorial.selectedEditorials.length)
       })
-    mockFetch(selectEditorial,  { articleId: articles[1], IssueId: IssueId2 }, tokens.editor)
+    mockFetch(selectEditorial,  { articleId: articles[1], issueId: IssueId2 }, tokens.editor)
       .then(res => {
         t.equal(1, res.selectEditorial.selectedEditorials.length)
       })
-    mockFetch(selectEditorial,  { articleId: articles[1], IssueId: IssueId2 }, tokens.reader)
+    mockFetch(selectEditorial,  { articleId: articles[1], issueId: IssueId2 }, tokens.reader)
       .then(res => {
         t.false(res.selectEditorial)
       })
@@ -326,8 +326,8 @@ module.exports = () => {
   test(`Should select articles for issue if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const unselectEditorial = `
-      mutation($articleId: ID! $IssueId: ID!) {
-        unselectEditorial(IssueId: $IssueId articleId: $articleId) {
+      mutation($articleId: ID! $issueId: ID!) {
+        unselectEditorial(issueId: $issueId articleId: $articleId) {
           id
           selectedEditorials {
             id
@@ -335,15 +335,15 @@ module.exports = () => {
         }
       }
     `
-    mockFetch(unselectEditorial, { articleId: articles[1], IssueId }, tokens.admin)
+    mockFetch(unselectEditorial, { articleId: articles[1], issueId }, tokens.admin)
       .then(res => {
         t.equal(0, res.unselectEditorial.selectedEditorials.length)
       })
-    mockFetch(unselectEditorial,  { articleId: articles[1], IssueId: IssueId2 }, tokens.editor)
+    mockFetch(unselectEditorial,  { articleId: articles[1], issueId: IssueId2 }, tokens.editor)
       .then(res => {
         t.equal(0, res.unselectEditorial.selectedEditorials.length)
       })
-    mockFetch(unselectEditorial,  { articleId: articles[1], IssueId: IssueId2 }, tokens.reader)
+    mockFetch(unselectEditorial,  { articleId: articles[1], issueId: IssueId2 }, tokens.reader)
       .then(res => {
         t.false(res.unselectEditorial)
       })
@@ -352,23 +352,23 @@ module.exports = () => {
   test(`Should publish existing issue if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const publishIssue = `
-      mutation($IssueId: ID!) {
-        publishIssue(IssueId: $IssueId) {
+      mutation($issueId: ID!) {
+        publishIssue(issueId: $issueId) {
           id
           published
         }
       }
     `
-    mockFetch(publishIssue, { IssueId }, tokens.admin)
+    mockFetch(publishIssue, { issueId }, tokens.admin)
       .then(res => {
         t.equal(true, res.publishIssue.published)
       })
       .catch(err => console.log('ERRR;,', err))
-    mockFetch(publishIssue, { IssueId: IssueId2 }, tokens.editor)
+    mockFetch(publishIssue, { issueId: IssueId2 }, tokens.editor)
       .then(res => {
         t.equal(true, res.publishIssue.published)
       })
-    mockFetch(publishIssue, { IssueId: IssueId2 }, tokens.reader)
+    mockFetch(publishIssue, { issueId: IssueId2 }, tokens.reader)
       .then(res => {
         t.false(res.publishIssue)
       })
@@ -377,8 +377,8 @@ module.exports = () => {
   test(`Should update existing issue if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const updateIssue = `
-      mutation($IssueId: ID! $input: IssueUpdateInput!) {
-        updateIssue(IssueId: $IssueId input: $input) {
+      mutation($issueId: ID! $input: IssueUpdateInput!) {
+        updateIssue(issueId: $issueId input: $input) {
           id
           title
           key
@@ -386,7 +386,7 @@ module.exports = () => {
       }
     `
     const variables = {
-      IssueId,
+      issueId,
       input: {
         title: faker.company.catchPhrase(),
         key: camelcase(faker.company.catchPhrase()),
@@ -416,22 +416,22 @@ module.exports = () => {
   test(`Should delete existing issue if ADMIN or EDITOR and fail if AUTHOR or READER`, (t) => {
     t.plan(testEmails.length)
     const deleteIssue = `
-      mutation($IssueId: ID!) {
-        deleteIssue(IssueId: $IssueId) {
+      mutation($issueId: ID!) {
+        deleteIssue(issueId: $issueId) {
           id
         }
       }
     `
-    mockFetch(deleteIssue, { IssueId }, tokens.admin)
+    mockFetch(deleteIssue, { issueId }, tokens.admin)
       .then(res => {
         t.ok(res.deleteIssue)
       })
       .catch(err => console.log('ERRR;,', err))
-    mockFetch(deleteIssue, { IssueId }, tokens.editor)
+    mockFetch(deleteIssue, { issueId }, tokens.editor)
       .then(res => {
         t.ok(res.deleteIssue)
       })
-    mockFetch(deleteIssue, { IssueId }, tokens.reader)
+    mockFetch(deleteIssue, { issueId }, tokens.reader)
       .then(res => {
         t.false(res.deleteIssue)
       })

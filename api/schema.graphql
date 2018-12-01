@@ -30,16 +30,18 @@ type Mutation {
   deleteArticle(articleId: ID!): Article
   payment(input: PaymentInput): Payment
   createIssue(input: IssueInput!): Issue
-  publishIssue(IssueId: ID!): Issue
-  publishIssueCall(IssueId: ID!): Issue
-  updateIssue(IssueId: ID! input: IssueUpdateInput!): Issue
-  deleteIssue(IssueId: ID!): Issue
-  selectEditorial(articleId: ID! IssueId: ID!): Issue
-  unselectEditorial(articleId: ID! IssueId: ID!): Issue
-  selectArticles(articleIds: [ID]! IssueId: ID!): Issue
-  unselectArticles(articleIds: [ID]! IssueId: ID!): Issue
+  publishIssue(issueId: ID!): Issue
+  publishIssueCall(issueId: ID!): Issue
+  updateIssue(issueId: ID! input: IssueUpdateInput!): Issue
+  deleteIssue(issueId: ID!): Issue
+  selectEditorial(articleId: ID! issueId: ID!): Issue
+  unselectEditorial(articleId: ID! issueId: ID!): Issue
+  selectArticles(articleIds: [ID]! issueId: ID!): Issue
+  unselectArticles(articleIds: [ID]! issueId: ID!): Issue
   uploadFile(file: Upload!): File!
   uploadFiles(file: Upload!): File!
   renameFile(file: Upload!): File!
   deleteFile(file: Upload!): File!
+  sendPasswordResetEmail(email: String!): Boolean
+  resetPassword(password: String! hash: String!): Boolean
 }
