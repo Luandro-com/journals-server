@@ -39,4 +39,7 @@ type Mutation {
   selectArticles(articleIds: [ID]! IssueId: ID!): Issue
   unselectArticles(articleIds: [ID]! IssueId: ID!): Issue
   uploadFile(file: Upload!): File!
+  uploadFiles(file: Upload!): File!
+  renameFile(file: Upload!): File!
+  deleteFile(file: Upload!): File!
 }

@@ -9,3 +9,5 @@ node_modules
 .DS_Store
 ./.uploads
 now.production.json
+up.json
+.env.production

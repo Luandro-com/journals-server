@@ -157,10 +157,12 @@ type CreditCard {
 
 type File {
   id: ID! @unique
-  path: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
   filename: String!
   mimetype: String!
-  encoding: String @default(value: "utf8")
+  encoding: String!
+  url: String! @unique
 }
 
 type ArticleFile {

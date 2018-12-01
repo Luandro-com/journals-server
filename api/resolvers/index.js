@@ -4,7 +4,7 @@ const { Subscription } = require('./Subscription')
 const { auth } = require('./Mutation/auth')
 const { admin } = require('./Mutation/admin')
 const { journal } = require('./Mutation/journal')
-const uploadFile = require('./Mutation/uploadFile')
+const { upload } = require('./Mutation/upload')
 const { AuthPayload } = require('./AuthPayload')
 module.exports = {
   Query,
@@ -12,7 +12,7 @@ module.exports = {
     ...auth,
     ...admin,
     ...journal,
-    uploadFile
+    ...upload,
   },
   // Subscription,
   AuthPayload,

@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Nov 30 2018 11:37:04 GMT-0200 (-02)
+# timestamp: Sat Dec 01 2018 10:09:03 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -3221,10 +3221,12 @@ scalar DateTime
 
 type File implements Node {
   id: ID!
-  path: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
   filename: String!
   mimetype: String!
-  encoding: String
+  encoding: String!
+  url: String!
 }
 
 """A connection to a list of items."""
@@ -3238,10 +3240,10 @@ type FileConnection {
 }
 
 input FileCreateInput {
-  path: String
   filename: String!
   mimetype: String!
-  encoding: String
+  encoding: String!
+  url: String!
 }
 
 """An edge in a connection."""
@@ -3256,26 +3258,28 @@ type FileEdge {
 enum FileOrderByInput {
   id_ASC
   id_DESC
-  path_ASC
-  path_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   filename_ASC
   filename_DESC
   mimetype_ASC
   mimetype_DESC
   encoding_ASC
   encoding_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
+  url_ASC
+  url_DESC
 }
 
 type FilePreviousValues {
   id: ID!
-  path: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
   filename: String!
   mimetype: String!
-  encoding: String
+  encoding: String!
+  url: String!
 }
 
 type FileSubscriptionPayload {
@@ -3318,17 +3322,17 @@ input FileSubscriptionWhereInput {
 }
 
 input FileUpdateInput {
-  path: String
   filename: String
   mimetype: String
   encoding: String
+  url: String
 }
 
 input FileUpdateManyMutationInput {
-  path: String
   filename: String
   mimetype: String
   encoding: String
+  url: String
 }
 
 input FileWhereInput {
@@ -3380,46 +3384,50 @@ input FileWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  path: String
+  createdAt: DateTime
 
   """All values that are not equal to given value."""
-  path_not: String
+  createdAt_not: DateTime
 
   """All values that are contained in given list."""
-  path_in: [String!]
+  createdAt_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  path_not_in: [String!]
+  createdAt_not_in: [DateTime!]
 
   """All values less than the given value."""
-  path_lt: String
+  createdAt_lt: DateTime
 
   """All values less than or equal the given value."""
-  path_lte: String
+  createdAt_lte: DateTime
 
   """All values greater than the given value."""
-  path_gt: String
+  createdAt_gt: DateTime
 
   """All values greater than or equal the given value."""
-  path_gte: String
+  createdAt_gte: DateTime
+  updatedAt: DateTime
 
-  """All values containing the given string."""
-  path_contains: String
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
 
-  """All values not containing the given string."""
-  path_not_contains: String
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
 
-  """All values starting with the given string."""
-  path_starts_with: String
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
 
-  """All values not starting with the given string."""
-  path_not_starts_with: String
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
 
-  """All values ending with the given string."""
-  path_ends_with: String
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
 
-  """All values not ending with the given string."""
-  path_not_ends_with: String
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
   filename: String
 
   """All values that are not equal to given value."""
@@ -3540,10 +3548,51 @@ input FileWhereInput {
 
   """All values not ending with the given string."""
   encoding_not_ends_with: String
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
 }
 
 input FileWhereUniqueInput {
   id: ID
+  url: String
 }
 
 type Issue implements Node {

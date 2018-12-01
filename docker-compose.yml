@@ -28,6 +28,10 @@ services:
       MYSQL_ROOT_PASSWORD: prisma
     volumes:
       - mysql:/var/lib/mysql
+  fakes3:
+    image: lphoward/fake-s3
+    ports:
+      - "4569:4569"
 volumes:
   mysql:
 
