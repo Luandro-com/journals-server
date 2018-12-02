@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sat Dec 01 2018 16:28:30 GMT-0200 (-02)
+# timestamp: Sun Dec 02 2018 18:00:44 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -1279,6 +1279,7 @@ input CitationWhereUniqueInput {
 
 type Content {
   title: String
+  code: String
   logo: String
   sections: [Section!]!
   authorGuideline: String
@@ -1309,6 +1310,7 @@ type ContentConnection {
 
 input ContentCreateInput {
   title: String
+  code: String
   logo: String
   authorGuideline: String
   description: String
@@ -1341,6 +1343,8 @@ type ContentEdge {
 enum ContentOrderByInput {
   title_ASC
   title_DESC
+  code_ASC
+  code_DESC
   logo_ASC
   logo_DESC
   authorGuideline_ASC
@@ -1377,6 +1381,7 @@ enum ContentOrderByInput {
 
 type ContentPreviousValues {
   title: String
+  code: String
   logo: String
   sections: [Section!]!
   authorGuideline: String
@@ -1436,6 +1441,7 @@ input ContentSubscriptionWhereInput {
 
 input ContentUpdateManyMutationInput {
   title: String
+  code: String
   logo: String
   authorGuideline: String
   description: String
@@ -1505,6 +1511,46 @@ input ContentWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
+  code: String
+
+  """All values that are not equal to given value."""
+  code_not: String
+
+  """All values that are contained in given list."""
+  code_in: [String!]
+
+  """All values that are not contained in given list."""
+  code_not_in: [String!]
+
+  """All values less than the given value."""
+  code_lt: String
+
+  """All values less than or equal the given value."""
+  code_lte: String
+
+  """All values greater than the given value."""
+  code_gt: String
+
+  """All values greater than or equal the given value."""
+  code_gte: String
+
+  """All values containing the given string."""
+  code_contains: String
+
+  """All values not containing the given string."""
+  code_not_contains: String
+
+  """All values starting with the given string."""
+  code_starts_with: String
+
+  """All values not starting with the given string."""
+  code_not_starts_with: String
+
+  """All values ending with the given string."""
+  code_ends_with: String
+
+  """All values not ending with the given string."""
+  code_not_ends_with: String
   logo: String
 
   """All values that are not equal to given value."""

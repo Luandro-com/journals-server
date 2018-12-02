@@ -12,7 +12,7 @@ type Query {
   admins: [User]
   payments: [Payment]
   issues: [Issue]
-  issue(IssueKey: String!): Issue
+  issue(issueKey: String!): Issue
   content: Content
   payedArticles: [Article]
   uploads: [File]
@@ -39,8 +39,8 @@ type Mutation {
   selectArticles(articleIds: [ID]! issueId: ID!): Issue
   unselectArticles(articleIds: [ID]! issueId: ID!): Issue
   updateContent(input: ContentInput!): Content
-  uploadFile(file: Upload!): File!
-  uploadFiles(file: Upload!): File!
+  uploadFile(file: Upload!): File
+  uploadFiles(file: Upload!): [File]
   renameFile(file: Upload!): File!
   deleteFile(file: Upload!): File!
   sendPasswordResetEmail(email: String!): Boolean

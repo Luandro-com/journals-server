@@ -1,6 +1,8 @@
 const aws = require('aws-sdk')
+const uuid = require('uuid')
 
 const s3 = new aws.S3({
+  s3ForcePathStyle: true,
   accessKeyId: process.env.S3_AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_AWS_SECRET_ACCESS_KEY,
   params: {
@@ -43,6 +45,8 @@ exports.processUpload = async ( upload, ctx ) => {
     mimetype,
     encoding,
     url,
+    createdAt: new Date(Date.now()).toISOString(),
+    updatedAt: new Date(Date.now()).toISOString(),
   }
 
   console.log('saved prisma file:')

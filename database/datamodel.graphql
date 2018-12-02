@@ -33,6 +33,7 @@ type NewsletterSubscription {
 
 type Content {
   title: String
+  code: String
   logo: String
   sections: [Section]
   authorGuideline: String

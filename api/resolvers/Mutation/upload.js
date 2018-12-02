@@ -18,6 +18,10 @@ const upload = {
   },
 }
 
+module.exports = {
+  upload
+}
+
 // module.exports = async (parent, { file }, ctx, info) => {
 //   if (!process.env.NODE_ENV === 'production') {
 //     throw 'NOT READY FOR PRODUCTION'

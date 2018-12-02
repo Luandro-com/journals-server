@@ -8,6 +8,7 @@ input ArticleInput {
 input ContentInput {
   title: String
   logo: String
+  code: String
   sections: Section
   authorGuideline: String
   description: String
