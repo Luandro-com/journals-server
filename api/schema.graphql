@@ -38,6 +38,7 @@ type Mutation {
   unselectEditorial(articleId: ID! issueId: ID!): Issue
   selectArticles(articleIds: [ID]! issueId: ID!): Issue
   unselectArticles(articleIds: [ID]! issueId: ID!): Issue
+  updateContent(input: ContentInput!): Content
   uploadFile(file: Upload!): File!
   uploadFiles(file: Upload!): File!
   renameFile(file: Upload!): File!

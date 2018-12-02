@@ -436,4 +436,34 @@ module.exports = () => {
         t.false(res.deleteIssue)
       })
   })
+  // UPDATE CONTENT
+  test(`Should update content if ADMIN and fail if AUTHOR or READER`, (t) => {
+    t.plan(testEmails.length)
+    const updateContent = `
+      mutation($input: ContentInput!) {
+        updateContent(input: $input) {
+          footer
+        }
+      }
+    `
+    const variables = {
+      input: {
+        footer: '<h3>Patrocinado pela Coka Kolas</h3>'
+      }
+    }
+
+    mockFetch(updateContent, variables, tokens.admin)
+      .then(res => {
+        t.ok(res.updateContent)
+      })
+      .catch(err => console.log('ERRR;,', err))
+    mockFetch(updateContent, variables, tokens.editor)
+      .then(res => {
+        t.false(res.updateContent)
+      })
+    mockFetch(updateContent, variables, tokens.reader)
+      .then(res => {
+        t.false(res.updateContent)
+      })
+  })
 }

@@ -4,3 +4,21 @@ input ArticleInput {
   title: String
   resume: String
 }
+
+input ContentInput {
+  title: String
+  logo: String
+  sections: Section
+  authorGuideline: String
+  description: String
+  scope: String
+  contact: String
+  footer: String
+  librarianInfo: String
+  privacyStatement: String
+  proofInstructions: String
+  publicationFrequency: String
+  purchaseArticleDescription: String
+  reviewGuidelines: String
+  waiverPolicy: String
+}

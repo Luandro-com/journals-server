@@ -24,6 +24,7 @@ module.exports = shield({
     admins: and(isAuthenticated, isAdmin),
     payments: and(isAuthenticated, isAdmin),
     payedArticles: and(isAuthenticated, isAdmin),
+    uploads: and(isAuthenticated, or(isAdmin, isEditor)),
   },
   Mutation: {
     updateUser: and(isAuthenticated),
@@ -42,7 +43,9 @@ module.exports = shield({
     unselectEditorial: and(isAuthenticated, or(isAdmin, isEditor)),
     selectArticles: and(isAuthenticated, or(isAdmin, isEditor)),
     unselectArticles: and(isAuthenticated, or(isAdmin, isEditor)),
-
+    updateContent: and(isAuthenticated, isAdmin),
+    renameFile: and(isAuthenticated, isAdmin),
+    deleteFile: and(isAuthenticated, isAdmin),
   },
 }, {
   allowExternalErrors: true

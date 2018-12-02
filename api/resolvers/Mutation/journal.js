@@ -68,6 +68,19 @@ const journal = {
     else throw 'Not Authorized'
   },
 
+  async updateContent(parent, { input }, ctx, info) {
+    const update = await ctx.db.mutation.updateManyContents({
+      where: { createdAt_not: "1900-01-01T00:00:00.263Z" },
+      data: { ...input }
+    }, `{ count }`)
+    if (update.count === 1) {
+      const contents = await ctx.db.query.contents({}, info)
+      return contents[0]
+    } else {
+      throw 'Error on updating content.'
+    }
+  },
+
   async payment(parent, args, ctx, info) {
     const { input } = args
     const id = getUserId(ctx)
