@@ -19,13 +19,14 @@ type Query {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, cart: String): AuthPayload!
-  login(email: String!, password: String!): AuthPayload!
+  signup(email: String! password: String! cart: String): AuthPayload!
+  login(email: String! password: String!): AuthPayload!
   subscribe: Boolean
   unsubscribe: Boolean
   updateUser(input: UserInput): User
   updateUsersRoles(userIds: [ID] role: Role!): Int
-  createArticle(input: ArticleInput): Article
+  createArticle(input: ArticleInput! issueId: ID! fileId: ID citationIds: [ID]): Article
+  updateArticle(input: ArticleInput! articleId: ID! fileId: ID citationIds: [ID]): Article
   publishArticle(articleId: ID!): Article
   deleteArticle(articleId: ID!): Article
   payment(input: PaymentInput): Payment

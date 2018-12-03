@@ -19,7 +19,7 @@ const isEditor = rule()(async (parent, args, ctx, info) => {
 
 module.exports = shield({
   Query: {
-    user: and(isAuthenticated),
+    // user: and(isAuthenticated),
     users: and(isAuthenticated, isAdmin),
     admins: and(isAuthenticated, isAdmin),
     payments: and(isAuthenticated, isAdmin),
@@ -28,8 +28,9 @@ module.exports = shield({
   },
   Mutation: {
     updateUser: and(isAuthenticated),
-    login: not(isAuthenticated),
+    // login: not(isAuthenticated),
     createArticle: and(isAuthenticated),
+    updateArticle: and(isAuthenticated),
     publishArticle: and(isAuthenticated),
     deleteArticle: and(isAuthenticated),
     payment: and(isAuthenticated),

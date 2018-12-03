@@ -170,16 +170,16 @@ module.exports = () => {
   // CREATE ARTICLE
   test(`should create a new unpublished article`, (t) => {
     const createArticle = `
-      mutation($input: ArticleInput!) {
-        createArticle(input: $input) {
+      mutation($input: ArticleInput! $issueId: ID!) {
+        createArticle(input: $input issueId: $issueId) {
           id
           published
         }
       }
     `
     const variables = {
+      issueId,
       input: {
-        issueId,
         title: faker.company.catchPhrase(),
         resume: faker.company.catchPhraseDescriptor(),
       }
@@ -196,6 +196,31 @@ module.exports = () => {
           t.ok(articleId2)
           t.end()
         })
+    })
+    .catch(err => console.log(err))
+  })
+  // UPDATE ARTICLE
+  test(`should update article`, (t) => {
+    const updateArticle = `
+      mutation($input: ArticleInput! $articleId: ID!) {
+        updateArticle(input: $input articleId: $articleId) {
+          id
+          published
+        }
+      }
+    `
+    const variables = {
+      articleId: articleId2,
+      input: {
+        title: faker.company.catchPhrase(),
+        resume: faker.company.catchPhraseDescriptor(),
+      }
+    }
+    mockFetch(updateArticle, variables, token)
+    .then(res => {
+      console.log('RES', res)
+      t.ok(res.updateArticle)
+      t.end()
     })
     .catch(err => console.log(err))
   })

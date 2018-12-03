@@ -1,8 +1,9 @@
 input ArticleInput {
-  issueId: ID!
-  file: String
+  key: String
   title: String
   resume: String
+  shortDescription: String
+  keyWords: [String]
 }
 
 input ContentInput {

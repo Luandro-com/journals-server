@@ -21,17 +21,29 @@ const journal = {
     return true
   },
 
-  async createArticle(parent, { input }, ctx, info) {
-    let validInputs = {}
-    Object.keys(input).filter(k => {
-      if (k !== 'issueId') {
-        validInputs[k] = input[k]
-      }
-    })
+  async createArticle(parent, { input, issueId, fileId, citationIds }, ctx, info) {
+    // let validInputs = {}
+    // Object.keys(input).filter(k => {
+    //   if (k !== 'issueId') {
+    //     validInputs[k] = input[k]
+    //   }
+    // })
     const id = getUserId(ctx)
+    const file = fileId ? { connect: {
+      id: fileId
+    }} : {}
+    const citations = citationIds ?
+      citationIds.map(cId => {
+        return {
+          connect: {
+            id: cId
+          }
+        }
+      })
+    : {}
     return await ctx.db.mutation.createArticle({
       data: {
-        ...validInputs,
+        ...input,
         author: {
           connect: {
             id
@@ -39,11 +51,43 @@ const journal = {
         },
         issue: {
           connect: {
-            id: input.issueId
+            id: issueId
           }
-        }
+        },
+        file,
+        citations,
       }
     }, info)
+  },
+
+  async updateArticle(parent, { input, articleId, fileId, citationIds }, ctx, info) {
+    const id = getUserId(ctx)
+    const file = fileId ? { connect: {
+      id: fileId
+    }} : {}
+    const citations = citationIds ?
+      citationIds.map(cId => {
+        return {
+          connect: {
+            id: cId
+          }
+        }
+      })
+    : {}
+    const user = await ctx.db.query.user({ where: { id } }, `{ articles { id } role }`)
+    const isAuthor = user.articles.filter(a => a.id === articleId).length > 0
+    if (isAuthor || user.role === 'ADMIN') {
+      return await ctx.db.mutation.updateArticle({
+        where: { id: articleId },
+        data: {
+          ...input,
+          file,
+          citations,
+        }
+      }, info)
+    } else {
+      throw 'User are not the author!'
+    }
   },
 
   async publishArticle(parent, { articleId }, ctx, info) {

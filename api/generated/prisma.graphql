@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Dec 02 2018 18:00:44 GMT-0200 (-02)
+# timestamp: Mon Dec 03 2018 08:16:54 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -3153,6 +3153,7 @@ type Issue implements Node {
   id: ID!
   key: String!
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3184,6 +3185,7 @@ type IssueConnection {
 input IssueCreateInput {
   key: String!
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3218,6 +3220,7 @@ input IssueCreateOneWithoutSubmitedArticlesInput {
 input IssueCreateWithoutSelectedArticlesInput {
   key: String!
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3236,6 +3239,7 @@ input IssueCreateWithoutSelectedArticlesInput {
 input IssueCreateWithoutSelectedEditorialsInput {
   key: String!
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3254,6 +3258,7 @@ input IssueCreateWithoutSelectedEditorialsInput {
 input IssueCreateWithoutSubmitedArticlesInput {
   key: String!
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3285,6 +3290,8 @@ enum IssueOrderByInput {
   key_DESC
   title_ASC
   title_DESC
+  image_ASC
+  image_DESC
   volume_ASC
   volume_DESC
   number_ASC
@@ -3317,6 +3324,7 @@ type IssuePreviousValues {
   id: ID!
   key: String!
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3461,6 +3469,46 @@ input IssueScalarWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
+  image: String
+
+  """All values that are not equal to given value."""
+  image_not: String
+
+  """All values that are contained in given list."""
+  image_in: [String!]
+
+  """All values that are not contained in given list."""
+  image_not_in: [String!]
+
+  """All values less than the given value."""
+  image_lt: String
+
+  """All values less than or equal the given value."""
+  image_lte: String
+
+  """All values greater than the given value."""
+  image_gt: String
+
+  """All values greater than or equal the given value."""
+  image_gte: String
+
+  """All values containing the given string."""
+  image_contains: String
+
+  """All values not containing the given string."""
+  image_not_contains: String
+
+  """All values starting with the given string."""
+  image_starts_with: String
+
+  """All values not starting with the given string."""
+  image_not_starts_with: String
+
+  """All values ending with the given string."""
+  image_ends_with: String
+
+  """All values not ending with the given string."""
+  image_not_ends_with: String
   volume: Int
 
   """All values that are not equal to given value."""
@@ -3809,6 +3857,7 @@ input IssueSubscriptionWhereInput {
 input IssueUpdateInput {
   key: String
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3828,6 +3877,7 @@ input IssueUpdateInput {
 input IssueUpdateManyDataInput {
   key: String
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3844,6 +3894,7 @@ input IssueUpdateManyDataInput {
 input IssueUpdateManyMutationInput {
   key: String
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3894,6 +3945,7 @@ input IssueUpdateOneRequiredWithoutSubmitedArticlesInput {
 input IssueUpdateWithoutSelectedArticlesDataInput {
   key: String
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3912,6 +3964,7 @@ input IssueUpdateWithoutSelectedArticlesDataInput {
 input IssueUpdateWithoutSelectedEditorialsDataInput {
   key: String
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -3930,6 +3983,7 @@ input IssueUpdateWithoutSelectedEditorialsDataInput {
 input IssueUpdateWithoutSubmitedArticlesDataInput {
   key: String
   title: String
+  image: String
   volume: Int
   number: Int
   year: String
@@ -4101,6 +4155,46 @@ input IssueWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
+  image: String
+
+  """All values that are not equal to given value."""
+  image_not: String
+
+  """All values that are contained in given list."""
+  image_in: [String!]
+
+  """All values that are not contained in given list."""
+  image_not_in: [String!]
+
+  """All values less than the given value."""
+  image_lt: String
+
+  """All values less than or equal the given value."""
+  image_lte: String
+
+  """All values greater than the given value."""
+  image_gt: String
+
+  """All values greater than or equal the given value."""
+  image_gte: String
+
+  """All values containing the given string."""
+  image_contains: String
+
+  """All values not containing the given string."""
+  image_not_contains: String
+
+  """All values starting with the given string."""
+  image_starts_with: String
+
+  """All values not starting with the given string."""
+  image_not_starts_with: String
+
+  """All values ending with the given string."""
+  image_ends_with: String
+
+  """All values not ending with the given string."""
+  image_not_ends_with: String
   volume: Int
 
   """All values that are not equal to given value."""

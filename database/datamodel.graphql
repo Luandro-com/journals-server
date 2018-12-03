@@ -35,6 +35,9 @@ type Content {
   title: String
   code: String
   logo: String
+  metaDescription: String
+  metaFavicon: String
+  metaKeyWords: [String]
   sections: [Section]
   authorGuideline: String
   description: String
@@ -62,6 +65,7 @@ type Issue {
   id: ID! @unique
   key: String! @unique
   title: String
+  image: String @default(value: "https://picsum.photos/500/250/?random")
   volume: Int
   number: Int
   year: String
@@ -82,12 +86,14 @@ type Issue {
 
 type Article {
   id: ID! @unique
+  key: String! @unique
   title: String
   resume: String
   author: User!
   shortDescription: String
   published: Boolean @default(value: "false")
   file: File
+  keyWords: [String]
   citations: [Citation!]!
   issue: Issue! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
   selectedBy: [Issue!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
