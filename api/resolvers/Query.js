@@ -22,6 +22,13 @@ const Query = {
     ] }}, info)
   },
 
+  async openCalls(parent, args, ctx, info) {
+    return await ctx.db.query.issues({ where: { AND: [
+      { publishedCall: true },
+      { endCall_gt: new Date(Date.now()).toISOString() }
+    ] }}, info)
+  },
+
   async users(parent, args, ctx, info) {
     return await ctx.db.query.users({ where: { role_in: ['READER', 'AUTHOR'] } }, info)
   },
