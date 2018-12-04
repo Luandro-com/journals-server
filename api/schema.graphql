@@ -12,6 +12,7 @@ type Query {
   admins: [User]
   payments: [Payment]
   issues: [Issue]
+  allIssues: [Issue]
   openCalls: [Issue]
   issue(issueKey: String!): Issue
   article(articleId: ID!): Article

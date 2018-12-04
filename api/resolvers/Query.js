@@ -35,6 +35,10 @@ const Query = {
     }
   },
 
+  async allIssues(parent, args, ctx, info) {
+    return await ctx.db.query.issues({}, info)
+  },
+
   async issues(parent, args, ctx, info) {
     return await ctx.db.query.issues({ where: { OR: [
       { published: true },

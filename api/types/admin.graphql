@@ -1,12 +1,16 @@
 input IssueInput {
   title: String
+  image: String
   key: String!
   body: String
+  volume: Int
+  number: Int
+  year: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
-  startCall: DateTime!
-  endCall: DateTime!
+  startCall: DateTime
+  endCall: DateTime
 }
 
 input IssueUpdateInput {

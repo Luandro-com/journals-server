@@ -69,9 +69,9 @@ type Issue {
   volume: Int
   number: Int
   year: String
-  submitedArticles: [Article!]! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
-  selectedArticles: [Article!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
-  selectedEditorials: [Article!]! @relation(name: "EditorialArticles", onDelete: SET_NULL)
+  submitedArticles: [Article!]! @relation(name: "SubmitedArticles", onDelete: CASCADE)
+  selectedArticles: [Article!]! @relation(name: "SelectedArticles", onDelete: CASCADE)
+  selectedEditorials: [Article!]! @relation(name: "EditorialArticles", onDelete: CASCADE)
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -94,9 +94,9 @@ type Article {
   file: File
   keyWords: [String!]
   citations: [Citation!]!
-  issue: Issue! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
-  selectedBy: [Issue!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
-  editorial: [Issue!]! @relation(name: "EditorialArticles", onDelete: SET_NULL)
+  issue: Issue! @relation(name: "SubmitedArticles", onDelete: CASCADE)
+  selectedBy: [Issue!]! @relation(name: "SelectedArticles", onDelete: CASCADE)
+  editorial: [Issue!]! @relation(name: "EditorialArticles", onDelete: CASCADE)
   createdAt: DateTime!
   updatedAt: DateTime!
   payment: Payment

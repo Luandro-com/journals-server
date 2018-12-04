@@ -20,6 +20,7 @@ const isEditor = rule()(async (parent, args, ctx, info) => {
 module.exports = shield({
   Query: {
     // user: and(isAuthenticated),
+    allIssues: and(isAuthenticated, or(isAdmin, isEditor)),
     users: and(isAuthenticated, isAdmin),
     admins: and(isAuthenticated, isAdmin),
     payments: and(isAuthenticated, isAdmin),
