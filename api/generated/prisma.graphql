@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Dec 03 2018 08:16:54 GMT-0200 (-02)
+# timestamp: Mon Dec 03 2018 22:41:47 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -53,6 +53,7 @@ type Article implements Node {
   shortDescription: String
   published: Boolean
   file: File
+  keyWords: [String!]!
   citations(where: CitationWhereInput, orderBy: CitationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Citation!]
   issue: Issue!
   selectedBy(where: IssueWhereInput, orderBy: IssueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Issue!]
@@ -77,6 +78,7 @@ input ArticleCreateInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   author: UserCreateOneWithoutArticlesInput!
   file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
@@ -84,6 +86,10 @@ input ArticleCreateInput {
   selectedBy: IssueCreateManyWithoutSelectedArticlesInput
   editorial: IssueCreateManyWithoutSelectedEditorialsInput
   payment: PaymentCreateOneWithoutArticleInput
+}
+
+input ArticleCreatekeyWordsInput {
+  set: [String!]
 }
 
 input ArticleCreateManyWithoutAuthorInput {
@@ -121,6 +127,7 @@ input ArticleCreateWithoutAuthorInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
@@ -134,6 +141,7 @@ input ArticleCreateWithoutCitationsInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   author: UserCreateOneWithoutArticlesInput!
   file: FileCreateOneInput
   issue: IssueCreateOneWithoutSubmitedArticlesInput!
@@ -147,6 +155,7 @@ input ArticleCreateWithoutEditorialInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   author: UserCreateOneWithoutArticlesInput!
   file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
@@ -160,6 +169,7 @@ input ArticleCreateWithoutIssueInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   author: UserCreateOneWithoutArticlesInput!
   file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
@@ -173,6 +183,7 @@ input ArticleCreateWithoutPaymentInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   author: UserCreateOneWithoutArticlesInput!
   file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
@@ -186,6 +197,7 @@ input ArticleCreateWithoutSelectedByInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleCreatekeyWordsInput
   author: UserCreateOneWithoutArticlesInput!
   file: FileCreateOneInput
   citations: CitationCreateManyWithoutArticleInput
@@ -226,6 +238,7 @@ type ArticlePreviousValues {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -493,6 +506,7 @@ input ArticleUpdateInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   author: UserUpdateOneRequiredWithoutArticlesInput
   file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
@@ -502,11 +516,16 @@ input ArticleUpdateInput {
   payment: PaymentUpdateOneWithoutArticleInput
 }
 
+input ArticleUpdatekeyWordsInput {
+  set: [String!]
+}
+
 input ArticleUpdateManyDataInput {
   title: String
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
 }
 
 input ArticleUpdateManyMutationInput {
@@ -514,6 +533,7 @@ input ArticleUpdateManyMutationInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
 }
 
 input ArticleUpdateManyWithoutAuthorInput {
@@ -584,6 +604,7 @@ input ArticleUpdateWithoutAuthorDataInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
@@ -597,6 +618,7 @@ input ArticleUpdateWithoutCitationsDataInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   author: UserUpdateOneRequiredWithoutArticlesInput
   file: FileUpdateOneInput
   issue: IssueUpdateOneRequiredWithoutSubmitedArticlesInput
@@ -610,6 +632,7 @@ input ArticleUpdateWithoutEditorialDataInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   author: UserUpdateOneRequiredWithoutArticlesInput
   file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
@@ -623,6 +646,7 @@ input ArticleUpdateWithoutIssueDataInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   author: UserUpdateOneRequiredWithoutArticlesInput
   file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
@@ -636,6 +660,7 @@ input ArticleUpdateWithoutPaymentDataInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   author: UserUpdateOneRequiredWithoutArticlesInput
   file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
@@ -649,6 +674,7 @@ input ArticleUpdateWithoutSelectedByDataInput {
   resume: String
   shortDescription: String
   published: Boolean
+  keyWords: ArticleUpdatekeyWordsInput
   author: UserUpdateOneRequiredWithoutArticlesInput
   file: FileUpdateOneInput
   citations: CitationUpdateManyWithoutArticleInput
@@ -1281,6 +1307,9 @@ type Content {
   title: String
   code: String
   logo: String
+  metaDescription: String
+  metaFavicon: String
+  metaKeyWords: [String!]!
   sections: [Section!]!
   authorGuideline: String
   description: String
@@ -1312,6 +1341,8 @@ input ContentCreateInput {
   title: String
   code: String
   logo: String
+  metaDescription: String
+  metaFavicon: String
   authorGuideline: String
   description: String
   scope: String
@@ -1324,7 +1355,12 @@ input ContentCreateInput {
   purchaseArticleDescription: String
   reviewGuidelines: String
   waiverPolicy: String
+  metaKeyWords: ContentCreatemetaKeyWordsInput
   sections: ContentCreatesectionsInput
+}
+
+input ContentCreatemetaKeyWordsInput {
+  set: [String!]
 }
 
 input ContentCreatesectionsInput {
@@ -1347,6 +1383,10 @@ enum ContentOrderByInput {
   code_DESC
   logo_ASC
   logo_DESC
+  metaDescription_ASC
+  metaDescription_DESC
+  metaFavicon_ASC
+  metaFavicon_DESC
   authorGuideline_ASC
   authorGuideline_DESC
   description_ASC
@@ -1383,6 +1423,9 @@ type ContentPreviousValues {
   title: String
   code: String
   logo: String
+  metaDescription: String
+  metaFavicon: String
+  metaKeyWords: [String!]!
   sections: [Section!]!
   authorGuideline: String
   description: String
@@ -1443,6 +1486,8 @@ input ContentUpdateManyMutationInput {
   title: String
   code: String
   logo: String
+  metaDescription: String
+  metaFavicon: String
   authorGuideline: String
   description: String
   scope: String
@@ -1455,7 +1500,12 @@ input ContentUpdateManyMutationInput {
   purchaseArticleDescription: String
   reviewGuidelines: String
   waiverPolicy: String
+  metaKeyWords: ContentUpdatemetaKeyWordsInput
   sections: ContentUpdatesectionsInput
+}
+
+input ContentUpdatemetaKeyWordsInput {
+  set: [String!]
 }
 
 input ContentUpdatesectionsInput {
@@ -1591,6 +1641,86 @@ input ContentWhereInput {
 
   """All values not ending with the given string."""
   logo_not_ends_with: String
+  metaDescription: String
+
+  """All values that are not equal to given value."""
+  metaDescription_not: String
+
+  """All values that are contained in given list."""
+  metaDescription_in: [String!]
+
+  """All values that are not contained in given list."""
+  metaDescription_not_in: [String!]
+
+  """All values less than the given value."""
+  metaDescription_lt: String
+
+  """All values less than or equal the given value."""
+  metaDescription_lte: String
+
+  """All values greater than the given value."""
+  metaDescription_gt: String
+
+  """All values greater than or equal the given value."""
+  metaDescription_gte: String
+
+  """All values containing the given string."""
+  metaDescription_contains: String
+
+  """All values not containing the given string."""
+  metaDescription_not_contains: String
+
+  """All values starting with the given string."""
+  metaDescription_starts_with: String
+
+  """All values not starting with the given string."""
+  metaDescription_not_starts_with: String
+
+  """All values ending with the given string."""
+  metaDescription_ends_with: String
+
+  """All values not ending with the given string."""
+  metaDescription_not_ends_with: String
+  metaFavicon: String
+
+  """All values that are not equal to given value."""
+  metaFavicon_not: String
+
+  """All values that are contained in given list."""
+  metaFavicon_in: [String!]
+
+  """All values that are not contained in given list."""
+  metaFavicon_not_in: [String!]
+
+  """All values less than the given value."""
+  metaFavicon_lt: String
+
+  """All values less than or equal the given value."""
+  metaFavicon_lte: String
+
+  """All values greater than the given value."""
+  metaFavicon_gt: String
+
+  """All values greater than or equal the given value."""
+  metaFavicon_gte: String
+
+  """All values containing the given string."""
+  metaFavicon_contains: String
+
+  """All values not containing the given string."""
+  metaFavicon_not_contains: String
+
+  """All values starting with the given string."""
+  metaFavicon_starts_with: String
+
+  """All values not starting with the given string."""
+  metaFavicon_not_starts_with: String
+
+  """All values ending with the given string."""
+  metaFavicon_ends_with: String
+
+  """All values not ending with the given string."""
+  metaFavicon_not_ends_with: String
   authorGuideline: String
 
   """All values that are not equal to given value."""

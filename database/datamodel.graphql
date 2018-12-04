@@ -37,7 +37,7 @@ type Content {
   logo: String
   metaDescription: String
   metaFavicon: String
-  metaKeyWords: [String]
+  metaKeyWords: [String!]
   sections: [Section]
   authorGuideline: String
   description: String
@@ -86,14 +86,13 @@ type Issue {
 
 type Article {
   id: ID! @unique
-  key: String! @unique
   title: String
   resume: String
   author: User!
   shortDescription: String
   published: Boolean @default(value: "false")
   file: File
-  keyWords: [String]
+  keyWords: [String!]
   citations: [Citation!]!
   issue: Issue! @relation(name: "SubmitedArticles", onDelete: SET_NULL)
   selectedBy: [Issue!]! @relation(name: "SelectedArticles", onDelete: SET_NULL)
