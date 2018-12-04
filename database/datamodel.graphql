@@ -68,7 +68,7 @@ type Issue {
   image: String @default(value: "https://picsum.photos/500/250/?random")
   volume: Int
   number: Int
-  year: String
+  year: Int
   submitedArticles: [Article!]! @relation(name: "SubmitedArticles", onDelete: CASCADE)
   selectedArticles: [Article!]! @relation(name: "SelectedArticles", onDelete: CASCADE)
   selectedEditorials: [Article!]! @relation(name: "EditorialArticles", onDelete: CASCADE)

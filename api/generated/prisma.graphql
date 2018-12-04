@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Dec 03 2018 22:41:47 GMT-0200 (-02)
+# timestamp: Tue Dec 04 2018 11:43:50 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -3286,7 +3286,7 @@ type Issue implements Node {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   submitedArticles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
   selectedArticles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
   selectedEditorials(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article!]
@@ -3318,7 +3318,7 @@ input IssueCreateInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -3353,7 +3353,7 @@ input IssueCreateWithoutSelectedArticlesInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -3372,7 +3372,7 @@ input IssueCreateWithoutSelectedEditorialsInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -3391,7 +3391,7 @@ input IssueCreateWithoutSubmitedArticlesInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -3457,7 +3457,7 @@ type IssuePreviousValues {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -3683,46 +3683,28 @@ input IssueScalarWhereInput {
 
   """All values greater than or equal the given value."""
   number_gte: Int
-  year: String
+  year: Int
 
   """All values that are not equal to given value."""
-  year_not: String
+  year_not: Int
 
   """All values that are contained in given list."""
-  year_in: [String!]
+  year_in: [Int!]
 
   """All values that are not contained in given list."""
-  year_not_in: [String!]
+  year_not_in: [Int!]
 
   """All values less than the given value."""
-  year_lt: String
+  year_lt: Int
 
   """All values less than or equal the given value."""
-  year_lte: String
+  year_lte: Int
 
   """All values greater than the given value."""
-  year_gt: String
+  year_gt: Int
 
   """All values greater than or equal the given value."""
-  year_gte: String
-
-  """All values containing the given string."""
-  year_contains: String
-
-  """All values not containing the given string."""
-  year_not_contains: String
-
-  """All values starting with the given string."""
-  year_starts_with: String
-
-  """All values not starting with the given string."""
-  year_not_starts_with: String
-
-  """All values ending with the given string."""
-  year_ends_with: String
-
-  """All values not ending with the given string."""
-  year_not_ends_with: String
+  year_gte: Int
   body: String
 
   """All values that are not equal to given value."""
@@ -3990,7 +3972,7 @@ input IssueUpdateInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -4010,7 +3992,7 @@ input IssueUpdateManyDataInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -4027,7 +4009,7 @@ input IssueUpdateManyMutationInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -4078,7 +4060,7 @@ input IssueUpdateWithoutSelectedArticlesDataInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -4097,7 +4079,7 @@ input IssueUpdateWithoutSelectedEditorialsDataInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -4116,7 +4098,7 @@ input IssueUpdateWithoutSubmitedArticlesDataInput {
   image: String
   volume: Int
   number: Int
-  year: String
+  year: Int
   body: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
@@ -4369,46 +4351,28 @@ input IssueWhereInput {
 
   """All values greater than or equal the given value."""
   number_gte: Int
-  year: String
+  year: Int
 
   """All values that are not equal to given value."""
-  year_not: String
+  year_not: Int
 
   """All values that are contained in given list."""
-  year_in: [String!]
+  year_in: [Int!]
 
   """All values that are not contained in given list."""
-  year_not_in: [String!]
+  year_not_in: [Int!]
 
   """All values less than the given value."""
-  year_lt: String
+  year_lt: Int
 
   """All values less than or equal the given value."""
-  year_lte: String
+  year_lte: Int
 
   """All values greater than the given value."""
-  year_gt: String
+  year_gt: Int
 
   """All values greater than or equal the given value."""
-  year_gte: String
-
-  """All values containing the given string."""
-  year_contains: String
-
-  """All values not containing the given string."""
-  year_not_contains: String
-
-  """All values starting with the given string."""
-  year_starts_with: String
-
-  """All values not starting with the given string."""
-  year_not_starts_with: String
-
-  """All values ending with the given string."""
-  year_ends_with: String
-
-  """All values not ending with the given string."""
-  year_not_ends_with: String
+  year_gte: Int
   body: String
 
   """All values that are not equal to given value."""
