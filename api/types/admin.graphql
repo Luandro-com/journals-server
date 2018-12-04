@@ -11,8 +11,12 @@ input IssueInput {
 
 input IssueUpdateInput {
   title: String
+  image: ID
   key: String
   body: String
+  volume: Int
+  number: Int
+  year: String
   evaluationPeriod: Int
   publicationPrediction: DateTime
   contact: String
