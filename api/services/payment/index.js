@@ -100,44 +100,44 @@ const simpleTransaction = async () => await cielo.creditCard.simpleTransaction(d
 // console.log(transaction);
 
 // // Compra boleto
-// var dadosBoleto = {  
-//   "MerchantOrderId":"2014111706",
-//   "Customer":
-//   {  
-//       "Name":"Comprador Teste Boleto",
-//       "Identity": "1234567890",
-//       "Address":
-//       {
-//         "Street": "Avenida Marechal Câmara",
-//         "Number": "160",  
-//         "Complement": "Sala 934",
-//         "ZipCode" : "22750012",
-//         "District": "Centro",
-//         "City": "Rio de Janeiro",
-//         "State" : "RJ",
-//         "Country": "BRA"
-//       }
-//   },
-//   "Payment":
-//   {  
-//       "Type":"Boleto",
-//       "Amount":15700,
-//       "Provider":"INCLUIR PROVIDER",
-//       "Address": "Rua Teste",
-//       "BoletoNumber": "123",
-//       "Assignor": "Empresa Teste",
-//       "Demonstrative": "Desmonstrative Teste",
-//       "ExpirationDate": "5/1/2015",
-//       "Identification": "11884926754",
-//       "Instructions": "Aceitar somente até a data de vencimento, após essa data juros de 1% dia."
-//   }
-// }
+var dadosBoleto = {  
+  "MerchantOrderId":"2014111706",
+  "Customer":
+  {  
+      "Name":"Comprador Teste Boleto",
+      "Identity": "1234567890",
+      "Address":
+      {
+        "Street": "Avenida Marechal Câmara",
+        "Number": "160",  
+        "Complement": "Sala 934",
+        "ZipCode" : "22750012",
+        "District": "Centro",
+        "City": "Rio de Janeiro",
+        "State" : "RJ",
+        "Country": "BRA"
+      }
+  },
+  "Payment":
+  {  
+      "Type":"Boleto",
+      "Amount":15700,
+      "Provider":"Bradesco",
+      "Address": "Rua Teste",
+      "BoletoNumber": "123",
+      "Assignor": "Empresa Teste",
+      "Demonstrative": "Desmonstrative Teste",
+      "ExpirationDate": "5/1/2015",
+      "Identification": "11884926754",
+      "Instructions": "Aceitar somente até a data de vencimento, após essa data juros de 1% dia."
+  }
+}
 
-// const transaction = await cielo.boleto.sale(dadosBoleto);
-// console.log(transaction);
+const boletoTransaction = async () => await cielo.boleto.sale(dadosBoleto);
 
 module.exports = {
   cielo,
   dadosSale,
   simpleTransaction,
+  boletoTransaction
 }

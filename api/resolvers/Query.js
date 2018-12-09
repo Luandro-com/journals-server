@@ -40,16 +40,13 @@ const Query = {
   },
 
   async issues(parent, args, ctx, info) {
-    return await ctx.db.query.issues({ where: { OR: [
-      { published: true },
-      { publishedCall: true },
-    ] }}, info)
+    return await ctx.db.query.issues({ where: { published: true }}, info)
   },
 
   async openCalls(parent, args, ctx, info) {
     return await ctx.db.query.issues({ where: { AND: [
       { publishedCall: true },
-      { endCall_gt: new Date(Date.now()).toISOString() }
+      { endCall_gte: new Date().toISOString() }
     ] }}, info)
   },
 
@@ -67,8 +64,8 @@ const Query = {
     return await ctx.db.query.payments({}, info)
   },
 
-  async payedArticles(parent, args, ctx, info) {
-    return await ctx.db.query.articles({ where: { payment: { returnCode: '4' } }}, info)
+  async articles(parent, args, ctx, info) {
+    return await ctx.db.query.articles({}, info)
   },
 
   async uploads(parent, args, ctx, info) {

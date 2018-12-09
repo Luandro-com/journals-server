@@ -126,6 +126,15 @@ type Payment {
   type: String!
   currency: String
   creditCard: CreditCard
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   customer: User!
   merchantOrderId: String!
   customerName: String

@@ -1,6 +1,21 @@
 const camel = require('camelcase')
 const { getUserId } = require('../../services/auth/utils')
-const { simpleTransaction } = require('../../services/payment')
+const { simpleTransaction, boletoTransaction } = require('../../services/payment')
+
+const formatPayment = (payment) => {
+  let formatedPayment = { creditCard: {}}
+  Object.keys(payment['Payment']).map(key => {
+    if (key !== 'CreditCard') {
+      formatedPayment[camel(key)] = payment['Payment'][key]
+    } else {
+      Object.keys(payment['Payment'][key]).map(creditKey => {
+        formatedPayment[camel(key)][camel(creditKey)] = payment['Payment'][key][creditKey]
+      })
+      
+    }
+  })
+  return formatedPayment
+}
 
 const journal = {
   async subscribe(parent, args, ctx, info) {
@@ -128,57 +143,16 @@ const journal = {
   async payment(parent, args, ctx, info) {
     const { input } = args
     const id = getUserId(ctx)
-    const articleId = input.articleId
-    const payment = await simpleTransaction()
-    let formatedPayment = { creditCard: {}}
-    Object.keys(payment['Payment']).map(key => {
-      if (key !== 'CreditCard') {
-        formatedPayment[camel(key)] = payment['Payment'][key]
-      } else {
-        Object.keys(payment['Payment'][key]).map(creditKey => {
-          formatedPayment[camel(key)][camel(creditKey)] = payment['Payment'][key][creditKey]
-        })
-        
-      }
-    })
-    console.log('formatedPayment', formatedPayment)
-    const {
-      paymentId,
-      type,
-      currency,
-      creditCard,
-      tid,
-      proofOfSale,
-      authorizationCode,
-      softDescriptor,
-      provider,
-      amount,
-      serviceTaxAmount,
-      installments,
-      interest,
-      capture,
-      authenticate,
-      recurrent,
-      receivedDate,
-      status,
-      isSplitted,
-      returnMessage,
-      returnCode
-    } = formatedPayment
-    const card = await ctx.db.mutation.createCreditCard({
-      data: creditCard
-    })
-    console.log('CREATED CARD ====> ', card)
-    return await ctx.db.mutation.createPayment({
-      data: {
-        merchantOrderId: payment['MerchantOrderId'],
-        customerName: payment['Customer']['Name'],
-        article: { connect: { id: articleId } },
-        customer: { connect: { id } },
-        creditCard: { connect: { id: card.id }},
+    const { articleId, method } = input
+    if( method === 'CREDIT_CARD') {
+      const payment = await simpleTransaction()
+      const formatedPayment = formatPayment(payment)
+      console.log('formatedPayment', formatedPayment)
+      const {
         paymentId,
         type,
         currency,
+        creditCard,
         tid,
         proofOfSale,
         authorizationCode,
@@ -191,13 +165,96 @@ const journal = {
         capture,
         authenticate,
         recurrent,
-        receivedDate: new Date(receivedDate),
+        receivedDate,
         status,
         isSplitted,
         returnMessage,
-        returnCode,
-      }
-    })
+        returnCode
+      } = formatedPayment
+      const card = await ctx.db.mutation.createCreditCard({
+        data: creditCard
+      })
+      console.log('CREATED CARD ====> ', card)
+      return await ctx.db.mutation.createPayment({
+        data: {
+          merchantOrderId: payment['MerchantOrderId'],
+          customerName: payment['Customer']['Name'],
+          article: { connect: { id: articleId } },
+          customer: { connect: { id } },
+          creditCard: { connect: { id: card.id }},
+          paymentId,
+          type,
+          currency,
+          tid,
+          proofOfSale,
+          authorizationCode,
+          softDescriptor,
+          provider,
+          amount,
+          serviceTaxAmount,
+          installments,
+          interest,
+          capture,
+          authenticate,
+          recurrent,
+          receivedDate: new Date(receivedDate),
+          status,
+          isSplitted,
+          returnMessage,
+          returnCode,
+        }
+      }) 
+    }
+    if( method === 'MONEY_ORDER') {
+      const payment = await  boletoTransaction()
+      const formatedPayment = formatPayment(payment)
+      console.log('BOLETO', formatedPayment)
+      const {
+        instructions,
+        expirationDate,
+        demonstrative,
+        url,
+        boletoNumber,
+        barCodeNumber,
+        digitableLine,
+        assignor,
+        address,
+        identification,
+        amount,
+        receivedDate,
+        provider,
+        status,
+        isSplitted,
+        paymentId,
+        type,
+        currency,
+      } = formatedPayment
+      return await ctx.db.mutation.createPayment({
+        data: {
+          merchantOrderId: payment['MerchantOrderId'],
+          customerName: payment['Customer']['Name'],
+          article: { connect: { id: articleId } },
+          customer: { connect: { id } },
+          instructions,
+          expirationDate,
+          demonstrative,
+          url,
+          boletoNumber,
+          barCodeNumber,
+          digitableLine,
+          assignor,
+          identification,
+          amount,
+          receivedDate: new Date(receivedDate),
+          provider,
+          status,
+          isSplitted,
+          paymentId,
+          type,
+          currency,
+        }
+      }) 
+    }
   },
 }
 

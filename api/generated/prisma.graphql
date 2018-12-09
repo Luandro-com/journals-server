@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Dec 04 2018 11:43:50 GMT-0200 (-02)
+# timestamp: Sun Dec 09 2018 19:16:24 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -4886,6 +4886,15 @@ type Payment implements Node {
   type: String!
   currency: String
   creditCard: CreditCard
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   customer: User!
   merchantOrderId: String!
   customerName: String
@@ -4926,6 +4935,15 @@ input PaymentCreateInput {
   paymentId: String
   type: String!
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String!
   customerName: String
   tid: String
@@ -4965,6 +4983,15 @@ input PaymentCreateWithoutArticleInput {
   paymentId: String
   type: String!
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String!
   customerName: String
   tid: String
@@ -4993,6 +5020,15 @@ input PaymentCreateWithoutCustomerInput {
   paymentId: String
   type: String!
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String!
   customerName: String
   tid: String
@@ -5035,6 +5071,24 @@ enum PaymentOrderByInput {
   type_DESC
   currency_ASC
   currency_DESC
+  url_ASC
+  url_DESC
+  boletoNumber_ASC
+  boletoNumber_DESC
+  barCodeNumber_ASC
+  barCodeNumber_DESC
+  digitableLine_ASC
+  digitableLine_DESC
+  expirationDate_ASC
+  expirationDate_DESC
+  instructions_ASC
+  instructions_DESC
+  demonstrative_ASC
+  demonstrative_DESC
+  assignor_ASC
+  assignor_DESC
+  identification_ASC
+  identification_DESC
   merchantOrderId_ASC
   merchantOrderId_DESC
   customerName_ASC
@@ -5084,6 +5138,15 @@ type PaymentPreviousValues {
   paymentId: String
   type: String!
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String!
   customerName: String
   tid: String
@@ -5276,6 +5339,366 @@ input PaymentScalarWhereInput {
 
   """All values not ending with the given string."""
   currency_not_ends_with: String
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
+  boletoNumber: String
+
+  """All values that are not equal to given value."""
+  boletoNumber_not: String
+
+  """All values that are contained in given list."""
+  boletoNumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  boletoNumber_not_in: [String!]
+
+  """All values less than the given value."""
+  boletoNumber_lt: String
+
+  """All values less than or equal the given value."""
+  boletoNumber_lte: String
+
+  """All values greater than the given value."""
+  boletoNumber_gt: String
+
+  """All values greater than or equal the given value."""
+  boletoNumber_gte: String
+
+  """All values containing the given string."""
+  boletoNumber_contains: String
+
+  """All values not containing the given string."""
+  boletoNumber_not_contains: String
+
+  """All values starting with the given string."""
+  boletoNumber_starts_with: String
+
+  """All values not starting with the given string."""
+  boletoNumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  boletoNumber_ends_with: String
+
+  """All values not ending with the given string."""
+  boletoNumber_not_ends_with: String
+  barCodeNumber: String
+
+  """All values that are not equal to given value."""
+  barCodeNumber_not: String
+
+  """All values that are contained in given list."""
+  barCodeNumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  barCodeNumber_not_in: [String!]
+
+  """All values less than the given value."""
+  barCodeNumber_lt: String
+
+  """All values less than or equal the given value."""
+  barCodeNumber_lte: String
+
+  """All values greater than the given value."""
+  barCodeNumber_gt: String
+
+  """All values greater than or equal the given value."""
+  barCodeNumber_gte: String
+
+  """All values containing the given string."""
+  barCodeNumber_contains: String
+
+  """All values not containing the given string."""
+  barCodeNumber_not_contains: String
+
+  """All values starting with the given string."""
+  barCodeNumber_starts_with: String
+
+  """All values not starting with the given string."""
+  barCodeNumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  barCodeNumber_ends_with: String
+
+  """All values not ending with the given string."""
+  barCodeNumber_not_ends_with: String
+  digitableLine: String
+
+  """All values that are not equal to given value."""
+  digitableLine_not: String
+
+  """All values that are contained in given list."""
+  digitableLine_in: [String!]
+
+  """All values that are not contained in given list."""
+  digitableLine_not_in: [String!]
+
+  """All values less than the given value."""
+  digitableLine_lt: String
+
+  """All values less than or equal the given value."""
+  digitableLine_lte: String
+
+  """All values greater than the given value."""
+  digitableLine_gt: String
+
+  """All values greater than or equal the given value."""
+  digitableLine_gte: String
+
+  """All values containing the given string."""
+  digitableLine_contains: String
+
+  """All values not containing the given string."""
+  digitableLine_not_contains: String
+
+  """All values starting with the given string."""
+  digitableLine_starts_with: String
+
+  """All values not starting with the given string."""
+  digitableLine_not_starts_with: String
+
+  """All values ending with the given string."""
+  digitableLine_ends_with: String
+
+  """All values not ending with the given string."""
+  digitableLine_not_ends_with: String
+  expirationDate: String
+
+  """All values that are not equal to given value."""
+  expirationDate_not: String
+
+  """All values that are contained in given list."""
+  expirationDate_in: [String!]
+
+  """All values that are not contained in given list."""
+  expirationDate_not_in: [String!]
+
+  """All values less than the given value."""
+  expirationDate_lt: String
+
+  """All values less than or equal the given value."""
+  expirationDate_lte: String
+
+  """All values greater than the given value."""
+  expirationDate_gt: String
+
+  """All values greater than or equal the given value."""
+  expirationDate_gte: String
+
+  """All values containing the given string."""
+  expirationDate_contains: String
+
+  """All values not containing the given string."""
+  expirationDate_not_contains: String
+
+  """All values starting with the given string."""
+  expirationDate_starts_with: String
+
+  """All values not starting with the given string."""
+  expirationDate_not_starts_with: String
+
+  """All values ending with the given string."""
+  expirationDate_ends_with: String
+
+  """All values not ending with the given string."""
+  expirationDate_not_ends_with: String
+  instructions: String
+
+  """All values that are not equal to given value."""
+  instructions_not: String
+
+  """All values that are contained in given list."""
+  instructions_in: [String!]
+
+  """All values that are not contained in given list."""
+  instructions_not_in: [String!]
+
+  """All values less than the given value."""
+  instructions_lt: String
+
+  """All values less than or equal the given value."""
+  instructions_lte: String
+
+  """All values greater than the given value."""
+  instructions_gt: String
+
+  """All values greater than or equal the given value."""
+  instructions_gte: String
+
+  """All values containing the given string."""
+  instructions_contains: String
+
+  """All values not containing the given string."""
+  instructions_not_contains: String
+
+  """All values starting with the given string."""
+  instructions_starts_with: String
+
+  """All values not starting with the given string."""
+  instructions_not_starts_with: String
+
+  """All values ending with the given string."""
+  instructions_ends_with: String
+
+  """All values not ending with the given string."""
+  instructions_not_ends_with: String
+  demonstrative: String
+
+  """All values that are not equal to given value."""
+  demonstrative_not: String
+
+  """All values that are contained in given list."""
+  demonstrative_in: [String!]
+
+  """All values that are not contained in given list."""
+  demonstrative_not_in: [String!]
+
+  """All values less than the given value."""
+  demonstrative_lt: String
+
+  """All values less than or equal the given value."""
+  demonstrative_lte: String
+
+  """All values greater than the given value."""
+  demonstrative_gt: String
+
+  """All values greater than or equal the given value."""
+  demonstrative_gte: String
+
+  """All values containing the given string."""
+  demonstrative_contains: String
+
+  """All values not containing the given string."""
+  demonstrative_not_contains: String
+
+  """All values starting with the given string."""
+  demonstrative_starts_with: String
+
+  """All values not starting with the given string."""
+  demonstrative_not_starts_with: String
+
+  """All values ending with the given string."""
+  demonstrative_ends_with: String
+
+  """All values not ending with the given string."""
+  demonstrative_not_ends_with: String
+  assignor: String
+
+  """All values that are not equal to given value."""
+  assignor_not: String
+
+  """All values that are contained in given list."""
+  assignor_in: [String!]
+
+  """All values that are not contained in given list."""
+  assignor_not_in: [String!]
+
+  """All values less than the given value."""
+  assignor_lt: String
+
+  """All values less than or equal the given value."""
+  assignor_lte: String
+
+  """All values greater than the given value."""
+  assignor_gt: String
+
+  """All values greater than or equal the given value."""
+  assignor_gte: String
+
+  """All values containing the given string."""
+  assignor_contains: String
+
+  """All values not containing the given string."""
+  assignor_not_contains: String
+
+  """All values starting with the given string."""
+  assignor_starts_with: String
+
+  """All values not starting with the given string."""
+  assignor_not_starts_with: String
+
+  """All values ending with the given string."""
+  assignor_ends_with: String
+
+  """All values not ending with the given string."""
+  assignor_not_ends_with: String
+  identification: String
+
+  """All values that are not equal to given value."""
+  identification_not: String
+
+  """All values that are contained in given list."""
+  identification_in: [String!]
+
+  """All values that are not contained in given list."""
+  identification_not_in: [String!]
+
+  """All values less than the given value."""
+  identification_lt: String
+
+  """All values less than or equal the given value."""
+  identification_lte: String
+
+  """All values greater than the given value."""
+  identification_gt: String
+
+  """All values greater than or equal the given value."""
+  identification_gte: String
+
+  """All values containing the given string."""
+  identification_contains: String
+
+  """All values not containing the given string."""
+  identification_not_contains: String
+
+  """All values starting with the given string."""
+  identification_starts_with: String
+
+  """All values not starting with the given string."""
+  identification_not_starts_with: String
+
+  """All values ending with the given string."""
+  identification_ends_with: String
+
+  """All values not ending with the given string."""
+  identification_not_ends_with: String
   merchantOrderId: String
 
   """All values that are not equal to given value."""
@@ -5873,6 +6296,15 @@ input PaymentUpdateInput {
   paymentId: String
   type: String
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String
   customerName: String
   tid: String
@@ -5902,6 +6334,15 @@ input PaymentUpdateManyDataInput {
   paymentId: String
   type: String
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String
   customerName: String
   tid: String
@@ -5927,6 +6368,15 @@ input PaymentUpdateManyMutationInput {
   paymentId: String
   type: String
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String
   customerName: String
   tid: String
@@ -5977,6 +6427,15 @@ input PaymentUpdateWithoutArticleDataInput {
   paymentId: String
   type: String
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String
   customerName: String
   tid: String
@@ -6005,6 +6464,15 @@ input PaymentUpdateWithoutCustomerDataInput {
   paymentId: String
   type: String
   currency: String
+  url: String
+  boletoNumber: String
+  barCodeNumber: String
+  digitableLine: String
+  expirationDate: String
+  instructions: String
+  demonstrative: String
+  assignor: String
+  identification: String
   merchantOrderId: String
   customerName: String
   tid: String
@@ -6214,6 +6682,366 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   currency_not_ends_with: String
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
+  boletoNumber: String
+
+  """All values that are not equal to given value."""
+  boletoNumber_not: String
+
+  """All values that are contained in given list."""
+  boletoNumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  boletoNumber_not_in: [String!]
+
+  """All values less than the given value."""
+  boletoNumber_lt: String
+
+  """All values less than or equal the given value."""
+  boletoNumber_lte: String
+
+  """All values greater than the given value."""
+  boletoNumber_gt: String
+
+  """All values greater than or equal the given value."""
+  boletoNumber_gte: String
+
+  """All values containing the given string."""
+  boletoNumber_contains: String
+
+  """All values not containing the given string."""
+  boletoNumber_not_contains: String
+
+  """All values starting with the given string."""
+  boletoNumber_starts_with: String
+
+  """All values not starting with the given string."""
+  boletoNumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  boletoNumber_ends_with: String
+
+  """All values not ending with the given string."""
+  boletoNumber_not_ends_with: String
+  barCodeNumber: String
+
+  """All values that are not equal to given value."""
+  barCodeNumber_not: String
+
+  """All values that are contained in given list."""
+  barCodeNumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  barCodeNumber_not_in: [String!]
+
+  """All values less than the given value."""
+  barCodeNumber_lt: String
+
+  """All values less than or equal the given value."""
+  barCodeNumber_lte: String
+
+  """All values greater than the given value."""
+  barCodeNumber_gt: String
+
+  """All values greater than or equal the given value."""
+  barCodeNumber_gte: String
+
+  """All values containing the given string."""
+  barCodeNumber_contains: String
+
+  """All values not containing the given string."""
+  barCodeNumber_not_contains: String
+
+  """All values starting with the given string."""
+  barCodeNumber_starts_with: String
+
+  """All values not starting with the given string."""
+  barCodeNumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  barCodeNumber_ends_with: String
+
+  """All values not ending with the given string."""
+  barCodeNumber_not_ends_with: String
+  digitableLine: String
+
+  """All values that are not equal to given value."""
+  digitableLine_not: String
+
+  """All values that are contained in given list."""
+  digitableLine_in: [String!]
+
+  """All values that are not contained in given list."""
+  digitableLine_not_in: [String!]
+
+  """All values less than the given value."""
+  digitableLine_lt: String
+
+  """All values less than or equal the given value."""
+  digitableLine_lte: String
+
+  """All values greater than the given value."""
+  digitableLine_gt: String
+
+  """All values greater than or equal the given value."""
+  digitableLine_gte: String
+
+  """All values containing the given string."""
+  digitableLine_contains: String
+
+  """All values not containing the given string."""
+  digitableLine_not_contains: String
+
+  """All values starting with the given string."""
+  digitableLine_starts_with: String
+
+  """All values not starting with the given string."""
+  digitableLine_not_starts_with: String
+
+  """All values ending with the given string."""
+  digitableLine_ends_with: String
+
+  """All values not ending with the given string."""
+  digitableLine_not_ends_with: String
+  expirationDate: String
+
+  """All values that are not equal to given value."""
+  expirationDate_not: String
+
+  """All values that are contained in given list."""
+  expirationDate_in: [String!]
+
+  """All values that are not contained in given list."""
+  expirationDate_not_in: [String!]
+
+  """All values less than the given value."""
+  expirationDate_lt: String
+
+  """All values less than or equal the given value."""
+  expirationDate_lte: String
+
+  """All values greater than the given value."""
+  expirationDate_gt: String
+
+  """All values greater than or equal the given value."""
+  expirationDate_gte: String
+
+  """All values containing the given string."""
+  expirationDate_contains: String
+
+  """All values not containing the given string."""
+  expirationDate_not_contains: String
+
+  """All values starting with the given string."""
+  expirationDate_starts_with: String
+
+  """All values not starting with the given string."""
+  expirationDate_not_starts_with: String
+
+  """All values ending with the given string."""
+  expirationDate_ends_with: String
+
+  """All values not ending with the given string."""
+  expirationDate_not_ends_with: String
+  instructions: String
+
+  """All values that are not equal to given value."""
+  instructions_not: String
+
+  """All values that are contained in given list."""
+  instructions_in: [String!]
+
+  """All values that are not contained in given list."""
+  instructions_not_in: [String!]
+
+  """All values less than the given value."""
+  instructions_lt: String
+
+  """All values less than or equal the given value."""
+  instructions_lte: String
+
+  """All values greater than the given value."""
+  instructions_gt: String
+
+  """All values greater than or equal the given value."""
+  instructions_gte: String
+
+  """All values containing the given string."""
+  instructions_contains: String
+
+  """All values not containing the given string."""
+  instructions_not_contains: String
+
+  """All values starting with the given string."""
+  instructions_starts_with: String
+
+  """All values not starting with the given string."""
+  instructions_not_starts_with: String
+
+  """All values ending with the given string."""
+  instructions_ends_with: String
+
+  """All values not ending with the given string."""
+  instructions_not_ends_with: String
+  demonstrative: String
+
+  """All values that are not equal to given value."""
+  demonstrative_not: String
+
+  """All values that are contained in given list."""
+  demonstrative_in: [String!]
+
+  """All values that are not contained in given list."""
+  demonstrative_not_in: [String!]
+
+  """All values less than the given value."""
+  demonstrative_lt: String
+
+  """All values less than or equal the given value."""
+  demonstrative_lte: String
+
+  """All values greater than the given value."""
+  demonstrative_gt: String
+
+  """All values greater than or equal the given value."""
+  demonstrative_gte: String
+
+  """All values containing the given string."""
+  demonstrative_contains: String
+
+  """All values not containing the given string."""
+  demonstrative_not_contains: String
+
+  """All values starting with the given string."""
+  demonstrative_starts_with: String
+
+  """All values not starting with the given string."""
+  demonstrative_not_starts_with: String
+
+  """All values ending with the given string."""
+  demonstrative_ends_with: String
+
+  """All values not ending with the given string."""
+  demonstrative_not_ends_with: String
+  assignor: String
+
+  """All values that are not equal to given value."""
+  assignor_not: String
+
+  """All values that are contained in given list."""
+  assignor_in: [String!]
+
+  """All values that are not contained in given list."""
+  assignor_not_in: [String!]
+
+  """All values less than the given value."""
+  assignor_lt: String
+
+  """All values less than or equal the given value."""
+  assignor_lte: String
+
+  """All values greater than the given value."""
+  assignor_gt: String
+
+  """All values greater than or equal the given value."""
+  assignor_gte: String
+
+  """All values containing the given string."""
+  assignor_contains: String
+
+  """All values not containing the given string."""
+  assignor_not_contains: String
+
+  """All values starting with the given string."""
+  assignor_starts_with: String
+
+  """All values not starting with the given string."""
+  assignor_not_starts_with: String
+
+  """All values ending with the given string."""
+  assignor_ends_with: String
+
+  """All values not ending with the given string."""
+  assignor_not_ends_with: String
+  identification: String
+
+  """All values that are not equal to given value."""
+  identification_not: String
+
+  """All values that are contained in given list."""
+  identification_in: [String!]
+
+  """All values that are not contained in given list."""
+  identification_not_in: [String!]
+
+  """All values less than the given value."""
+  identification_lt: String
+
+  """All values less than or equal the given value."""
+  identification_lte: String
+
+  """All values greater than the given value."""
+  identification_gt: String
+
+  """All values greater than or equal the given value."""
+  identification_gte: String
+
+  """All values containing the given string."""
+  identification_contains: String
+
+  """All values not containing the given string."""
+  identification_not_contains: String
+
+  """All values starting with the given string."""
+  identification_starts_with: String
+
+  """All values not starting with the given string."""
+  identification_not_starts_with: String
+
+  """All values ending with the given string."""
+  identification_ends_with: String
+
+  """All values not ending with the given string."""
+  identification_not_ends_with: String
   merchantOrderId: String
 
   """All values that are not equal to given value."""

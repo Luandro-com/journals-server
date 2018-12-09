@@ -17,7 +17,7 @@ type Query {
   issue(issueKey: String!): Issue
   article(articleId: ID!): Article
   content: Content
-  payedArticles: [Article]
+  articles: [Article]
   uploads: [File]
 }
 

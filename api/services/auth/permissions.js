@@ -24,7 +24,7 @@ module.exports = shield({
     users: and(isAuthenticated, isAdmin),
     admins: and(isAuthenticated, isAdmin),
     payments: and(isAuthenticated, isAdmin),
-    payedArticles: and(isAuthenticated, isAdmin),
+    articles: and(isAuthenticated, or(isAdmin, isEditor)),
     uploads: and(isAuthenticated, or(isAdmin, isEditor)),
   },
   Mutation: {

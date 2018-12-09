@@ -10,29 +10,29 @@ mutation {
     title: "Experiências no Pretexto do Pretérito"
     body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
     evaluationPeriod: 90
-    published: true
+    published: false
     publishedCall: true
     publicationPrediction: "2018-04-15T14:49:00.309Z"
-    contact: "wesleymedeiros@periodicos.com"
-    startCall: "2017-11-24T14:49:00.309Z"
-    endCall: "2018-02-24T14:49:00.309Z"
-  }) {
-    id
-  },
-  createSecondIssue: createIssue(data: {
-    key: "experiencias-do-urbanismo-no-brasil"
-    title: "Experiências no Ensino do Urbanismo no Brasil"
-    body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
-    evaluationPeriod: 90
-    published: true
-    publishedCall: true
-    publicationPrediction: "2019-04-15T14:49:00.309Z"
     contact: "wesleymedeiros@periodicos.com"
     startCall: "2018-11-24T14:49:00.309Z"
     endCall: "2019-02-24T14:49:00.309Z"
   }) {
     id
   },
+  # createSecondIssue: createIssue(data: {
+  #   key: "experiencias-do-urbanismo-no-brasil"
+  #   title: "Experiências no Ensino do Urbanismo no Brasil"
+  #   body: "<h1>Experiências no Ensino do Urbanismo no Brasil</h1><p>Vamos lá....</p>"
+  #   evaluationPeriod: 90
+  #   published: true
+  #   publishedCall: true
+  #   publicationPrediction: "2019-04-15T14:49:00.309Z"
+  #   contact: "wesleymedeiros@periodicos.com"
+  #   startCall: "2018-11-24T14:49:00.309Z"
+  #   endCall: "2019-02-24T14:49:00.309Z"
+  # }) {
+  #   id
+  # },
   # createThirdIssue: createIssue(data: {
   #   key: "experiencias-do-urbanismo-no-brasil-revolta"
   #   title: "Experiências no Ensino do Urbanismo no Brasil A Revolta do Proletariado"
@@ -64,22 +64,22 @@ mutation {
   }) {
     id
   },
-  createReader: createUser(data: {
-    email: "reader@example.com"
-    password: "$2a$10$hACwQ5/HQI6FhbIISOUVeusy3sKyUDhSq36fF5d/54aAdiygJPFzm" # plaintext password: "nooneknows"
-    firstName: "Fandangos"
-    lastName: "Royce"
-    role: READER
-    articles: {
-      create: [{
-        issue: {
-          connect:{
-            key: "experiencias-do-urbanismo-no-brasil"
-          }
-        }
-      }]
-    }
-  }) {
-    id
-  },
+  # createReader: createUser(data: {
+  #   email: "reader@example.com"
+  #   password: "$2a$10$hACwQ5/HQI6FhbIISOUVeusy3sKyUDhSq36fF5d/54aAdiygJPFzm" # plaintext password: "nooneknows"
+  #   firstName: "Fandangos"
+  #   lastName: "Royce"
+  #   role: READER
+  #   articles: {
+  #     create: [{
+  #       issue: {
+  #         connect:{
+  #           key: "experiencias-do-urbanismo-no-brasil"
+  #         }
+  #       }
+  #     }]
+  #   }
+  # }) {
+  #   id
+  # },
 }
