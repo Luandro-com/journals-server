@@ -1,5 +1,5 @@
-# source: http://localhost:4466
-# timestamp: Sun Dec 09 2018 19:16:24 GMT-0200 (-02)
+# source: https://us1.prisma.sh/luandro-93a3b2/periodico/dev
+# timestamp: Thu Dec 13 2018 18:04:55 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -4609,9 +4609,6 @@ input IssueWhereUniqueInput {
   key: String
 }
 
-"""Raw JSON value"""
-scalar Json
-
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -4682,7 +4679,6 @@ type Mutation {
   deleteManyCreditCards(where: CreditCardWhereInput): BatchPayload!
   deleteManyCupoms(where: CupomWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
-  executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
 enum MutationType {
@@ -7602,10 +7598,6 @@ input PaymentWhereInput {
 
 input PaymentWhereUniqueInput {
   id: ID
-}
-
-enum PrismaDatabase {
-  default
 }
 
 type Query {
