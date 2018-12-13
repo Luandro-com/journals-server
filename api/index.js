@@ -15,9 +15,9 @@ const db = new Prisma({
 
 const server = new GraphQLServer({
   middlewares: [
-    // process.env.SENTRY_DSN ? sentry({
-    //   dsn: process.env.SENTRY_DSN
-    // }) : {},
+    process.env.SENTRY_DSN ? sentry({
+      dsn: process.env.SENTRY_DSN
+    }) : {},
     permissions,
    ],
   typeDefs: './api/schema.graphql',
