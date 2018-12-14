@@ -16,7 +16,7 @@
     "test": "npm-run-all --parallel start run-test"
   },
   "dependencies": {
-    "aws-sdk": "^2.375.0",
+    "aws-sdk": "^2.376.0",
     "bcryptjs": "2.4.3",
     "camelcase": "^5.0.0",
     "cielo": "^1.0.8",
