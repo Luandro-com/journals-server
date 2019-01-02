@@ -22,7 +22,7 @@ const Query = {
         AND: [
           { id: articleId },
           { OR: [
-            { published: true },
+            { published: !null },
             { author: { id } }
           ]},
         ]}
@@ -40,7 +40,8 @@ const Query = {
   },
 
   async issues(parent, args, ctx, info) {
-    return await ctx.db.query.issues({ where: { published: true }}, info)
+    const issues = await ctx.db.query.issues({}, info)
+    return issues.filter(i => i.published !== null)
   },
 
   async openCalls(parent, args, ctx, info) {

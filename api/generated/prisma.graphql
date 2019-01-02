@@ -1,5 +1,5 @@
-# source: https://us1.prisma.sh/luandro-93a3b2/periodico/dev
-# timestamp: Thu Dec 13 2018 18:04:55 GMT-0200 (-02)
+# source: http://localhost:4466
+# timestamp: Tue Jan 01 2019 21:32:48 GMT-0200 (-02)
 
 type AggregateArticle {
   count: Int!
@@ -3295,7 +3295,7 @@ type Issue implements Node {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!
@@ -3324,7 +3324,7 @@ input IssueCreateInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   submitedArticles: ArticleCreateManyWithoutIssueInput
@@ -3359,7 +3359,7 @@ input IssueCreateWithoutSelectedArticlesInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   submitedArticles: ArticleCreateManyWithoutIssueInput
@@ -3378,7 +3378,7 @@ input IssueCreateWithoutSelectedEditorialsInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   submitedArticles: ArticleCreateManyWithoutIssueInput
@@ -3397,7 +3397,7 @@ input IssueCreateWithoutSubmitedArticlesInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   selectedArticles: ArticleCreateManyWithoutSelectedByInput
@@ -3463,7 +3463,7 @@ type IssuePreviousValues {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!
@@ -3833,10 +3833,28 @@ input IssueScalarWhereInput {
 
   """All values that are not equal to given value."""
   publishedCall_not: Boolean
-  published: Boolean
+  published: DateTime
 
   """All values that are not equal to given value."""
-  published_not: Boolean
+  published_not: DateTime
+
+  """All values that are contained in given list."""
+  published_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  published_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  published_lt: DateTime
+
+  """All values less than or equal the given value."""
+  published_lte: DateTime
+
+  """All values greater than the given value."""
+  published_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  published_gte: DateTime
   startCall: DateTime
 
   """All values that are not equal to given value."""
@@ -3978,7 +3996,7 @@ input IssueUpdateInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime
   endCall: DateTime
   submitedArticles: ArticleUpdateManyWithoutIssueInput
@@ -3998,7 +4016,7 @@ input IssueUpdateManyDataInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime
   endCall: DateTime
 }
@@ -4015,7 +4033,7 @@ input IssueUpdateManyMutationInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime
   endCall: DateTime
 }
@@ -4066,7 +4084,7 @@ input IssueUpdateWithoutSelectedArticlesDataInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime
   endCall: DateTime
   submitedArticles: ArticleUpdateManyWithoutIssueInput
@@ -4085,7 +4103,7 @@ input IssueUpdateWithoutSelectedEditorialsDataInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime
   endCall: DateTime
   submitedArticles: ArticleUpdateManyWithoutIssueInput
@@ -4104,7 +4122,7 @@ input IssueUpdateWithoutSubmitedArticlesDataInput {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean
-  published: Boolean
+  published: DateTime
   startCall: DateTime
   endCall: DateTime
   selectedArticles: ArticleUpdateManyWithoutSelectedByInput
@@ -4501,10 +4519,28 @@ input IssueWhereInput {
 
   """All values that are not equal to given value."""
   publishedCall_not: Boolean
-  published: Boolean
+  published: DateTime
 
   """All values that are not equal to given value."""
-  published_not: Boolean
+  published_not: DateTime
+
+  """All values that are contained in given list."""
+  published_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  published_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  published_lt: DateTime
+
+  """All values less than or equal the given value."""
+  published_lte: DateTime
+
+  """All values greater than the given value."""
+  published_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  published_gte: DateTime
   startCall: DateTime
 
   """All values that are not equal to given value."""
@@ -4609,6 +4645,9 @@ input IssueWhereUniqueInput {
   key: String
 }
 
+"""Raw JSON value"""
+scalar Json
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -4679,6 +4718,7 @@ type Mutation {
   deleteManyCreditCards(where: CreditCardWhereInput): BatchPayload!
   deleteManyCupoms(where: CupomWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
+  executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
 enum MutationType {
@@ -7598,6 +7638,10 @@ input PaymentWhereInput {
 
 input PaymentWhereUniqueInput {
   id: ID
+}
+
+enum PrismaDatabase {
+  default
 }
 
 type Query {

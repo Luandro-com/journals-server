@@ -77,7 +77,7 @@ type Issue {
   publicationPrediction: DateTime
   contact: String
   publishedCall: Boolean @default(value: "false")
-  published: Boolean @default(value: "false")
+  published: DateTime
   startCall: DateTime!
   endCall: DateTime!
   createdAt: DateTime!

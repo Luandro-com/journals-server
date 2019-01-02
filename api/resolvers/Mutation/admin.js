@@ -28,7 +28,7 @@ const admin = {
       const IssueInfo = await ctx.db.query.issue({ where: { id: issueId } }, `{ publishedCall selectedArticles { id }}`)
       if (IssueInfo.selectedArticles.length > 0 && IssueInfo.publishedCall) return await ctx.db.mutation.updateIssue({
         where: { id: issueId },
-        data: { published: true }
+        data: { published: new Date().toISOString() }
       }, info)
       else throw 'No articles selected or call not published'
     } catch (err) { throw err }

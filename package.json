@@ -11,6 +11,7 @@
     "docker": "npm run docker:build && npm run docker:run",
     "deploy": "prisma deploy -e .env.staging && now",
     "deploy:prod": "now",
+    "seed": "node -r dotenv/config database/seed",
     "reset": "prisma reset -f && prisma deploy && prisma seed && graphql get-schema --project database && npm test",
     "run-test": "wait-on http://localhost:4000 && NODE_ENV=production node ./test/index.test.js | tap-spec",
     "test": "npm-run-all --parallel start run-test"

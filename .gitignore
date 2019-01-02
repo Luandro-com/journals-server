@@ -11,3 +11,4 @@ node_modules
 now.production.json
 up.json
 .env.production
+backup.json

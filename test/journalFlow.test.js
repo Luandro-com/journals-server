@@ -239,7 +239,7 @@ module.exports = () => {
     mockFetch(publishArticle, variables, token)
     .then(res => {
       console.log('RES', res)
-      t.equal(true, res.publishArticle.published)
+      t.ok(res.publishArticle.published)
       t.end()
     })
     .catch(err => console.log(err))
@@ -272,12 +272,13 @@ module.exports = () => {
     `
     const variables = {
       input: {
-        method: 'CREDIT',
+        method: 'MONEY_ORDER',
         articleId,
       }
     }
     mockFetch(payment, variables, token)
     .then(res => {
+      console.log('Payment res', articleId, res)
       t.equal(true, (res.payment.id !== null))
       t.end()
     })
