@@ -15,6 +15,45 @@ const seedConfig = {
 const setup = async () => {
   // console.log('------>', backup)
   backup.users.map(user => {
+    const { 
+      user_id,
+      email,
+      password,
+      username,
+      first_name,
+      last_name,
+      initials,
+    } = user
+    backup.authors.map(author => {
+      // "author_id": "2",
+      // "submission_id": "1",
+      // "primary_contact": "0",
+      // "seq": "2",
+      // "first_name": "Livia",
+      // "middle_name": "Teresinha Salomão",
+      // "last_name": "Piccinini",
+      // "suffix": null,
+      // "country": "",
+      // "email": "arq.alinecs@gmail.com",
+      // "url": "",
+      // "user_group_id": null
+      backup.user_settings.map(authorSetting => {
+        // "user_id": "6",
+        // "assoc_id": "0",
+        // "setting_value": "Programa de Pós-Graduação Mestrado em Desenvolvimento Regional da Universidade Federal do Amapá",
+        // "setting_type": "string"
+      })
+    })
+    await db.mutation.createUser({
+      data: {
+        email,
+        password,
+        username,
+        firstName: first_name,
+        lastName: last_name,
+        initials,
+      }
+    })
     // "user_id": "1",
     // "username": "wmedeiros",
     // "password": "$2y$10$W0lOgFk535wpTBB.lYDkluUofIwEv0OBWA7WgFS6SGk9s6HjlyrNS",
@@ -44,52 +83,29 @@ const setup = async () => {
     // "disabled_reason": null,
     // "inline_help": "0"
   })
-  backup.authors.map(author => {
-    backup.user_settings.map(authorSetting => {
-      // "user_id": "6",
-      // "assoc_id": "0",
-      // "setting_value": "Programa de Pós-Graduação Mestrado em Desenvolvimento Regional da Universidade Federal do Amapá",
-      // "setting_type": "string"
-    })
-    // create user
-    await db.createUser({
-      data: {
-        "author_id": "2",
-        "submission_id": "1",
-        "primary_contact": "0",
-        "seq": "2",
-        "first_name": "Livia",
-        "middle_name": "Teresinha Salomão",
-        "last_name": "Piccinini",
-        "suffix": null,
-        "country": "",
-        "email": "arq.alinecs@gmail.com",
-        "url": "",
-        "user_group_id": null
-      }
-    })
-  })
+  
   backup.issues.map(issue => {
+    const { }
     await db.mutation.createIssue({
       data: {
-        "issue_id": "9",
-        "journal_id": "1",
-        "volume": "6",
-        "number": "1",
-        "year": "2018",
-        "published": "1",
-        "current": "0",
-        "date_published": "2018-06-01 00:00:00",
-        "date_notified": null,
-        "last_modified": "2018-08-24 18:48:28",
-        "access_status": "1",
-        "open_access_date": null,
-        "show_volume": "1",
-        "show_number": "1",
-        "show_year": "1",
-        "show_title": "1",
-        "style_file_name": null,
-        "original_style_file_name": null
+        // "issue_id": "9",
+        // "journal_id": "1",
+        // "volume": "6",
+        // "number": "1",
+        // "year": "2018",
+        // "published": "1",
+        // "current": "0",
+        // "date_published": "2018-06-01 00:00:00",
+        // "date_notified": null,
+        // "last_modified": "2018-08-24 18:48:28",
+        // "access_status": "1",
+        // "open_access_date": null,
+        // "show_volume": "1",
+        // "show_number": "1",
+        // "show_year": "1",
+        // "show_title": "1",
+        // "style_file_name": null,
+        // "original_style_file_name": null
       },
     })
   })
